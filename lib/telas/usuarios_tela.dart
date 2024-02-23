@@ -144,46 +144,6 @@ class _UsuariosTelaState extends State<UsuariosTela> {
                                 });
                               }
                           ),
-                          // Column(
-                          //   children: [
-                          //     TituloPadrao(title: ' '),
-                          //     Container(
-                          //         alignment: Alignment.center,
-                          //         height: 52,
-                          //         child: TextoPadrao(texto: 'ADM',cor: Cores.primaria,tamanhoFonte: 12,)
-                          //     ),
-                          //   ],
-                          // ),
-                          // SizedBox(width: 20,),
-                          // Column(
-                          //   children: [
-                          //     TituloPadrao(title: ' '),
-                          //     Container(
-                          //       height: 52,
-                          //       width: 35,
-                          //       child: Radio(value: 1,
-                          //           groupValue: tipoAcesso,
-                          //           activeColor: Cores.primaria,
-                          //           onChanged: (int? value){
-                          //             setState(() {
-                          //               tipoAcesso = value!;
-                          //               print("tipo acesso : $tipoAcesso");
-                          //             });
-                          //           }
-                          //       ),
-                          //     ),
-                          //   ],
-                          // ),
-                          // Column(
-                          //   children: [
-                          //     TituloPadrao(title: ' '),
-                          //     Container(
-                          //         alignment: Alignment.center,
-                          //         height: 52,
-                          //         child: TextoPadrao(texto: 'VISUALIZADOR',cor: Cores.primaria,tamanhoFonte: 12,)
-                          //     ),
-                          //   ],
-                          // ),
                           SizedBox(width: 5,)
                         ],
                       ),
