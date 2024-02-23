@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:instrucao_de_processos/telas/home_tela.dart';
-import 'package:instrucao_de_processos/utilidades/paleta_cores.dart';
-import 'package:instrucao_de_processos/widgets/input_text.dart';
+import 'package:instrucao_de_processos/utilidades/cores.dart';
+import 'package:instrucao_de_processos/widgets/caixa_texto.dart';
 import 'package:instrucao_de_processos/widgets/snackBars.dart';
 import '../utilidades/variavel_estatica.dart';
-import '../widgets/buttom_default.dart';
+import '../widgets/botao_padrao.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 class LoginTela extends StatefulWidget {
@@ -23,14 +23,12 @@ class _LoginTelaState extends State<LoginTela> {
   checkLogin(){
     if(email.text.isNotEmpty && senha.text.isNotEmpty){
       FirebaseAuth.instance.signInWithEmailAndPassword(
-        email: email.text.toLowerCase().trim(),
+        email: email.text.trim(),
         password: senha.text.trim())
       .then((user) async {
         showSnackBar(context, 'Usuário Logado.',Colors.green);
-        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => HomeTela()));
+        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => HomeTela(emailLogado: email.text,)));
       }).catchError((error) async {
-
-        // print(error.toString());
 
         switch (error.toString()) {
           case '[firebase_auth/unknown] An unknown error occurred: FirebaseError: Firebase: The email address is badly formatted. (auth/invalid-email).':
@@ -58,25 +56,25 @@ class _LoginTelaState extends State<LoginTela> {
   @override
   Widget build(BuildContext context) {
 
-    VariavelEstatica.initialize(context);
+    VariavelEstatica.inicializarDimensoes(context);
 
     return Scaffold(
       body: Container(
-        width: VariavelEstatica.width,
-        height: VariavelEstatica.height,
+        width: VariavelEstatica.largura,
+        height: VariavelEstatica.altura,
         alignment: Alignment.bottomCenter,
         decoration: BoxDecoration(
           gradient: LinearGradient(
             begin: Alignment.centerRight,
             end: Alignment.centerLeft,
-            colors: PaletaCores.degrade_azul, // Define your gradient colors here
+            colors: Cores.degrade_azul, // Define your gradient colors here
           ),
         ),
         child: Container(
-          width: VariavelEstatica.width*0.35,
-          height: VariavelEstatica.height*0.8,
+          width: VariavelEstatica.largura*0.35,
+          height: VariavelEstatica.altura*0.8,
           decoration: BoxDecoration(
-              color: PaletaCores.cinzaClaro,
+              color: Cores.cinzaClaro,
               borderRadius: BorderRadius.only(
                 topLeft: Radius.circular(40.0),
                 topRight: Radius.circular(40.0),
@@ -85,34 +83,35 @@ class _LoginTelaState extends State<LoginTela> {
           child: Column(
             children: [
               Container(
-                margin: EdgeInsets.only(top: VariavelEstatica.height*0.07,bottom: VariavelEstatica.height*0.08),
+                margin: EdgeInsets.only(top: VariavelEstatica.altura*0.07,bottom: VariavelEstatica.altura*0.08),
                 child: Text(
                   'Instrução\nde\nProcessos',
                   textAlign: TextAlign.center,
                   style: TextStyle(
-                    color: PaletaCores.primaria,
+                    color: Cores.primaria,
                     fontFamily: 'Nunito',
                     fontWeight: FontWeight.bold,
                     fontSize: 48.0,
                   ),
                 ),
               ),
-              InputText(
-                title: 'E-mail',
+              CaixaTexto(
+                titulo: 'E-mail',
                 controller: email,
-                width: VariavelEstatica.width*0.2
+                largura: VariavelEstatica.largura*0.2
               ),
-              InputText(
-                title: 'Senha',
+              CaixaTexto(
+                titulo: 'Senha',
                 controller: senha,
-                width: VariavelEstatica.width*0.2,
+                largura: VariavelEstatica.largura*0.2,
                 obscure: obscure,
                 mostrarOlho: true,
                 onPressedSenha: ()=>setState(()=>obscure?obscure=false:obscure=true),
               ),
-              ButtomDefault(
+              BotaoPadrao(
                 texto: 'Entrar',
                 onTap: checkLogin,
+                largura: VariavelEstatica.largura*0.2,
               )
             ],
           ),

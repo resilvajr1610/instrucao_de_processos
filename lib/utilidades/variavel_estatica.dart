@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 
 class VariavelEstatica{
-  static double width = 0.0;
-  static double height = 0.0;
+  static double largura = 0.0;
+  static double altura = 0.0;
 
-  static void initialize(BuildContext context) {
-    width = MediaQuery.of(context).size.width;
-    height = MediaQuery.of(context).size.height;
+  static void inicializarDimensoes(BuildContext context) {
+    largura = MediaQuery.of(context).size.width;
+    altura = MediaQuery.of(context).size.height;
   }
 }

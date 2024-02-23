@@ -1,15 +1,19 @@
 import 'package:flutter/material.dart';
-import 'package:instrucao_de_processos/widgets/text_default.dart';
-import '../utilidades/paleta_cores.dart';
+import 'package:instrucao_de_processos/widgets/texto_padrao.dart';
+import '../utilidades/cores.dart';
 import '../utilidades/variavel_estatica.dart';
 
-class ButtomDefault extends StatelessWidget {
+class BotaoPadrao extends StatelessWidget {
   String texto;
   var onTap;
+  double largura;
+  double margemVertical;
 
-  ButtomDefault({
+  BotaoPadrao({
     required this.texto,
     required this.onTap,
+    this.largura = 280,
+    this.margemVertical = 45
   });
 
   @override
@@ -17,18 +21,18 @@ class ButtomDefault extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        width: VariavelEstatica.width*0.2,
+        width: largura,
         padding: EdgeInsets.all(10),
-        margin: EdgeInsets.symmetric(vertical: 45),
+        margin: EdgeInsets.symmetric(vertical: margemVertical),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(5),
           gradient: LinearGradient(
             begin: Alignment.centerRight,
             end: Alignment.centerLeft,
-            colors: PaletaCores.degrade_azul, // Define your gradient colors here
+            colors: Cores.degrade_azul, // Define your gradient colors here
           ),
         ),
-        child: TextDefault(text: 'Entrar',textAlign: TextAlign.center,),
+        child: TextoPadrao(texto: texto,alinhamentoTexto: TextAlign.center,),
       ),
     );
   }
