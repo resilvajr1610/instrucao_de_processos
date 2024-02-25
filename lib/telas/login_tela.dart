@@ -26,7 +26,7 @@ class _LoginTelaState extends State<LoginTela> {
         email: email.text.trim(),
         password: senha.text.trim())
       .then((user) async {
-        showSnackBar(context, 'Usuário Logado.',Colors.green);
+        showSnackBar(context, 'Usuário Logado!',Colors.green);
         Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => HomeTela(emailLogado: email.text,)));
       }).catchError((error) async {
 
@@ -49,7 +49,7 @@ class _LoginTelaState extends State<LoginTela> {
         }
       });
     }else{
-      showSnackBar(context, 'Preencha seu email e senha para continuar.',Colors.red);
+      showSnackBar(context, 'Preencha seu email e senha para continuar!',Colors.red);
     }
   }
 

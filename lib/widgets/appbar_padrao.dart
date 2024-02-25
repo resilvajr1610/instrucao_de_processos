@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:instrucao_de_processos/telas/home_tela.dart';
+import 'package:instrucao_de_processos/telas/login_tela.dart';
 import 'package:instrucao_de_processos/telas/usuarios_tela.dart';
 import 'package:instrucao_de_processos/widgets/texto_padrao.dart';
 import '../utilidades/cores.dart';
 import '../utilidades/variavel_estatica.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class AppBarPadrao extends StatelessWidget implements PreferredSizeWidget{
   bool showUsuarios;
@@ -47,7 +49,9 @@ class AppBarPadrao extends StatelessWidget implements PreferredSizeWidget{
             ),
             Padding(
               padding: const EdgeInsets.all(8.0),
-              child: IconButton(onPressed: (){}, icon: Icon(Icons.logout,color: Colors.white,size: 35,)),
+              child: IconButton(
+                  onPressed: ()=>FirebaseAuth.instance.signOut().then((value) => Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>LoginTela()))),
+                  icon: Icon(Icons.logout,color: Colors.white,size: 35,)),
             ),
           ],
         ),

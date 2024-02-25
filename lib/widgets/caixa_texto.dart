@@ -18,6 +18,7 @@ class CaixaTexto extends StatelessWidget {
   var onChanged;
   List<TextInputFormatter> inputFormatters;
   var onPressedSenha;
+  bool mostrarTitulo;
 
   CaixaTexto({
     required this.controller,
@@ -34,6 +35,7 @@ class CaixaTexto extends StatelessWidget {
     List<TextInputFormatter>? inputFormatters,
     this.onPressedSenha = null,
     this.mostrarOlho = false,
+    this.mostrarTitulo = true,
   }) : inputFormatters = inputFormatters ?? [];
 
   @override
@@ -41,7 +43,7 @@ class CaixaTexto extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        TituloPadrao(title:titulo),
+        mostrarTitulo?TituloPadrao(title:titulo):Container(),
         Container(
           width: largura,
           margin: EdgeInsets.only(bottom: 5),
