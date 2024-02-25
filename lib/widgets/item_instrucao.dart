@@ -7,50 +7,47 @@ import 'caixa_texto.dart';
 
 class ItemInstrucao extends StatelessWidget {
   var controller = TextEditingController();
-  bool check = false;
+  bool ativarBotaoAdicionarItemLista = false;
   var onPressed;
   double largura;
+  bool escrever;
 
   ItemInstrucao({
     required this.controller,
-    required this.check,
+    required this.ativarBotaoAdicionarItemLista,
     required this.onPressed,
-    required this.largura
+    required this.largura,
+    required this.escrever
   });
 
   @override
   Widget build(BuildContext context) {
 
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.end,
-      children: [
-        Card(
-          child: Container(
-              color: Cores.cinzaClaro,
-              alignment: Alignment.centerRight,
-              width: 700,
-              height: 65,
-              padding: EdgeInsets.symmetric(horizontal: 20,vertical: 3.5),
-              child: Row(
-                children: [
-                  CaixaTexto(controller: controller, largura: largura,textoCaixa: 'Inserir',corCaixa: Cores.cinzaClaro,corBorda: Cores.cinzaClaro,mostrarTitulo: false),
-                  Spacer(),
-                  check?BotaoPadraoNovaInstrucao(
-                    texto: 'Criar Instrução',
-                    onPressed: ()=>
-                      controller.text.isNotEmpty?
-                        Navigator.push(context, MaterialPageRoute(builder: (context)=>InstrucaoEtapaTela()))
-                        :showSnackBar(context, 'Insira um texto para avançar', Colors.red),
-                  ):Container(),
-                  IconButton(
-                    icon: check?Icon(Icons.navigate_next_outlined,color: Cores.cinzaTexto,):Icon(Icons.add_box,color: Cores.primaria,),
-                    onPressed: onPressed,
-                  )
-                ],
+    return  Card(
+      child: Container(
+          color: Cores.cinzaClaro,
+          alignment: Alignment.centerRight,
+          width: 700,
+          height: 65,
+          padding: EdgeInsets.symmetric(horizontal: 20,vertical: 3.5),
+          child: Row(
+            children: [
+              CaixaTexto(controller: controller, largura: largura,textoCaixa: 'Inserir',corCaixa: Cores.cinzaClaro,corBorda: Cores.cinzaClaro,mostrarTitulo: false,escrever: escrever,),
+              Spacer(),
+              ativarBotaoAdicionarItemLista?BotaoPadraoNovaInstrucao(
+                texto: 'Criar Instrução',
+                onPressed: ()=>
+                controller.text.isNotEmpty?
+                Navigator.push(context, MaterialPageRoute(builder: (context)=>InstrucaoEtapaTela()))
+                    :showSnackBar(context, 'Insira um texto para avançar', Colors.red),
+              ):Container(),
+              IconButton(
+                icon: ativarBotaoAdicionarItemLista?Icon(Icons.navigate_next_outlined,color: Cores.cinzaTexto,):Icon(Icons.add_box,color: Cores.primaria,),
+                onPressed: ativarBotaoAdicionarItemLista?null:onPressed,
               )
-          ),
-        ),
-      ],
+            ],
+          )
+      ),
     );
   }
 }

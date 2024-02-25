@@ -19,6 +19,7 @@ class CaixaTexto extends StatelessWidget {
   List<TextInputFormatter> inputFormatters;
   var onPressedSenha;
   bool mostrarTitulo;
+  bool escrever;
 
   CaixaTexto({
     required this.controller,
@@ -36,6 +37,7 @@ class CaixaTexto extends StatelessWidget {
     this.onPressedSenha = null,
     this.mostrarOlho = false,
     this.mostrarTitulo = true,
+    this.escrever = true,
   }) : inputFormatters = inputFormatters ?? [];
 
   @override
@@ -85,6 +87,7 @@ class CaixaTexto extends StatelessWidget {
                       borderSide: BorderSide(width: 1, color: corBorda),
                       borderRadius: BorderRadius.circular(3),
                     ),
+                    enabled: escrever,
                     hintText: textoCaixa,
                     hintStyle: TextStyle(
                       color: Cores.cinzaTexto,

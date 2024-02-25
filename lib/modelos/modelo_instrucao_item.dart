@@ -1,11 +1,17 @@
+import 'package:flutter/cupertino.dart';
+
 class ModeloInstrucaoItem{
-  var controller;
-  bool check;
+  TextEditingController controller;
+  bool caixaTextoNaoVazia;
   double largura;
+  bool escrever;
+  List listaMeio;
 
   ModeloInstrucaoItem({
     required this.controller,
-    required this.check,
-    required this.largura
+    required this.caixaTextoNaoVazia,
+    required this.largura,
+    required this.escrever,
+    required this.listaMeio,
   });
 }

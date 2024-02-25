@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:instrucao_de_processos/modelos/modelo_instrucao_item.dart';
-import 'package:instrucao_de_processos/modelos/modelo_instrucao_lista.dart';
+import 'package:instrucao_de_processos/modelos/modelo_instrucao_lista_1_0_0.dart';
+import 'package:instrucao_de_processos/modelos/modelo_instrucao_lista_1_1_0.dart';
+import 'package:instrucao_de_processos/modelos/modelo_instrucao_lista_1_1_1.dart';
 import 'package:instrucao_de_processos/utilidades/cores.dart';
 import 'package:instrucao_de_processos/utilidades/variavel_estatica.dart';
 import 'package:instrucao_de_processos/widgets/appbar_padrao.dart';
 import 'package:instrucao_de_processos/widgets/caixa_texto_pesquisa.dart';
 import 'package:instrucao_de_processos/widgets/item_instrucao.dart';
+import 'package:instrucao_de_processos/widgets/snackBars.dart';
 import '../widgets/texto_padrao.dart';
 
 class HomeTela extends StatefulWidget {
@@ -21,27 +24,30 @@ class HomeTela extends StatefulWidget {
 
 class _HomeTelaState extends State<HomeTela> {
 
-  List<ModeloInstrucaoLista> listaInstrucao=[];
+  List<ModeloInstrucaoLista_1_0_0> listaInstrucaoPrincipal=[];
   var pesquisa = TextEditingController();
+  double larguraInicioCaixaTexto = 450;
+  double larguraMeioCaixaTexto = 350;
+  double larguraFinalCaixaTexto = 300;
+
+  double larguraInicioCard = 650;
+  double larguraMeioCard = 600;
+  double larguraFinalCard = 550;
 
   iniciarModelo(){
 
-    List<ModeloInstrucaoItem> listaNivel1 = [];
-    List<ModeloInstrucaoItem> listaNivel2 = [];
-    List<ModeloInstrucaoItem> listaNivel3 = [];
+   List<ModeloInstrucaoLista_1_1_0> listaMeio = [];
+    List<ModeloInstrucaoLista_1_1_1> listaFinal = [];
+    listaFinal.add(ModeloInstrucaoLista_1_1_1(controller: TextEditingController(text: 'final'), checkFinal: false,largura: larguraFinalCaixaTexto,escrever: true));
+    listaMeio.add(ModeloInstrucaoLista_1_1_0(controller: TextEditingController(text: 'meio'), ativarBotaoAdicionarItemLista: false, largura: larguraMeioCaixaTexto, escrever: true, listaFinal: listaFinal));
 
-    listaNivel1.add(ModeloInstrucaoItem(controller: TextEditingController(), check: false, largura: 550));
-    listaNivel2.add(ModeloInstrucaoItem(controller: TextEditingController(), check: false, largura: 500));
-    listaNivel3.add(ModeloInstrucaoItem(controller: TextEditingController(), check: false, largura: 450));
-
-    listaInstrucao.add(
-      ModeloInstrucaoLista(
-        listaNivel1: listaNivel1,
-        listaNivel2: listaNivel2,
-        listaNivel3: listaNivel3,
-        nivel1Check: false,
-        nivel2Check: false,
-        nivel3Check: false,
+    listaInstrucaoPrincipal.add(
+      ModeloInstrucaoLista_1_0_0(
+        controller: TextEditingController(text: 'inicio'),
+        ativarBotaoAdicionarItemLista: false,
+        escrever: true,
+        largura: 450,
+        listaMeio: listaMeio
       )
     );
     setState(() {});
@@ -63,93 +69,121 @@ class _HomeTelaState extends State<HomeTela> {
         height: VariavelEstatica.altura,
         padding: EdgeInsets.symmetric(vertical: 32,horizontal: 60),
         child: Card(
-          child: Container(
-            padding: EdgeInsets.symmetric(vertical: 36, horizontal: 46),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                TextoPadrao(texto: 'Documentos disponíveis',cor: Cores.primaria,negrito: FontWeight.bold,tamanhoFonte: 20,),
-                SizedBox(height: 40,),
-                CaixaTextoPesquisa(
-                  textoCaixa: 'Pesquisar',
-                  controller: pesquisa,
-                  largura: 600,
-                ),
-                SizedBox(height: 33,),
-                Container(
-                  height: VariavelEstatica.altura*0.45,
-                  width: 650,
-                  child: ListView.builder(
-                    itemCount: listaInstrucao.length,
-                    itemBuilder: (context,i){
-
-                      print('listaInstrucao.length');
-                      print(listaInstrucao.length);
-                      print(listaInstrucao[i].listaNivel1.length);
-
-                      return Column(
-                        crossAxisAlignment: CrossAxisAlignment.end,
-                        children: [
-                          Container(
-                            height: listaInstrucao[i].listaNivel1.length*80,
-                            width: 650,
-                            child: ListView.builder(
-                              itemCount: listaInstrucao[i].listaNivel1.length,
-                              itemBuilder: (context,j){
-                                return ItemInstrucao(
-                                  controller: listaInstrucao[i].listaNivel1[j].controller,
-                                  check: listaInstrucao[i].listaNivel1[j].check,
-                                  largura: listaInstrucao[i].listaNivel1[j].largura,
-
-                                  onPressed: (){
-                                    print('teste');
-                                    listaInstrucao[i+1].listaNivel1.add(ModeloInstrucaoItem(controller: TextEditingController(), check: false, largura: 500));
-                                    setState(() {});
-                                  },
-                                );
-                              }
-                            ),
-                          ),
-                          Container(
-                            height: listaInstrucao[i].listaNivel2.length*80,
-                            width: 600,
-                            child: ListView.builder(
-                                itemCount: listaInstrucao[i].listaNivel2.length,
-                                itemBuilder: (context,j){
-                                  return ItemInstrucao(
-                                    controller: listaInstrucao[i].listaNivel2[j].controller,
-                                    check: listaInstrucao[i].listaNivel2[j].check,
-                                    largura: listaInstrucao[i].listaNivel2[j].largura,
-                                    onPressed: (){
-                                      print('teste2');
-                                    },
-                                  );
-                                }
-                            ),
-                          ),
-                          Container(
-                            height: VariavelEstatica.altura*0.5,
-                            width: 550,
-                            child: ListView.builder(
-                                itemCount: listaInstrucao[i].listaNivel3.length,
-                                itemBuilder: (context,j){
-                                  return ItemInstrucao(
-                                    controller: listaInstrucao[i].listaNivel3[j].controller,
-                                    check: listaInstrucao[i].listaNivel3[j].check,
-                                    largura: listaInstrucao[i].listaNivel3[j].largura,
-                                    onPressed: (){
-                                      print('teste3');
-                                    },
-                                  );
-                                }
-                            ),
-                          ),
-                        ],
-                      );
-                    },
+          child: SingleChildScrollView(
+            child: Container(
+              padding: EdgeInsets.symmetric(vertical: 36, horizontal: 46),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  TextoPadrao(texto: 'Documentos disponíveis',cor: Cores.primaria,negrito: FontWeight.bold,tamanhoFonte: 20,),
+                  SizedBox(height: 40,),
+                  CaixaTextoPesquisa(
+                    textoCaixa: 'Pesquisar',
+                    controller: pesquisa,
+                    largura: 600,
                   ),
-                ),
-              ],
+                  SizedBox(height: 33,),
+                  Container(
+                    color: Colors.green,
+                    height: VariavelEstatica.altura*0.4+150,
+                    width: larguraInicioCard,
+                    child: ListView.builder(
+                      itemCount: listaInstrucaoPrincipal.length,
+                      itemBuilder: (context,i){
+                        return Column(
+                          crossAxisAlignment: CrossAxisAlignment.end,
+                          children: [
+                            ItemInstrucao(
+                              controller: listaInstrucaoPrincipal[i].controller,
+                              ativarBotaoAdicionarItemLista: listaInstrucaoPrincipal[i].ativarBotaoAdicionarItemLista,
+                              largura: listaInstrucaoPrincipal[i].largura,
+                              escrever: listaInstrucaoPrincipal[i].escrever,
+                              onPressed: (){},
+                            ),
+                            Container(
+                              color: Colors.red,
+                              height: listaInstrucaoPrincipal[i].listaMeio.length*200,
+                              width: larguraMeioCard,
+                              child: ListView.builder(
+                                physics: NeverScrollableScrollPhysics(),
+                                itemCount: listaInstrucaoPrincipal[i].listaMeio.length,
+                                itemBuilder: (context,j){
+                                  return Column(
+                                    crossAxisAlignment: CrossAxisAlignment.end,
+                                    children: [
+                                      ItemInstrucao(
+                                        // controller: listaInstrucaoPrincipal[i].listaMeio[j].controller,
+                                        controller: TextEditingController(text: 'meio add'),
+                                        ativarBotaoAdicionarItemLista: listaInstrucaoPrincipal[i].listaMeio[j].ativarBotaoAdicionarItemLista,
+                                        largura: listaInstrucaoPrincipal[i].listaMeio[j].largura,
+                                        escrever: listaInstrucaoPrincipal[i].listaMeio[j].escrever,
+                                        onPressed: (){},
+                                      ),
+                                      Container(
+                                        color: Colors.amber,
+                                        height: 500,
+                                        width: larguraFinalCard,
+                                        child: ListView.builder(
+                                            // physics: NeverScrollableScrollPhysics(),
+                                            itemCount: listaInstrucaoPrincipal[i].listaMeio[j].listaFinal.length,
+                                            itemBuilder: (context,k){
+
+                                              print('len');
+                                              print(listaInstrucaoPrincipal[i].listaMeio[j].listaFinal.length);
+
+                                              return ItemInstrucao(
+                                                controller: listaInstrucaoPrincipal[i].listaMeio[j].listaFinal[k].controller,
+                                                ativarBotaoAdicionarItemLista: listaInstrucaoPrincipal[i].listaMeio[j].listaFinal[k].checkFinal,
+                                                largura: listaInstrucaoPrincipal[i].listaMeio[j].listaFinal[k].largura,
+                                                escrever: listaInstrucaoPrincipal[i].listaMeio[j].listaFinal[k].escrever,
+                                                onPressed: (){
+                                                  print('teste');
+                                                  if(listaInstrucaoPrincipal[i].listaMeio[j].listaFinal[k].controller.text.isNotEmpty){
+                                                    listaInstrucaoPrincipal[i].listaMeio[j].listaFinal[k].escrever = false;
+                                                    listaInstrucaoPrincipal[i].listaMeio[j].listaFinal[k].checkFinal = true;
+                                                    listaInstrucaoPrincipal[i].listaMeio[j].listaFinal.add(
+                                                        ModeloInstrucaoLista_1_1_1(
+                                                          controller: TextEditingController(text: 'adicionar meio'),
+                                                          checkFinal: false,
+                                                          largura: larguraFinalCaixaTexto,
+                                                          escrever: true,
+                                                        )
+                                                    );
+                                                    setState(() {});
+                                                  }else{
+                                                    showSnackBar(context, 'Insirar um texto para avançar', Colors.red);
+                                                  }
+                                                },
+                                              );
+                                            }
+                                        ),
+                                      ),
+                                      ItemInstrucao(
+                                        controller: TextEditingController(),
+                                        ativarBotaoAdicionarItemLista: true,
+                                        largura: larguraMeioCaixaTexto,
+                                        escrever: true,
+                                        onPressed: (){},
+                                      ),
+                                    ],
+                                  );
+                                }
+                              ),
+                            ),
+                            ItemInstrucao(
+                              controller: TextEditingController(),
+                              ativarBotaoAdicionarItemLista: true,
+                              largura: larguraInicioCaixaTexto,
+                              escrever: true,
+                              onPressed: (){},
+                            ),
+                          ],
+                        );
+                      },
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
         )
