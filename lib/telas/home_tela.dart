@@ -100,6 +100,7 @@ class _HomeTelaState extends State<HomeTela> {
                                   controller: listaInstrucao[i].listaNivel1[j].controller,
                                   check: listaInstrucao[i].listaNivel1[j].check,
                                   largura: listaInstrucao[i].listaNivel1[j].largura,
+
                                   onPressed: (){
                                     print('teste');
                                     listaInstrucao[i+1].listaNivel1.add(ModeloInstrucaoItem(controller: TextEditingController(), check: false, largura: 500));
