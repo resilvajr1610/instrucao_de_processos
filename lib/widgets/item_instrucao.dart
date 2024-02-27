@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:instrucao_de_processos/telas/instrucao_etapa_tela.dart';
 import 'package:instrucao_de_processos/widgets/snackBars.dart';
+import 'package:instrucao_de_processos/widgets/texto_padrao.dart';
 import '../utilidades/cores.dart';
 import 'botao_padrao_nova_instrucao.dart';
 import 'caixa_texto.dart';
 
 class ItemInstrucao extends StatelessWidget {
+  String idFirebase;
+  String idDocumento;
   var controller = TextEditingController();
   bool ativarBotaoAdicionarItemLista = false;
   var onPressed;
@@ -13,6 +16,8 @@ class ItemInstrucao extends StatelessWidget {
   bool escrever;
 
   ItemInstrucao({
+    required this.idFirebase,
+    required this.idDocumento,
     required this.controller,
     required this.ativarBotaoAdicionarItemLista,
     required this.onPressed,
@@ -32,13 +37,14 @@ class ItemInstrucao extends StatelessWidget {
           padding: EdgeInsets.symmetric(horizontal: 20,vertical: 3.5),
           child: Row(
             children: [
+              TextoPadrao(texto: idDocumento,cor: Cores.cinzaTexto,),
               CaixaTexto(controller: controller, largura: largura,textoCaixa: 'Inserir',corCaixa: Cores.cinzaClaro,corBorda: Cores.cinzaClaro,mostrarTitulo: false,escrever: escrever,),
               Spacer(),
               ativarBotaoAdicionarItemLista?BotaoPadraoNovaInstrucao(
                 texto: 'Criar Instrução',
                 onPressed: ()=>
                 controller.text.isNotEmpty?
-                Navigator.push(context, MaterialPageRoute(builder: (context)=>InstrucaoEtapaTela()))
+                Navigator.push(context, MaterialPageRoute(builder: (context)=>InstrucaoEtapaTela(idDocumento: idDocumento,idFirebase: idFirebase)))
                     :showSnackBar(context, 'Insira um texto para avançar', Colors.red),
               ):Container(),
               IconButton(
