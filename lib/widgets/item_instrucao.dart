@@ -14,6 +14,7 @@ class ItemInstrucao extends StatelessWidget {
   var onPressed;
   double largura;
   bool escrever;
+  String emailLogado;
 
   ItemInstrucao({
     required this.idFirebase,
@@ -22,7 +23,8 @@ class ItemInstrucao extends StatelessWidget {
     required this.ativarBotaoAdicionarItemLista,
     required this.onPressed,
     required this.largura,
-    required this.escrever
+    required this.escrever,
+    required this.emailLogado
   });
 
   @override
@@ -44,7 +46,7 @@ class ItemInstrucao extends StatelessWidget {
                 texto: 'Criar Instrução',
                 onPressed: ()=>
                 controller.text.isNotEmpty?
-                Navigator.push(context, MaterialPageRoute(builder: (context)=>InstrucaoEtapaTela(idDocumento: idDocumento,idFirebase: idFirebase)))
+                Navigator.push(context, MaterialPageRoute(builder: (context)=>InstrucaoEtapaTela(idDocumento: idDocumento,idFirebase: idFirebase,emailLogado: emailLogado,)))
                     :showSnackBar(context, 'Insira um texto para avançar', Colors.red),
               ):Container(),
               IconButton(

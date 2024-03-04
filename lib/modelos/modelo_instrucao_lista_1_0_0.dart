@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:instrucao_de_processos/modelos/modelo_instrucao_lista_1_1_0.dart';
 
 class ModeloInstrucaoLista_1_0_0{
-  String idFirebase;
-  String idDocumento;
+  String idFire;
+  String idDoc;
   TextEditingController controller;
   bool ativarBotaoAdicionarItemLista;
   double largura;
@@ -12,8 +12,8 @@ class ModeloInstrucaoLista_1_0_0{
   double alturaListaMeio;
 
   ModeloInstrucaoLista_1_0_0({
-    required this.idFirebase,
-    required this.idDocumento,
+    required this.idFire,
+    required this.idDoc,
     required this.controller,
     required this.ativarBotaoAdicionarItemLista,
     required this.largura,

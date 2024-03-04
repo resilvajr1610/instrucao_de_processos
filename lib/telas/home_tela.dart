@@ -35,31 +35,53 @@ class _HomeTelaState extends State<HomeTela> {
   double larguraFinalCard = 550;
   double alturaItens = 75;
   double alturaListaFinal = 0;
-  double alturaListaInicio = 75;
+  double alturaListaInicio = 0;
 
-  iniciarListaPrincipal(int inicio){
+  bool carregando = true;
+
+  adicionarListaInicio(String idDoc,String idFire, String titulo,bool ativarBotaoAdicionarItemLista, bool escrever ){
     listaInstrucaoPrincipal.add(
       ModeloInstrucaoLista_1_0_0(
-        idDocumento: '${inicio+1}.0.0',
-        idFirebase: '',
-        controller: TextEditingController(text: 'inicio'),
-        ativarBotaoAdicionarItemLista: false,
-        escrever: true,
+        idDoc: idDoc,
+        idFire: idFire,
+        controller: TextEditingController(text: titulo),
+        ativarBotaoAdicionarItemLista: ativarBotaoAdicionarItemLista,
+        escrever: escrever,
         largura: 450,
         listaMeio: [],
         alturaListaMeio: 0
       )
     );
+    alturaListaInicio = alturaListaInicio + alturaItens;
+    carregando = false;
     setState(() {});
   }
+  carregarDadosInicio()async{
+    FirebaseFirestore.instance.collection('documentos').where('posicao',isEqualTo: 'inicio').orderBy('idDoc').get().then((docs){
+      if(docs.docs.isNotEmpty){
+        for(int i = 0; docs.docs.length > i; i++) {
+          // print(docs.docs[i]['idDoc']);
+          adicionarListaInicio(docs.docs[i]['idDoc'], docs.docs[i]['idFire'],docs.docs[i]['titulo'], false, true);
+          if(docs.docs.length == i+1){
+            adicionarListaInicio('${i+2}.0.0', '','teste flutter inicio', false, true);
+            carregarDadosMeio();
+            setState(() {});
+          }
+        }
+      }else{
+        adicionarListaInicio('1.0.0', '','inicio vazio', false, true);
+        carregando = false;
+        setState((){});
+      }
+    });
+  }
 
-  adicionarListaMeio(int inicio, bool addPrincipal){
-    List<ModeloInstrucaoLista_1_1_0> listaMeio = [];
-    listaMeio.add(
+  adicionarListaMeio(int inicio, bool addPrincipal,String idFire, String idDoc,String titulo, bool ativarBotaoAdicionarItemLista, bool escrever){
+    listaInstrucaoPrincipal[inicio].listaMeio.add(
       ModeloInstrucaoLista_1_1_0(
-        idFirebase: '',
-        idDocumento:'${inicio+1}.1.0',
-        controller: TextEditingController(text: 'meio'),
+        idFire: idFire,
+        idDoc: idDoc,
+        controller: TextEditingController(text: titulo),
         ativarBotaoAdicionarItemLista: false,
         largura: larguraMeioCaixaTexto,
         escrever: true,
@@ -67,28 +89,59 @@ class _HomeTelaState extends State<HomeTela> {
         alturaListaFinal: 0
       )
     );
-    listaInstrucaoPrincipal[inicio].listaMeio = listaMeio;
     listaInstrucaoPrincipal[inicio].escrever = false;
     listaInstrucaoPrincipal[inicio].ativarBotaoAdicionarItemLista = true;
+    alturaListaInicio = alturaListaInicio + alturaItens;
+    listaInstrucaoPrincipal[inicio].alturaListaMeio = listaInstrucaoPrincipal[inicio].alturaListaMeio + alturaItens;
 
     if(addPrincipal){
       alturaListaInicio = alturaListaInicio + alturaItens + alturaItens;
       listaInstrucaoPrincipal[inicio].alturaListaMeio = listaInstrucaoPrincipal[inicio].alturaListaMeio + alturaItens;
-      iniciarListaPrincipal(listaInstrucaoPrincipal.length);
+      adicionarListaInicio('${listaInstrucaoPrincipal.length+1}.0.0','','inicio flutter',false,true);
     }
     setState(() {});
   }
+  carregarDadosMeio()async{
+    FirebaseFirestore.instance.collection('documentos').where('posicao',isEqualTo: 'meio').orderBy('idDoc').get().then((docs){
+      for(int i = 0; docs.docs.length > i; i++) {
+        print(docs.docs[i]['idDoc']);
+        List dividirDoc = docs.docs[i]['idDoc'].toString().split('.');
+        int inicio = int.parse(dividirDoc[0]);
+        int meio = int.parse(dividirDoc[1]);
+        listaInstrucaoPrincipal[inicio-1].ativarBotaoAdicionarItemLista = false;
+        adicionarListaMeio(inicio-1,false,docs.docs[i]['idFire'],docs.docs[i]['idDoc'],docs.docs[i]['titulo'], true, false);
+        if(docs.docs.length == i+1){
+          alturaListaInicio = alturaListaInicio + alturaItens;
+          listaInstrucaoPrincipal[inicio-1].alturaListaMeio = listaInstrucaoPrincipal[inicio-1].alturaListaMeio + alturaItens;
+          listaInstrucaoPrincipal[inicio-1].listaMeio.add(
+              ModeloInstrucaoLista_1_1_0(
+                  idFire: '',
+                  idDoc: '$inicio.${meio+1}.0',
+                  controller: TextEditingController(text: 'add meio'),
+                  ativarBotaoAdicionarItemLista: false,
+                  largura: larguraMeioCaixaTexto,
+                  escrever: true,
+                  listaFinal: [],
+                  alturaListaFinal: 0
+              )
+          );
+          setState(() {});
+          carregarDadosFim();
+        }
+      }
+    });
+  }
 
-  adicionarListaFinal(int inicio, int meio,bool addMeio){
+  adicionarListaFim(int inicio, int meio,bool addMeio,String idFire, String idDoc,String titulo, bool checkFinal, bool escrever){
     List<ModeloInstrucaoLista_1_1_1> listaFinal = [];
     listaFinal.add(
       ModeloInstrucaoLista_1_1_1(
-        idFirebase: '',
-        idDocumento:'${inicio+1}.${meio+1}.1',
-        controller: TextEditingController(text: 'final'),
-        checkFinal: false,
+        idFire: idFire,
+        idDoc: idDoc,
+        controller: TextEditingController(text: titulo),
+        checkFinal: checkFinal,
         largura: larguraFinalCaixaTexto,
-        escrever: true
+        escrever: escrever
       )
     );
     listaInstrucaoPrincipal[inicio].listaMeio[meio].listaFinal = listaFinal;
@@ -97,15 +150,16 @@ class _HomeTelaState extends State<HomeTela> {
     listaInstrucaoPrincipal[inicio].escrever = false;
     listaInstrucaoPrincipal[inicio].ativarBotaoAdicionarItemLista = true;
     alturaListaFinal = alturaListaFinal + alturaItens;
+    listaInstrucaoPrincipal[inicio].listaMeio[meio].alturaListaFinal = listaInstrucaoPrincipal[inicio].listaMeio[meio].alturaListaFinal + alturaItens;
     if(addMeio){
       alturaListaInicio = alturaListaInicio +alturaItens + alturaItens;
       listaInstrucaoPrincipal[inicio].alturaListaMeio = listaInstrucaoPrincipal[inicio].alturaListaMeio+ alturaItens + alturaItens;
       listaInstrucaoPrincipal[inicio].listaMeio[meio].alturaListaFinal = listaInstrucaoPrincipal[inicio].listaMeio[meio].alturaListaFinal + alturaItens;
       listaInstrucaoPrincipal[inicio].listaMeio.add(
           ModeloInstrucaoLista_1_1_0(
-              idFirebase: '',
-              idDocumento: '${inicio+1}.${meio+2}.0',
-              controller: TextEditingController(text: 'meio'),
+              idFire: '',
+              idDoc: '${inicio+1}.${meio+2}.0',
+              controller: TextEditingController(text: 'meio flutter'),
               ativarBotaoAdicionarItemLista: false,
               largura: larguraMeioCaixaTexto,
               escrever: true,
@@ -117,12 +171,32 @@ class _HomeTelaState extends State<HomeTela> {
     setState(() {});
   }
 
-  Future<String> obterNovoId(String colecao, String titulo, String idDocumento, String nivel) async {
+  carregarDadosFim()async{
+    FirebaseFirestore.instance.collection('documentos').where('posicao',isEqualTo: 'fim').orderBy('idDoc').get().then((docs){
+      for(int i = 0; docs.docs.length > i; i++) {
+        print(docs.docs[i]['idDoc']);
+        List dividirDoc = docs.docs[i]['idDoc'].toString().split('.');
+        int inicio = int.parse(dividirDoc[0]);
+        int meio = int.parse(dividirDoc[1]);
+        listaInstrucaoPrincipal[inicio-1].listaMeio[meio-1].ativarBotaoAdicionarItemLista = false;
+        adicionarListaFim(inicio-1,meio-1,false,docs.docs[i]['idFire'],docs.docs[i]['idDoc'],docs.docs[i]['titulo'], true, false);
+        if(docs.docs.length == i+1){
+          alturaListaInicio = alturaListaInicio + alturaItens;
+          listaInstrucaoPrincipal[inicio-1].alturaListaMeio = listaInstrucaoPrincipal[inicio-1].alturaListaMeio + alturaItens;
+          // adicionarListaFinal(inicio - 1,meio-1,false,'','$inicio.${meio}.1','flutter fim',true,false);
+          setState(() {});
+        }
+      }
+    });
+  }
+
+  Future<String> salvarFirebase(String colecao, String titulo, String idDocumento, String nivel) async {
     DocumentReference docRef = FirebaseFirestore.instance.collection(colecao).doc();
     await docRef.set({
-      'titulo'      : titulo,
-      'idDocumento$nivel' : idDocumento,
-      'idFirebase'  : docRef.id
+      'idFire': docRef.id,
+      'idDoc'     : idDocumento,
+      'titulo'    : titulo,
+      'posicao'   : nivel
     });
     return docRef.id;
   }
@@ -130,19 +204,27 @@ class _HomeTelaState extends State<HomeTela> {
   @override
   void initState() {
     super.initState();
-    iniciarListaPrincipal(0);
+    carregarDadosInicio();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Cores.cinzaClaro,
-      appBar: AppBarPadrao(showUsuarios: true,emailLogado: widget.emailLogado),
+      appBar: carregando?null:AppBarPadrao(showUsuarios: true,emailLogado: widget.emailLogado),
       body: Container(
         width: VariavelEstatica.largura,
         height: VariavelEstatica.altura,
         padding: EdgeInsets.symmetric(vertical: 32,horizontal: 60),
-        child: Card(
+        child: carregando?Center(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              CircularProgressIndicator(color: Cores.primaria,),
+              TextoPadrao(texto: 'Buscando informações, aguarde ...',cor: Colors.black,)
+            ],
+          ),
+        ):Card(
           child: SingleChildScrollView(
             child: Container(
               padding: EdgeInsets.symmetric(vertical: 36, horizontal: 46),
@@ -173,13 +255,24 @@ class _HomeTelaState extends State<HomeTela> {
                               ativarBotaoAdicionarItemLista: listaInstrucaoPrincipal[inicio].ativarBotaoAdicionarItemLista,
                               largura: listaInstrucaoPrincipal[inicio].largura,
                               escrever: listaInstrucaoPrincipal[inicio].escrever,
-                              idFirebase: listaInstrucaoPrincipal[inicio].idFirebase,
-                              idDocumento: listaInstrucaoPrincipal[inicio].idDocumento,
+                              idFirebase: listaInstrucaoPrincipal[inicio].idFire,
+                              idDocumento: listaInstrucaoPrincipal[inicio].idDoc,
+                              emailLogado: widget.emailLogado,
                               onPressed: ()async{
                                 if(listaInstrucaoPrincipal[inicio].controller.text.isNotEmpty){
-                                  String idFirebase = await obterNovoId('documentos',listaInstrucaoPrincipal[inicio].controller.text,listaInstrucaoPrincipal[inicio].idDocumento,'inicio');
-                                  listaInstrucaoPrincipal[inicio].idFirebase = idFirebase;
-                                  adicionarListaMeio(inicio,true);
+                                  if(listaInstrucaoPrincipal[inicio].idFire!=''){
+                                    listaInstrucaoPrincipal[inicio].ativarBotaoAdicionarItemLista = true;
+                                    FirebaseFirestore.instance.collection('documentos').doc(listaInstrucaoPrincipal[inicio].idFire).update({
+                                          'titulo':listaInstrucaoPrincipal[inicio].controller.text
+                                        }).then((value){
+                                      adicionarListaMeio(inicio,false,'','${inicio+1}.1.0','teste meio flutter',false,true);
+                                      setState(() {});
+                                    });
+                                  }else{
+                                    salvarFirebase('documentos',listaInstrucaoPrincipal[inicio].controller.text,listaInstrucaoPrincipal[inicio].idDoc,'inicio').then((value){
+                                      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>HomeTela(emailLogado: widget.emailLogado)));
+                                    });
+                                  }
                                 }else{
                                   showSnackBar(context, 'Adicione um texto para avançar', Colors.red);
                                 }
@@ -193,7 +286,6 @@ class _HomeTelaState extends State<HomeTela> {
                                 // physics: NeverScrollableScrollPhysics(),
                                 itemCount: listaInstrucaoPrincipal[inicio].listaMeio.length,
                                 itemBuilder: (context,meio){
-
                                   return Column(
                                     crossAxisAlignment: CrossAxisAlignment.end,
                                     children: [
@@ -202,15 +294,25 @@ class _HomeTelaState extends State<HomeTela> {
                                         ativarBotaoAdicionarItemLista: listaInstrucaoPrincipal[inicio].listaMeio[meio].ativarBotaoAdicionarItemLista,
                                         largura: listaInstrucaoPrincipal[inicio].listaMeio[meio].largura,
                                         escrever: listaInstrucaoPrincipal[inicio].listaMeio[meio].escrever,
-                                        idFirebase: listaInstrucaoPrincipal[inicio].listaMeio[meio].idFirebase,
-                                        idDocumento: listaInstrucaoPrincipal[inicio].listaMeio[meio].idDocumento,
+                                        idFirebase: listaInstrucaoPrincipal[inicio].listaMeio[meio].idFire,
+                                        idDocumento: listaInstrucaoPrincipal[inicio].listaMeio[meio].idDoc,
+                                        emailLogado: widget.emailLogado,
                                         onPressed: ()async{
                                           if(listaInstrucaoPrincipal[inicio].listaMeio[meio].controller.text.isNotEmpty){
-                                            String idFirebase = await obterNovoId('documentos',listaInstrucaoPrincipal[inicio].listaMeio[meio].controller.text,
-                                                listaInstrucaoPrincipal[inicio].listaMeio[meio].idDocumento,'meio');
-
-                                            listaInstrucaoPrincipal[inicio].listaMeio[meio].idFirebase = idFirebase;
-                                            adicionarListaFinal(inicio,meio,true);
+                                            if(listaInstrucaoPrincipal[inicio].listaMeio[meio].idFire!=''){
+                                              listaInstrucaoPrincipal[inicio].listaMeio[meio].ativarBotaoAdicionarItemLista = true;
+                                              listaInstrucaoPrincipal[inicio].alturaListaMeio = listaInstrucaoPrincipal[inicio].alturaListaMeio + alturaItens;
+                                              FirebaseFirestore.instance.collection('documentos').doc(listaInstrucaoPrincipal[inicio].listaMeio[meio].idFire).update({
+                                                'titulo':listaInstrucaoPrincipal[inicio].listaMeio[meio].controller.text
+                                              }).then((value){
+                                                adicionarListaFim(inicio,meio,false,'','${inicio+1}.${meio+1}.1','teste fim flutter',false,true);
+                                              });
+                                            }else{
+                                              await salvarFirebase('documentos',listaInstrucaoPrincipal[inicio].listaMeio[meio].controller.text,
+                                                  listaInstrucaoPrincipal[inicio].listaMeio[meio].idDoc,'meio').then((value){
+                                                Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>HomeTela(emailLogado: widget.emailLogado)));
+                                              });
+                                            }
                                           }else{
                                             showSnackBar(context, 'Adicione um texto para avançar', Colors.red);
                                           }
@@ -229,15 +331,17 @@ class _HomeTelaState extends State<HomeTela> {
                                                 ativarBotaoAdicionarItemLista: listaInstrucaoPrincipal[inicio].listaMeio[meio].listaFinal[fim].checkFinal,
                                                 largura: listaInstrucaoPrincipal[inicio].listaMeio[meio].listaFinal[fim].largura,
                                                 escrever: listaInstrucaoPrincipal[inicio].listaMeio[meio].listaFinal[fim].escrever,
-                                                idFirebase: listaInstrucaoPrincipal[inicio].listaMeio[meio].listaFinal[fim].idFirebase,
-                                                idDocumento: listaInstrucaoPrincipal[inicio].listaMeio[meio].listaFinal[fim].idDocumento,
+                                                idFirebase: listaInstrucaoPrincipal[inicio].listaMeio[meio].listaFinal[fim].idFire,
+                                                idDocumento: listaInstrucaoPrincipal[inicio].listaMeio[meio].listaFinal[fim].idDoc,
+                                                emailLogado: widget.emailLogado,
                                                 onPressed: ()async{
                                                   if(listaInstrucaoPrincipal[inicio].listaMeio[meio].listaFinal[fim].controller.text.isNotEmpty){
                                                     listaInstrucaoPrincipal[inicio].listaMeio[meio].listaFinal[fim].checkFinal = true;
-                                                    String idFirebase = await obterNovoId(
+                                                    await salvarFirebase(
                                                         'documentos',listaInstrucaoPrincipal[inicio].listaMeio[meio].listaFinal[fim].controller.text,
-                                                        listaInstrucaoPrincipal[inicio].listaMeio[meio].listaFinal[fim].idDocumento,'fim');
-                                                    listaInstrucaoPrincipal[inicio].listaMeio[meio].listaFinal[fim].idFirebase = idFirebase;
+                                                        listaInstrucaoPrincipal[inicio].listaMeio[meio].listaFinal[fim].idDoc,'fim').then((value){
+                                                      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>HomeTela(emailLogado: widget.emailLogado)));
+                                                    });
                                                     setState(() {});
                                                   }else{
                                                     showSnackBar(context, 'Adicione um texto para avançar', Colors.red);
