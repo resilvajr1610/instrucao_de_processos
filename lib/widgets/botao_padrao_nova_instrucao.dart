@@ -7,11 +7,15 @@ class BotaoPadraoNovaInstrucao extends StatelessWidget {
   String texto;
   var onPressed;
   double margemVertical;
+  Color corBotao;
+  double largura;
 
   BotaoPadraoNovaInstrucao({
     required this.texto,
     required this.onPressed,
-    this.margemVertical = 45
+    this.margemVertical = 45,
+    this.corBotao = Cores.primaria,
+    this.largura = 80
   });
 
   @override
@@ -19,12 +23,12 @@ class BotaoPadraoNovaInstrucao extends StatelessWidget {
     return TextButton(
         onPressed: onPressed,
         style: TextButton.styleFrom(
-          backgroundColor: Cores.primaria,
+          backgroundColor: corBotao,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(5.0),
           ),
         ),
-        child: TextoPadrao(texto: texto,alinhamentoTexto: TextAlign.center,negrito: FontWeight.bold,tamanhoFonte: 12)
+        child: Container(width: largura,child: TextoPadrao(texto: texto,alinhamentoTexto: TextAlign.center,negrito: FontWeight.bold,tamanhoFonte: 12))
     );
   }
 }

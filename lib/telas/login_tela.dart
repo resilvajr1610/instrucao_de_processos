@@ -16,7 +16,7 @@ class LoginTela extends StatefulWidget {
 
 class _LoginTelaState extends State<LoginTela> {
 
-  var email = TextEditingController(text: 'teste@gmail.com');
+  var email = TextEditingController(text: 'teste123@gmail.com');
   var senha = TextEditingController(text: 'senha123');
   bool obscure = true;
 
