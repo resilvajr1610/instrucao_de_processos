@@ -23,6 +23,7 @@ dev_dependencies:
   firebase_auth: ^4.1.4
   firebase_core: ^2.3.0
   firebase_storage: ^11.0.6
+#  flutter_typeahead: ^5.2.0
   intl:
 
 flutter:
@@ -31,3 +32,5 @@ flutter:
     - family: Nunito
       fonts:
         - asset: assets/fontes/Nunito-Regular.ttf
+  assets:
+    - assets/imagens/

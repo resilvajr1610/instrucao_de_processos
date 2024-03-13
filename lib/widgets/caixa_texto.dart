@@ -20,6 +20,8 @@ class CaixaTexto extends StatelessWidget {
   var onPressedSenha;
   bool mostrarTitulo;
   bool escrever;
+  double margimBottom;
+  bool ativarCaixa;
 
   CaixaTexto({
     required this.controller,
@@ -38,6 +40,8 @@ class CaixaTexto extends StatelessWidget {
     this.mostrarOlho = false,
     this.mostrarTitulo = true,
     this.escrever = true,
+    this.margimBottom = 5,
+    this.ativarCaixa = true,
   }) : inputFormatters = inputFormatters ?? [];
 
   @override
@@ -48,9 +52,9 @@ class CaixaTexto extends StatelessWidget {
         mostrarTitulo?TituloPadrao(title:titulo):Container(),
         Container(
           width: largura,
-          margin: EdgeInsets.only(bottom: 5),
+          margin: EdgeInsets.only(bottom: margimBottom),
           decoration: BoxDecoration(
-            color: corCaixa,
+            color: ativarCaixa?corCaixa:Colors.white,
             borderRadius: BorderRadius.circular(5),
           ),
           child: Row(
@@ -65,6 +69,7 @@ class CaixaTexto extends StatelessWidget {
                   obscureText: this.obscure,
                   controller: this.controller,
                   cursorColor: Cores.primaria,
+                  enabled: ativarCaixa,
                   style: TextStyle(
                     color: Cores.cinzaTexto,
                     fontSize: this.tamanhoFonte,
