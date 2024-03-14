@@ -136,7 +136,8 @@ class _InstrucaoPrimeiraEtapaTelaState extends State<InstrucaoPrimeiraEtapaTela>
             'numeroFIP' : numFIP,
           }).then((value){
             showSnackBar(context, 'Dados salvos com sucesso!', Colors.green);
-            Navigator.push(context, MaterialPageRoute(builder: (context)=>InstrucaoSegundaEtapaTela(emailLogado: widget.emailLogado,nomeProcesso: nomeProcesso.text,FIP: numFIP,)));
+            Navigator.push(context, MaterialPageRoute(builder: (context)=>
+                InstrucaoSegundaEtapaTela(emailLogado: widget.emailLogado,nomeProcesso: nomeProcesso.text,FIP: numFIP,idEsp: docRef.id,etapaCriada: false,)));
           });
         });
     }else{
@@ -145,8 +146,12 @@ class _InstrucaoPrimeiraEtapaTelaState extends State<InstrucaoPrimeiraEtapaTela>
   }
 
   editarInstrucao() {
-    showSnackBar(context, 'Dados salvos com sucesso!', Colors.green);
-    Navigator.push(context, MaterialPageRoute(builder: (context)=>InstrucaoSegundaEtapaTela(emailLogado: widget.emailLogado,nomeProcesso: nomeProcesso.text,FIP: numFIP,)));
+    // showSnackBar(context, 'Dados salvos com sucesso!', Colors.green);
+
+    FirebaseFirestore.instance.collection('especificacao').doc(widget.idEsp).get().then((doc){
+      Navigator.push(context, MaterialPageRoute(builder: (context)=>
+          InstrucaoSegundaEtapaTela(emailLogado: widget.emailLogado,nomeProcesso: nomeProcesso.text,FIP: numFIP,idEsp: widget.idEsp,etapaCriada: BadStateString(doc,'etapa')!=''?true:false)));
+    });
   }
 
   buscarListaEPI(){

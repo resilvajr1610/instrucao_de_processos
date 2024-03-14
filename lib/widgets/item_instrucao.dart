@@ -51,7 +51,7 @@ class ItemInstrucao extends StatelessWidget {
                   TextoPadrao(texto: idDocumento,cor: Cores.cinzaTexto,),
                   CaixaTexto(controller: controller, largura: largura,textoCaixa: 'Inserir',corCaixa: Cores.cinzaClaro,corBorda: Cores.cinzaClaro,mostrarTitulo: false,escrever: escrever,),
                   Spacer(),
-                  ativarBotaoAdicionarItemLista?BotaoPadraoNovaInstrucao(
+                  ativarBotaoAdicionarItemLista && idEsp=='' && nomeProcesso==''?BotaoPadraoNovaInstrucao(
                     texto: 'Criar Instrução',
                     onPressed: ()=>
                     controller.text.isNotEmpty?

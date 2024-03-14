@@ -1,23 +1,34 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:instrucao_de_processos/modelos/modelo_etapa.dart';
+import 'package:instrucao_de_processos/modelos/modelo_analise.dart';
+import 'package:instrucao_de_processos/telas/instrucao_terceira_etapa_tela.dart';
 import 'package:instrucao_de_processos/widgets/item_etapa.dart';
 import 'package:instrucao_de_processos/widgets/snackBars.dart';
 import '../utilidades/cores.dart';
 import '../utilidades/variavel_estatica.dart';
 import '../widgets/appbar_padrao.dart';
+import '../widgets/botao_padrao_nova_instrucao.dart';
 import '../widgets/caixa_texto.dart';
+import '../widgets/item_analise.dart';
 import '../widgets/nivel_etapa.dart';
 import '../widgets/texto_padrao.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class InstrucaoSegundaEtapaTela extends StatefulWidget {
   String emailLogado;
   String nomeProcesso;
   int FIP;
+  String idEsp;
+  bool etapaCriada;
 
   InstrucaoSegundaEtapaTela({
     required this.emailLogado,
     required this.nomeProcesso,
     required this.FIP,
+    required this.idEsp,
+    required this.etapaCriada,
   });
 
   @override
@@ -26,18 +37,177 @@ class InstrucaoSegundaEtapaTela extends StatefulWidget {
 
 class _InstrucaoSegundaEtapaTelaState extends State<InstrucaoSegundaEtapaTela> {
   bool carregando = false;
+  var observacoes = TextEditingController();
+  var alteracao = TextEditingController();
 
-  bool adicionarChaveRazao = false;
-  bool etapaAtiva = false;
-  bool mostrarListaImagens = false;
-  bool analiseAtiva = false;
+  List  <ModeloEtapa> listaEtapas = [];
 
-  String imagemSelecionada = '';
+  double alturaMostrarIcones = 0;
 
-  var nomeEtapa = TextEditingController();
-  var nomeAnalise = TextEditingController();
-  var tempoAnalise = TextEditingController();
-  var pontoChave = TextEditingController();
+  double alturaGeral = 150;
+  double estenderItem = 40;
+
+  iniciarEtapa(bool iniciar, int i){
+
+    if(!iniciar){
+      listaEtapas[i].adicionaNovo = 1;
+    }
+
+    listaEtapas.add(
+        ModeloEtapa(
+            idEsp: widget.idEsp,
+            nomeProcesso: widget.nomeProcesso,
+            numeroFIP: widget.FIP,
+            numeroEtapa: listaEtapas.length +1,
+            nomeEtapa: TextEditingController(),
+            tempoTotalEtapaSegundos: 0,
+            tempoTotalEtapaMinutos: '0:00',
+            etapaAtiva: false,
+            listaAnalise: [
+              ModeloAnalise(
+                analiseAtiva: false,
+                etapaAtiva: false,
+                imagemSelecionada: '',
+                numeroAnalise: i!=0?i*10:10,
+                nomeAnalise: TextEditingController(),
+                tempoAnalise: TextEditingController(),
+                pontoChave: TextEditingController(),
+                mostrarListaImagens: false,
+                listaCompleta: false
+              )
+            ],
+            aumentarAlturaContainer: false,
+            adicionarChaveRazao: false,
+            ativarCaixaEtapa: false,
+            adicionaNovo: 0
+        )
+    );
+  }
+
+  carregarEtapa() {
+    FirebaseFirestore.instance
+        .collection('etapas')
+        .doc(widget.idEsp)
+        .get()
+        .then((etapasDoc) {
+      List<dynamic> listaMapEtapa = etapasDoc['listaEtapa'];
+
+      for (int i = 0; i < listaMapEtapa.length; i++) {
+        List<dynamic> listaMapAnalise = listaMapEtapa[i]['listaAnalise'];
+        List<ModeloAnalise> listaAnalise = [];
+
+        for (int j = 0; j < listaMapAnalise.length; j++) {
+          listaAnalise.add(
+              ModeloAnalise(
+                  analiseAtiva: true,
+                  etapaAtiva: true,
+                  imagemSelecionada: listaMapAnalise[j]['imagemSelecionada'],
+                  numeroAnalise: listaMapAnalise[j]['numeroAnalise'],
+                  nomeAnalise: TextEditingController(text: listaMapAnalise[j]['nomeAnalise']),
+                  tempoAnalise: TextEditingController(text: listaMapAnalise[j]['tempoAnalise']),
+                  pontoChave: TextEditingController(text: listaMapAnalise[j]['pontoChave']),
+                  mostrarListaImagens: false,
+                  listaCompleta: true
+              )
+          );
+        }
+
+        listaEtapas.add(
+            ModeloEtapa(
+                idEsp: widget.idEsp,
+                nomeProcesso: widget.nomeProcesso,
+                numeroFIP: widget.FIP,
+                numeroEtapa: listaMapEtapa[i]['numeroEtapa'],
+                nomeEtapa: TextEditingController(text: listaMapEtapa[i]['nomeEtapa']),
+                tempoTotalEtapaSegundos: listaMapEtapa[i]['tempoTotalEtapaSegundos'],
+                tempoTotalEtapaMinutos: listaMapEtapa[i]['tempoTotalEtapaMinutos'],
+                etapaAtiva: true,
+                listaAnalise: listaAnalise,
+                aumentarAlturaContainer: false,
+                adicionarChaveRazao: true,
+                ativarCaixaEtapa: false,
+                adicionaNovo: 1
+            )
+        );
+      }
+      observacoes.text = etapasDoc['observacoes'];
+      alteracao.text = etapasDoc['alteracao'];
+      iniciarEtapa(false,0);
+      setState(() {});
+    });
+  }
+
+
+
+  editarEtapa() {
+    showSnackBar(context, 'Etapas foram salvas', Colors.green);
+    Navigator.of(context).push(MaterialPageRoute(builder: (context)=>InstrucaoTerceiraEtapaTela(emailLogado: widget.emailLogado,idEtapa: widget.idEsp,)));
+  }
+
+  salvarEtapa() {
+
+    if(observacoes.text.isNotEmpty && alteracao.text.isNotEmpty && listaEtapas[0].adicionaNovo!=0){
+
+      List <Map> listaMapEtapa = [];
+
+      for(int i = 0; listaEtapas.length > i; i++){
+        List <Map> listaMapAnalise = [];
+        for(int j = 0; listaEtapas[i].listaAnalise.length > j; j++){
+          if(listaEtapas[i].listaAnalise[j].nomeAnalise.text.isNotEmpty){
+            listaMapAnalise.add({
+              'j':j,
+              'imagemSelecionada' : listaEtapas[i].listaAnalise[j].imagemSelecionada,
+              'numeroAnalise' : listaEtapas[i].listaAnalise[j].numeroAnalise,
+              'nomeAnalise' : listaEtapas[i].listaAnalise[j].nomeAnalise.text.trim().toUpperCase(),
+              'tempoAnalise' : listaEtapas[i].listaAnalise[j].tempoAnalise.text,
+              'pontoChave' : listaEtapas[i].listaAnalise[j].pontoChave.text.trim().toUpperCase(),
+            });
+          }
+        }
+        if(listaEtapas[i].nomeEtapa.text.isNotEmpty){
+          listaMapEtapa.add({
+            'i':i,
+            'nomeProcesso': listaEtapas[i].nomeProcesso,
+            'numeroFIP': listaEtapas[i].numeroFIP,
+            'numeroEtapa': listaEtapas[i].numeroEtapa,
+            'nomeEtapa': listaEtapas[i].nomeEtapa.text.trim().toUpperCase(),
+            'tempoTotalEtapaSegundos': listaEtapas[i].tempoTotalEtapaSegundos,
+            'tempoTotalEtapaMinutos': listaEtapas[i].tempoTotalEtapaMinutos,
+            'listaAnalise': listaMapAnalise,
+          });
+        }
+      }
+
+      FirebaseFirestore.instance.collection('etapas').doc(widget.idEsp).set({
+        'idEsp'       : widget.idEsp,
+        'listaEtapa'  : listaMapEtapa,
+        'observacoes' : observacoes.text,
+        'alteracao'   : alteracao.text,
+        'idUsuario'   : FirebaseAuth.instance.currentUser!.uid,
+        'idEmail'     : FirebaseAuth.instance.currentUser!.email,
+        'dataCriacao' : DateTime.now(),
+      },SetOptions(merge: true)).then((value){
+        FirebaseFirestore.instance.collection('especificacao').doc(widget.idEsp).update({
+          'etapa' : 'criada'
+        }).then((value){
+          showSnackBar(context, 'Etapas foram salvas', Colors.green);
+          Navigator.of(context).push(MaterialPageRoute(builder: (context)=>InstrucaoTerceiraEtapaTela(emailLogado: widget.emailLogado,idEtapa: widget.idEsp,)));
+        });
+      });
+    }else{
+      showSnackBar(context, 'Insira ao menos uma etapa e uma análise para avançar', Colors.red);
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    if(widget.etapaCriada){
+      carregarEtapa();
+    }else{
+      iniciarEtapa(true,0);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -81,250 +251,177 @@ class _InstrucaoSegundaEtapaTelaState extends State<InstrucaoSegundaEtapaTela> {
                         ],
                       ),
                     ),
-                    // Container(
-                    //   width: 1200,
-                    //   height: mostrarListaImagens?620:adicionarChaveRazao?300:120,
-                    //   padding: EdgeInsets.all(20),
-                    //   decoration: BoxDecoration(
-                    //     color: Colors.white,
-                    //     borderRadius: BorderRadius.circular(10),
-                    //     boxShadow: [
-                    //       BoxShadow(
-                    //         color: Colors.grey.withOpacity(0.5),
-                    //         spreadRadius: 2, // Define o raio de propagação da sombra
-                    //         blurRadius: 3, // Define o raio de desfoque da sombra
-                    //         offset: Offset(0, 3), // Define o deslocamento da sombra
-                    //       ),
-                    //     ],
-                    //   ),
-                    //   child: Column(
-                    //     crossAxisAlignment: CrossAxisAlignment.start,
-                    //     children: [
-                    //       TextoPadrao(texto:'Etapa 1',cor: Cores.primaria,negrito: FontWeight.bold,tamanhoFonte: 14,),
-                    //       Row(
-                    //         crossAxisAlignment: CrossAxisAlignment.center,
-                    //         children: [
-                    //           TextoPadrao(texto:'Nome da Etapa',cor: Cores.primaria,tamanhoFonte: 14,),
-                    //           SizedBox(width: 5,),
-                    //           CaixaTexto(
-                    //             mostrarTitulo: false,
-                    //             textoCaixa: 'Inserir nome da etapa',
-                    //             titulo: '',
-                    //             controller: nomeEtapa,
-                    //             largura: 420,
-                    //             corCaixa: Cores.cinzaClaro,
-                    //             ativarCaixa: !etapaAtiva,
-                    //           ),
-                    //           SizedBox(width: 20,),
-                    //           TextoPadrao(texto:'Tempo total da etapa',cor: Cores.primaria,tamanhoFonte: 14,),
-                    //           SizedBox(width: 10,),
-                    //           TextoPadrao(texto:'0 min',cor: Cores.cinzaTextoEscuro,tamanhoFonte: 14,),
-                    //           Spacer(),
-                    //           IconButton(
-                    //             icon: adicionarChaveRazao
-                    //                 ?Icon(Icons.arrow_drop_down,color: Cores.cinzaTextoEscuro,size: 30,)
-                    //                 :etapaAtiva?Icon(Icons.arrow_right,color: Cores.cinzaTextoEscuro,size: 30,):Icon(Icons.add_box,color: Cores.primaria,),
-                    //             onPressed: (){
-                    //               if(nomeEtapa.text.isNotEmpty){
-                    //                 adicionarChaveRazao = adicionarChaveRazao?false:true;
-                    //                 if(!etapaAtiva){
-                    //                   etapaAtiva = true;
-                    //                 }
-                    //                 setState(() {});
-                    //               }else{
-                    //                 showSnackBar(context, 'Adicionar um texto para avançar', Colors.red);
-                    //               }
-                    //             },
-                    //           )
-                    //         ],
-                    //       ),
-                    //       adicionarChaveRazao?Column(
-                    //         crossAxisAlignment: CrossAxisAlignment.start,
-                    //        children: [
-                    //          Row(
-                    //            children: [
-                    //              Container(
-                    //                width: 100,
-                    //                child: TextoPadrao(texto:'Característica',cor: Cores.primaria,tamanhoFonte: 14,)
-                    //              ),
-                    //              Container(
-                    //                width: 50,
-                    //                child: TextoPadrao(texto:'Análise',cor: Cores.primaria,tamanhoFonte: 14,)
-                    //              ),
-                    //              SizedBox(width: 10,),
-                    //              Container(
-                    //                width: 100,
-                    //                child: TextoPadrao(texto:'Imagem/Vídeo',cor: Cores.primaria,tamanhoFonte: 14,)
-                    //              ),
-                    //              Container(
-                    //                width: 400,
-                    //                child: TextoPadrao(texto:'Análise da Operação',cor: Cores.primaria,tamanhoFonte: 14,)
-                    //              ),
-                    //              SizedBox(width: 10,),
-                    //              Container(
-                    //                 width: 130,
-                    //                 child: TextoPadrao(texto:'Tempo (segundos)',cor: Cores.primaria,tamanhoFonte: 14,)
-                    //              ),
-                    //              SizedBox(width: 10,),
-                    //              TextoPadrao(texto:'Ponto Chave/Razão',cor: Cores.primaria,tamanhoFonte: 14,),
-                    //            ],
-                    //          ),
-                    //          Divider(),
-                    //          Row(
-                    //            crossAxisAlignment: CrossAxisAlignment.start,
-                    //            children: [
-                    //              Container(
-                    //                width: 100,
-                    //                height: mostrarListaImagens?450:60,
-                    //                child: mostrarListaImagens?ListView.builder(
-                    //                  itemCount: VariavelEstatica.listaImagens.length,
-                    //                  itemBuilder: (context, i){
-                    //                    return GestureDetector(
-                    //                      onTap: (){
-                    //                        imagemSelecionada = VariavelEstatica.listaImagens[i];
-                    //                        mostrarListaImagens = false;
-                    //                        setState(() {});
-                    //                      },
-                    //                      child: Container(
-                    //                          padding: EdgeInsets.all(5),
-                    //                          width: 50,
-                    //                          height: 50,
-                    //                          child: Image.asset(VariavelEstatica.listaImagens[i])
-                    //                      ),
-                    //                    );
-                    //                  },
-                    //                ):GestureDetector(
-                    //                  onTap: analiseAtiva?null:()=>setState(()=>mostrarListaImagens=true),
-                    //                  child: Container(
-                    //                    width: 30,
-                    //                    height: 30,
-                    //                    child: imagemSelecionada==''?Container(
-                    //                      margin: EdgeInsets.symmetric(vertical: 10,horizontal: 20),
-                    //                      width: 20,
-                    //                      height: 20,
-                    //                      decoration: BoxDecoration(
-                    //                        color: Cores.cinzaClaro,
-                    //                        borderRadius: BorderRadius.circular(10),
-                    //                      ),
-                    //                      child: Row(
-                    //                        mainAxisSize: MainAxisSize.min,
-                    //                        mainAxisAlignment: MainAxisAlignment.center,
-                    //                        children: [
-                    //                          TextoPadrao(texto: '-',cor: Cores.cinzaTextoEscuro,),
-                    //                          Icon(Icons.arrow_drop_down,size: 20,color: Cores.cinzaTextoEscuro,)
-                    //                        ],
-                    //                      ),
-                    //                    ):GestureDetector(
-                    //                      onTap: analiseAtiva?null:()=>setState(()=>mostrarListaImagens=true),
-                    //                      child: Container(
-                    //                          padding: EdgeInsets.all(5),
-                    //                          width: 50,
-                    //                          height: 50,
-                    //                          child: Image.asset(imagemSelecionada)
-                    //                      ),
-                    //                    ),
-                    //                  ),
-                    //                ),
-                    //              ),
-                    //              Container(
-                    //                width: 50,
-                    //                child: TextoPadrao(texto:'10',cor: Cores.primaria,tamanhoFonte: 14,alinhamentoTexto: TextAlign.center,)
-                    //              ),
-                    //              Container(
-                    //                 width: 100,
-                    //                 child: IconButton(
-                    //                   icon: Icon(Icons.add_photo_alternate_outlined,color: Cores.cinzaTexto,),
-                    //                   onPressed: analiseAtiva?null:(){},
-                    //                 ),
-                    //              ),
-                    //              SizedBox(width: 10,),
-                    //              CaixaTexto(
-                    //                mostrarTitulo: false,
-                    //                textoCaixa: 'Inserir nova análise',
-                    //                titulo: '',
-                    //                controller: nomeAnalise,
-                    //                largura: 400,
-                    //                corCaixa: Cores.cinzaClaro,
-                    //                ativarCaixa: !analiseAtiva,
-                    //              ),
-                    //              SizedBox(width: 10,),
-                    //              CaixaTexto(
-                    //                mostrarTitulo: false,
-                    //                textoCaixa: 'Inserir tempo',
-                    //                titulo: '',
-                    //                controller: tempoAnalise,
-                    //                largura: 130,
-                    //                corCaixa: Cores.cinzaClaro,
-                    //                ativarCaixa: !analiseAtiva,
-                    //                textInputType: TextInputType.number,
-                    //                inputFormatters: [
-                    //                  FilteringTextInputFormatter.digitsOnly
-                    //                ],
-                    //              ),
-                    //              SizedBox(width: 10,),
-                    //              CaixaTexto(
-                    //                mostrarTitulo: false,
-                    //                textoCaixa: 'Inserir ponto chave',
-                    //                titulo: '',
-                    //                controller: pontoChave,
-                    //                largura: 350,
-                    //                corCaixa: Cores.cinzaClaro,
-                    //                ativarCaixa: !analiseAtiva,
-                    //              ),
-                    //              Spacer(),
-                    //              IconButton(
-                    //                icon: !analiseAtiva?Icon(Icons.add_box,color: Cores.primaria,):Icon(Icons.clear,color: Colors.red,),
-                    //                onPressed: ()=>setState(()=>analiseAtiva=analiseAtiva?false:true),
-                    //              )
-                    //            ],
-                    //          )
-                    //        ],
-                    //      ):Container(),
-                    //     ],
-                    //   ),
-                    // ),
-                    ItemEtapa(
-                        mostrarListaImagens: mostrarListaImagens,
-                        adicionarChaveRazao: adicionarChaveRazao,
-                        numeroEtapa: 1,
-                        nomeEtapa: nomeEtapa,
-                        etapaAtiva: etapaAtiva,
-                        analiseAtiva: analiseAtiva,
-                        imagemSelecionada: imagemSelecionada,
-                        nomeAnalise: nomeAnalise,
-                        tempoAnalise: tempoAnalise,
-                        pontoChave: pontoChave,
-                        botaoAtivaEtapa: (){
-                            if(nomeEtapa.text.isNotEmpty){
-                              adicionarChaveRazao = adicionarChaveRazao?false:true;
-                              if(!etapaAtiva){
-                                etapaAtiva = true;
-                              }
-                              setState(() {});
-                            }else{
-                              showSnackBar(context, 'Adicionar um texto para avançar', Colors.red);
-                            }
-                        },
-                        botaoMostrarListaImagem:  analiseAtiva?null:()=>setState(()=>mostrarListaImagens=true),
-                        botaoSalvarNovaAnalise: ()=>setState(()=>analiseAtiva=analiseAtiva?false:true),
-                        listView: ListView.builder(
-                          itemCount: VariavelEstatica.listaImagens.length,
-                          itemBuilder: (context, i){
-                            return GestureDetector(
-                              onTap: (){
-                                imagemSelecionada = VariavelEstatica.listaImagens[i];
-                                mostrarListaImagens = false;
-                                setState(() {});
-                              },
-                              child: Container(
-                                  padding: EdgeInsets.all(5),
-                                  width: 50,
-                                  height: 50,
-                                  child: Image.asset(VariavelEstatica.listaImagens[i])
+                    Container(
+                      height: (alturaGeral*listaEtapas.length)+alturaMostrarIcones,
+                      child: ListView.builder(
+                          itemCount: listaEtapas.length,
+                          itemBuilder: (context,i){
+                            return ItemEtapa(
+                                modeloEtapa: listaEtapas[i],
+                                botaoAtivaEtapa: (){
+                                  if(listaEtapas[i].nomeEtapa.text.isNotEmpty){
+                                    listaEtapas[i].adicionarChaveRazao = listaEtapas[i].adicionarChaveRazao?false:true;
+                                    if(listaEtapas[i].adicionarChaveRazao){
+                                      alturaMostrarIcones = alturaMostrarIcones + 60;
+                                      print('add geral');
+                                      print(alturaGeral);
+                                      print('add icones');
+                                      print(alturaMostrarIcones);
+
+                                    }else{
+                                      if(listaEtapas[i].listaAnalise.length!=1){
+                                        alturaMostrarIcones = alturaMostrarIcones - 60;
+                                      }
+                                      print('menos geral');
+                                      print(alturaGeral);
+                                      print('menos icones');
+                                      print(alturaMostrarIcones);
+                                    }
+
+                                    if(!listaEtapas[i].ativarCaixaEtapa){
+                                      listaEtapas[i].ativarCaixaEtapa = true;
+                                      listaEtapas[i].listaAnalise[0].analiseAtiva = true;
+                                    }
+                                    setState(() {});
+                                  }else{
+                                    showSnackBar(context, 'Adicionar um texto para avançar', Colors.red);
+                                  }
+                                },
+                              listViewAnalise: Container(
+                                height: listaEtapas[i].listaAnalise.length*60+alturaMostrarIcones,
+                                child: ListView.builder(
+                                    itemCount: listaEtapas[i].listaAnalise.length,
+                                    itemBuilder: (context, j){
+                                      return Container(
+                                        height: 60,
+                                        child: ItemAnalise(
+                                            modeloAnalise: listaEtapas[i].listaAnalise[j],
+                                            botaoMostrarListaImagem:  ()=>setState((){
+                                              listaEtapas[i].listaAnalise[j].mostrarListaImagens=true;
+                                              alturaMostrarIcones = 100;
+                                            }),
+                                            botaoSalvarNovaAnalise: (){
+                                              if(!listaEtapas[i].listaAnalise[j].listaCompleta){
+                                                if(listaEtapas[i].listaAnalise[j].nomeAnalise.text.isNotEmpty
+                                                    && listaEtapas[i].listaAnalise[j].tempoAnalise.text.isNotEmpty
+                                                    && listaEtapas[i].listaAnalise[j].pontoChave.text.isNotEmpty
+                                                ){
+                                                  if(listaEtapas[i].listaAnalise[j].analiseAtiva){
+                                                    listaEtapas[i].tempoTotalEtapaSegundos = int.parse(listaEtapas[i].listaAnalise[j].tempoAnalise.text.trim()) + listaEtapas[i].tempoTotalEtapaSegundos;
+                                                    listaEtapas[i].listaAnalise[j].listaCompleta = true;
+
+                                                    print('verifica adicionar ${listaEtapas[i].adicionaNovo}');
+                                                      if(listaEtapas[i].adicionaNovo==0){
+                                                        print('novo adicionado ${i}');
+                                                        print(listaEtapas[i].adicionaNovo);
+                                                        iniciarEtapa(false, i);
+                                                      }
+
+                                                    listaEtapas[i].listaAnalise.add(
+                                                        ModeloAnalise(
+                                                            etapaAtiva: true,
+                                                            imagemSelecionada: '',
+                                                            numeroAnalise: listaEtapas[i].listaAnalise[j].numeroAnalise+10,
+                                                            nomeAnalise: TextEditingController(),
+                                                            tempoAnalise: TextEditingController(),
+                                                            pontoChave: TextEditingController(),
+                                                            mostrarListaImagens: false,
+                                                            analiseAtiva: true,
+                                                            listaCompleta: false
+                                                        )
+                                                    );
+                                                    int minutos = listaEtapas[i].tempoTotalEtapaSegundos ~/60;
+                                                    double segundos = listaEtapas[i].tempoTotalEtapaSegundos % 60;
+                                                    listaEtapas[i].tempoTotalEtapaMinutos = '${minutos>9?'':'0'}${minutos}:${segundos>9?'':'0'}$segundos';
+
+                                                    setState(()=>listaEtapas[i].listaAnalise[j].analiseAtiva=listaEtapas[i].listaAnalise[j].analiseAtiva?false:true);
+                                                  }
+                                                }else{
+                                                  setState(()=>listaEtapas[i].listaAnalise[j].analiseAtiva=false);
+                                                  showSnackBar(context, 'preencha todas as informações para avançar', Colors.red);
+                                                }
+                                              }else{
+                                                listaEtapas[i].tempoTotalEtapaSegundos = listaEtapas[i].tempoTotalEtapaSegundos - int.parse(listaEtapas[i].listaAnalise[j].tempoAnalise.text.trim());
+                                                int minutos = listaEtapas[i].tempoTotalEtapaSegundos ~/60;
+                                                double segundos = listaEtapas[i].tempoTotalEtapaSegundos % 60;
+                                                listaEtapas[i].tempoTotalEtapaMinutos = '${minutos>9?'':'0'}${minutos}:${segundos>9?'':'0'}$segundos';
+
+                                                listaEtapas[i].listaAnalise.removeAt(j);
+                                                if(listaEtapas[i].listaAnalise.length!=1){
+                                                  alturaMostrarIcones = alturaMostrarIcones-60;
+                                                }
+
+                                                setState(() {});
+                                              }
+                                            },
+                                            listViewImagens: ListView.builder(
+                                              itemCount: VariavelEstatica.listaImagens.length,
+                                              itemBuilder: (context, k){
+                                                return GestureDetector(
+                                                  onTap: (){
+                                                    listaEtapas[i].listaAnalise[j].imagemSelecionada = VariavelEstatica.listaImagens[k];
+                                                    listaEtapas[i].listaAnalise[j].mostrarListaImagens=false;
+                                                    listaEtapas[i].aumentarAlturaContainer = false;
+                                                    alturaMostrarIcones = 0;
+                                                    setState(() {});
+                                                  },
+                                                  child: Container(
+                                                      padding: EdgeInsets.all(5),
+                                                      width: 50,
+                                                      height: 50,
+                                                      child: Image.asset(VariavelEstatica.listaImagens[k])
+                                                  ),
+                                                );
+                                              },
+                                            )
+                                        ),
+                                      );
+                                    }
+                                ),
                               ),
                             );
-                          },
+                          }
+                      ),
+                    ),
+                    SizedBox(height: 25,),
+                    TextoPadrao(texto:'Observações Gerais/O que é proibido e porque?',cor: Cores.primaria,negrito: FontWeight.bold,tamanhoFonte: 14,),
+                    CaixaTexto(
+                      mostrarTitulo: false,
+                      textoCaixa: 'Informar observações',
+                      titulo: '',
+                      controller: observacoes,
+                      largura: 950,
+                      corCaixa: Cores.cinzaClaro,
+                    ),
+                    TextoPadrao(texto:'Motivo da alteração',cor: Cores.primaria,negrito: FontWeight.bold,tamanhoFonte: 14,),
+                    CaixaTexto(
+                      mostrarTitulo: false,
+                      textoCaixa: 'Informe o que alterou',
+                      titulo: '',
+                      controller: alteracao,
+                      largura: 950,
+                      corCaixa: Cores.cinzaClaro,
+                    ),
+                    SizedBox(height: VariavelEstatica.altura*0.1,),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        BotaoPadraoNovaInstrucao(
+                          texto: 'Voltar',
+                          largura: 150,
+                          margemVertical: 5,
+                          corBotao: Colors.black,
+                          onPressed: ()=>Navigator.pop(context),
                         ),
+                        SizedBox(width: 10,),
+                        BotaoPadraoNovaInstrucao(
+                          texto: 'Avançar',
+                          largura: 150,
+                          margemVertical: 5,
+                          onPressed: ()=>widget.etapaCriada?editarEtapa():salvarEtapa(),
+                        ),
+                        SizedBox(width: VariavelEstatica.largura*0.025,),
+                      ],
                     )
                   ],
                 ),
