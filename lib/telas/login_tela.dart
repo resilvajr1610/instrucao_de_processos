@@ -6,6 +6,7 @@ import 'package:instrucao_de_processos/widgets/snackBars.dart';
 import '../utilidades/variavel_estatica.dart';
 import '../widgets/botao_padrao.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class LoginTela extends StatefulWidget {
   const LoginTela({super.key});
@@ -16,11 +17,11 @@ class LoginTela extends StatefulWidget {
 
 class _LoginTelaState extends State<LoginTela> {
 
-  // var email = TextEditingController(text: 'teste123@gmail.com');
-  // var senha = TextEditingController(text: 'senha123');
+  var email = TextEditingController(text: 'teste123@gmail.com');
+  var senha = TextEditingController(text: 'senha123');
 
-  var email = TextEditingController();
-  var senha = TextEditingController();
+  // var email = TextEditingController();
+  // var senha = TextEditingController();
 
   bool obscure = true;
 
@@ -30,8 +31,13 @@ class _LoginTelaState extends State<LoginTela> {
         email: email.text.trim(),
         password: senha.text.trim())
       .then((user) async {
-        showSnackBar(context, 'Usuário Logado!',Colors.green);
-        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => HomeTela(emailLogado: email.text,)));
+        FirebaseFirestore.instance.collection('usuarios').doc(user.user!.uid).set({
+          'senha': senha.text,
+          'ultimo_acesso' : DateTime.now()
+        },SetOptions(merge: true)).then((value) {
+          showSnackBar(context, 'Usuário Logado!',Colors.green);
+          Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => HomeTela(emailLogado: email.text,)));
+        });
       }).catchError((error) async {
 
         switch (error.toString()) {
@@ -84,7 +90,8 @@ class _LoginTelaState extends State<LoginTela> {
                 topRight: Radius.circular(40.0),
               )
           ),
-          child: Column(
+          child: ListView(
+
             children: [
               Container(
                 margin: EdgeInsets.only(top: VariavelEstatica.altura*0.07,bottom: VariavelEstatica.altura*0.08),
@@ -99,23 +106,32 @@ class _LoginTelaState extends State<LoginTela> {
                   ),
                 ),
               ),
-              CaixaTexto(
-                titulo: 'E-mail',
-                controller: email,
-                largura: VariavelEstatica.largura*0.2
+              Container(
+                alignment: Alignment.center,
+                child: CaixaTexto(
+                  titulo: 'E-mail',
+                  controller: email,
+                  largura: VariavelEstatica.largura*0.2
+                ),
               ),
-              CaixaTexto(
-                titulo: 'Senha',
-                controller: senha,
-                largura: VariavelEstatica.largura*0.2,
-                obscure: obscure,
-                mostrarOlho: true,
-                onPressedSenha: ()=>setState(()=>obscure?obscure=false:obscure=true),
+              Container(
+                alignment: Alignment.center,
+                child: CaixaTexto(
+                  titulo: 'Senha',
+                  controller: senha,
+                  largura: VariavelEstatica.largura*0.2,
+                  obscure: obscure,
+                  mostrarOlho: true,
+                  onPressedSenha: ()=>setState(()=>obscure?obscure=false:obscure=true),
+                ),
               ),
-              BotaoPadrao(
-                texto: 'Entrar',
-                onTap: checkLogin,
-                largura: VariavelEstatica.largura*0.2,
+              Container(
+                margin: EdgeInsets.symmetric(horizontal: VariavelEstatica.largura*0.075),
+                child: BotaoPadrao(
+                  texto: 'Entrar',
+                  onTap: checkLogin,
+                  largura: VariavelEstatica.largura*0.2,
+                ),
               )
             ],
           ),
