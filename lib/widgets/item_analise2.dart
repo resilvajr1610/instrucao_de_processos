@@ -1,18 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:instrucao_de_processos/modelos/modelo_analise.dart';
+import 'package:instrucao_de_processos/modelos/modelo_analise2.dart';
 import 'package:instrucao_de_processos/widgets/texto_padrao.dart';
 import '../utilidades/cores.dart';
 import 'caixa_texto.dart';
 
-class ItemAnalise extends StatelessWidget {
+class ItemAnalise2 extends StatelessWidget {
 
-  ModeloAnalise modeloAnalise;
+  ModeloAnalise2 modeloAnalise;
   var botaoSalvarNovaAnalise;
   var botaoMostrarListaImagem;
   Widget listViewImagens;
 
-  ItemAnalise({
+  ItemAnalise2({
     required this.modeloAnalise,
     required this.botaoSalvarNovaAnalise,
     required this.listViewImagens,

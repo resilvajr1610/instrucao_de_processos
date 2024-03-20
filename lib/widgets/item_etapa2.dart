@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:instrucao_de_processos/modelos/modelo_etapa.dart';
+import 'package:instrucao_de_processos/modelos/modelo_etapa2.dart';
 import 'package:instrucao_de_processos/widgets/texto_padrao.dart';
 import '../utilidades/cores.dart';
 import 'caixa_texto.dart';
 
-class ItemEtapa extends StatelessWidget {
+class ItemEtapa2 extends StatelessWidget {
 
-  ModeloEtapa modeloEtapa;
+  ModeloEtapa2 modeloEtapa;
   var botaoAtivaEtapa;
   Widget listViewAnalise;
 
-  ItemEtapa({
+  ItemEtapa2({
     required this.modeloEtapa,
     required this.botaoAtivaEtapa,
     required this.listViewAnalise,
@@ -63,8 +63,10 @@ class ItemEtapa extends StatelessWidget {
                 Spacer(),
                 IconButton(
                   icon: modeloEtapa.adicionarChaveRazao
-                      ?Icon(Icons.arrow_drop_down,color: Cores.cinzaTextoEscuro,size: 30,)
-                      :modeloEtapa.ativarCaixaEtapa?Icon(Icons.arrow_right,color: Cores.cinzaTextoEscuro,size: 30,):Icon(Icons.add_box,color: Cores.primaria,),
+                          ?Icon(Icons.arrow_drop_down,color: Cores.cinzaTextoEscuro,size: 30,)
+                          :modeloEtapa.ativarCaixaEtapa
+                            ?Icon(Icons.arrow_right,color: Cores.cinzaTextoEscuro,size: 30,)
+                            :Icon(Icons.add_box,color: Cores.primaria,),
                   onPressed: botaoAtivaEtapa,
                 )
               ],

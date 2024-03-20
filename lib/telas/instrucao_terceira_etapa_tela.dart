@@ -2,11 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:instrucao_de_processos/modelos/bad_state_int.dart';
 import 'package:instrucao_de_processos/modelos/bad_state_list.dart';
 import 'package:instrucao_de_processos/modelos/bad_state_string.dart';
+import 'package:instrucao_de_processos/modelos/modelo_analise3.dart';
+import 'package:instrucao_de_processos/telas/instrucao_usuario_tela.dart';
+import 'package:instrucao_de_processos/widgets/item_etapa3.dart';
 import 'package:instrucao_de_processos/widgets/item_etapa3_titulo.dart';
 import '../utilidades/cores.dart';
 import '../utilidades/variavel_estatica.dart';
 import '../widgets/appbar_padrao.dart';
-import '../widgets/nivel_etapa.dart';
+import '../widgets/botao_padrao_nova_instrucao.dart';
+import '../widgets/item_etapa3_um_titulo.dart';
+import '../widgets/nivel_etapa2.dart';
 import '../widgets/texto_padrao.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
@@ -26,10 +31,17 @@ class InstrucaoTerceiraEtapaTela extends StatefulWidget {
 class _InstrucaoTerceiraEtapaTelaState extends State<InstrucaoTerceiraEtapaTela> {
   bool carregando = false;
   DocumentSnapshot? dadosEspecificacao;
+  DocumentSnapshot? dadosEtapas;
+  List listaEtapas=[];
 
   carregarDados(){
     FirebaseFirestore.instance.collection('especificacao').doc(widget.idEtapa).get().then((dadosEsp){
       dadosEspecificacao = dadosEsp;
+      setState((){});
+    });
+    FirebaseFirestore.instance.collection('etapas').doc(widget.idEtapa).get().then((dadosEta){
+      dadosEtapas = dadosEta;
+      listaEtapas = BadStateList(dadosEta, 'listaEtapa');
       setState((){});
     });
   }
@@ -57,7 +69,7 @@ class _InstrucaoTerceiraEtapaTelaState extends State<InstrucaoTerceiraEtapaTela>
                   NivelEtapa(nivel: 3),
                   Container(
                     width: VariavelEstatica.largura * 0.8,
-                    height: VariavelEstatica.altura * 0.75,
+                    height: VariavelEstatica.altura * 0.7,
                     margin: EdgeInsets.all(20),
                     padding: EdgeInsets.all(36),
                     alignment: Alignment.topLeft,
@@ -67,7 +79,8 @@ class _InstrucaoTerceiraEtapaTelaState extends State<InstrucaoTerceiraEtapaTela>
                     ),
                     child: Container(
                       width: VariavelEstatica.largura * 0.95,
-                      child: ListView(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Row(
                             children: [
@@ -118,85 +131,30 @@ class _InstrucaoTerceiraEtapaTelaState extends State<InstrucaoTerceiraEtapaTela>
                             ),
                           ),
                           Divider(),
-                          Row(
-                            children: [
-                              Container(
-                                width: VariavelEstatica.largura>1500?VariavelEstatica.largura * 0.45:VariavelEstatica.largura * 0.15,
-                                child: Row(
-                                  children: [
-                                    TextoPadrao(texto: 'EPI Necessário',cor: Cores.primaria,tamanhoFonte: 14,),
-                                    SizedBox(width: 10,),
-                                    TextoPadrao(texto: BadStateList(dadosEspecificacao, 'epi').toString().replaceAll('[', '').replaceAll(']', ''),cor: Cores.cinzaTextoEscuro,tamanhoFonte: 14,),
-                                  ],
-                                ) ,
-                              ),
-                              Container(
-                                width: VariavelEstatica.largura>1500?VariavelEstatica.largura * 0.45:VariavelEstatica.largura * 0.15,
-                                child: Row(
-                                  children: [
-                                    TextoPadrao(texto: 'Máquina',cor: Cores.primaria,tamanhoFonte: 14,),
-                                    SizedBox(width: 10,),
-                                    TextoPadrao(texto: BadStateString(dadosEspecificacao, 'maquina'),cor: Cores.cinzaTextoEscuro,tamanhoFonte: 14,),
-                                  ],
-                                ),
-                              )
-                            ],
+                          ItemEtapa3Titulo(
+                            dadosEspecificacao: dadosEspecificacao,
+                            item1: 'epi',
+                            item2: 'maquina',
+                            titulo1: 'EPI Necessário',
+                            titulo2: 'Máquina',
+                            dadoString1: false,
                           ),
-                          Row(
-                            children: [
-                              TextoPadrao(texto: 'Ferramentas utilizadas',cor: Cores.primaria,tamanhoFonte: 14,),
-                              SizedBox(width: 10,),
-                              TextoPadrao(texto: BadStateList(dadosEspecificacao, 'ferramentas').toString().replaceAll('[', '').replaceAll(']', ''),cor: Cores.cinzaTextoEscuro,tamanhoFonte: 14,),
-                            ],
-                          ),
+                          ItemEtapaUmTitulo(dadosEspecificacao: dadosEspecificacao,item: 'ferramentas',titulo: 'Ferramentas utilizadas'),
                           Divider(),
-                          Row(
-                            children: [
-                              Container(
-                                width: VariavelEstatica.largura>1500?VariavelEstatica.largura * 0.45:VariavelEstatica.largura * 0.15,
-                                child: Row(
-                                  children: [
-                                    TextoPadrao(texto: 'Matéria-prima utilizada',cor: Cores.primaria,tamanhoFonte: 14,),
-                                    SizedBox(width: 10,),
-                                    TextoPadrao(texto: BadStateList(dadosEspecificacao, 'materiaPrima').toString().replaceAll('[', '').replaceAll(']', ''),cor: Cores.cinzaTextoEscuro,tamanhoFonte: 14,),
-                                  ],
-                                ),
-                              ),
-                              Container(
-                                width: VariavelEstatica.largura>1500?VariavelEstatica.largura * 0.45:VariavelEstatica.largura * 0.15,
-                                child: Row(
-                                  children: [
-                                    TextoPadrao(texto: 'Tempo total das etapas',cor: Cores.primaria,tamanhoFonte: 14,),
-                                    SizedBox(width: 10,),
-                                    TextoPadrao(texto: '2.77 min',cor: Cores.cinzaTextoEscuro,tamanhoFonte: 14,),
-                                  ],
-                                ),
-                              ),
-                            ],
+                          ItemEtapa3Titulo(
+                            dadosEspecificacao: dadosEspecificacao,
+                            item1: 'materiaPrima',
+                            item2: 'licenca_qualificacoes',
+                            titulo1: 'Matéria-prima utilizada',
+                            titulo2: 'Tempo total das etapas',
+                            dadoString1: false,
                           ),
-                          Row(
-                            children: [
-                              Container(
-                                width: VariavelEstatica.largura>1500?VariavelEstatica.largura * 0.45:VariavelEstatica.largura * 0.15,
-                                child: Row(
-                                  children: [
-                                    TextoPadrao(texto: 'Especificações',cor: Cores.primaria,tamanhoFonte: 14,),
-                                    SizedBox(width: 10,),
-                                    TextoPadrao(texto: BadStateString(dadosEspecificacao, 'espeficicacao'),cor: Cores.cinzaTextoEscuro,tamanhoFonte: 14,),
-                                  ],
-                                ),
-                              ),
-                              Container(
-                                width: VariavelEstatica.largura>1500?VariavelEstatica.largura * 0.45:VariavelEstatica.largura * 0.15,
-                                child: Row(
-                                  children: [
-                                    TextoPadrao(texto: 'Prazo de aprendizagem',cor: Cores.primaria,tamanhoFonte: 14,),
-                                    SizedBox(width: 10,),
-                                    TextoPadrao(texto: BadStateString(dadosEspecificacao, 'prazo'),cor: Cores.cinzaTextoEscuro,tamanhoFonte: 14,),
-                                  ],
-                                ),
-                              ),
-                            ],
+                          ItemEtapa3Titulo(
+                            dadosEspecificacao: dadosEspecificacao,
+                            item1: 'espeficicacao',
+                            item2: 'prazo',
+                            titulo1: 'Especificações',
+                            titulo2: 'Prazo de aprendizagem',
                           ),
                           ItemEtapa3Titulo(
                               dadosEspecificacao: dadosEspecificacao,
@@ -206,6 +164,154 @@ class _InstrucaoTerceiraEtapaTelaState extends State<InstrucaoTerceiraEtapaTela>
                               titulo2: 'Licenças ou qualificações',
                           ),
                           Divider(),
+                          Container(
+                            height: VariavelEstatica.altura*0.38,
+                            child: SingleChildScrollView(
+                              child: listaEtapas.isEmpty?Container():Container(
+                                height: listaEtapas.length*250+80,
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Container(
+                                      height: listaEtapas.length*200,
+                                      width: VariavelEstatica.largura * 0.7,
+                                      child: ListView.builder(
+                                          itemCount: listaEtapas.length,
+                                          itemBuilder: (context,i){
+
+                                            List aux = listaEtapas[i]['listaAnalise'];
+                                            List<ModeloAnalise3> listaAnalise = [];
+
+                                            for(int j = 0; aux.length > j ; j++){
+                                              listaAnalise.add(
+                                                  ModeloAnalise3(
+                                                      imagemSelecionada: aux[j]['imagemSelecionada'],
+                                                      numeroAnalise: aux[j]['numeroAnalise'],
+                                                      nomeAnalise: aux[j]['nomeAnalise'],
+                                                      tempo: aux[j]['tempoAnalise'],
+                                                      pontoChave: aux[j]['pontoChave']
+                                                  )
+                                              );
+                                            }
+
+                                            return ItemEtapa3(
+                                                numeroEtapa: listaEtapas[i]['numeroEtapa'],
+                                                nomeEtapa: listaEtapas[i]['nomeEtapa'],
+                                                tempoTotalEtapa: listaEtapas[i]['tempoTotalEtapaMinutos'],
+                                                listaAnalise: listaAnalise
+                                            );
+                                          }
+                                      ),
+                                    ),
+                                    TextoPadrao(texto: 'Observações Gerais/ O que é proibido e porque?',cor: Cores.primaria,negrito: FontWeight.bold,tamanhoFonte: 16,),
+                                    TextoPadrao(texto: BadStateString(dadosEtapas, 'observacoes'),cor: Cores.cinzaTextoEscuro,tamanhoFonte: 16,),
+                                    Container(
+                                        width: 670,
+                                        padding: EdgeInsets.all(10),
+                                        margin: EdgeInsets.symmetric(vertical: 5,horizontal: 5),
+                                        decoration: BoxDecoration(
+                                          color: Colors.white,
+                                          border: Border.all(color: Cores.cinzaTexto),
+                                          borderRadius: BorderRadius.circular(10),
+                                        ),
+                                      child: Column(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          TextoPadrao(texto: 'Histórico',cor: Cores.primaria,negrito: FontWeight.bold,tamanhoFonte: 16,),
+                                          Column(
+                                            children: [
+                                              Container(
+                                                width: 650,
+                                                child: Row(
+                                                  mainAxisSize: MainAxisSize.min,
+                                                  children: [
+                                                    Container(
+                                                        width: 50,
+                                                        child: TextoPadrao(texto:'Versão',cor: Cores.primaria,tamanhoFonte: 14,)
+                                                    ),
+                                                    Container(
+                                                        width: 100,
+                                                        child: TextoPadrao(texto:'Data',cor: Cores.primaria,tamanhoFonte: 14,alinhamentoTexto: TextAlign.center,)
+                                                    ),
+                                                    SizedBox(width: 10,),
+                                                    Container(
+                                                        width: 200,
+                                                        child: TextoPadrao(texto:'Resp. Alteração',cor: Cores.primaria,tamanhoFonte: 14,)
+                                                    ),
+                                                    SizedBox(width: 10,),
+                                                    Container(
+                                                        width: 250,
+                                                        child: TextoPadrao(texto:'Razão',cor: Cores.primaria,tamanhoFonte: 14,)
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                              Container(
+                                                width: 650,
+                                                child: Row(
+                                                  mainAxisSize: MainAxisSize.min,
+                                                  children: [
+                                                    Container(
+                                                      width: 50,
+                                                      child: TextoPadrao(
+                                                        texto:BadStateInt(dadosEspecificacao, 'versao').toString(),
+                                                        cor: Cores.cinzaTextoEscuro,
+                                                        tamanhoFonte: 14,
+                                                        alinhamentoTexto: TextAlign.center,
+                                                      )
+                                                    ),
+                                                    Container(
+                                                      width: 100,
+                                                      child: TextoPadrao(
+                                                        texto:dadosEspecificacao==null?'':VariavelEstatica.mascaraData.format(dadosEspecificacao!['dataVersao'].toDate()),
+                                                        cor: Cores.cinzaTextoEscuro,
+                                                        tamanhoFonte: 14,
+                                                        alinhamentoTexto: TextAlign.center,
+                                                      )
+                                                    ),
+                                                    SizedBox(width: 10,),
+                                                    Container(
+                                                      width: 200,
+                                                      child: TextoPadrao(texto:BadStateString(dadosEspecificacao, 'visto'),cor: Cores.cinzaTextoEscuro,tamanhoFonte: 14,)
+                                                    ),
+                                                    SizedBox(width: 10,),
+                                                    Container(
+                                                      width: 250,
+                                                      child: TextoPadrao(texto:BadStateString(dadosEtapas, 'alteracao'),cor: Cores.cinzaTextoEscuro,tamanhoFonte: 14,)
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    Row(
+                                      mainAxisAlignment: MainAxisAlignment.end,
+                                      children: [
+                                        BotaoPadraoNovaInstrucao(
+                                          texto: 'Voltar',
+                                          largura: 150,
+                                          margemVertical: 5,
+                                          corBotao: Colors.black,
+                                          onPressed: ()=>Navigator.pop(context),
+                                        ),
+                                        SizedBox(width: 10,),
+                                        BotaoPadraoNovaInstrucao(
+                                          texto: 'Finalizar',
+                                          largura: 150,
+                                          margemVertical: 5,
+                                          onPressed: ()=>Navigator.push(context, MaterialPageRoute(builder: (context)=>InstrucaoUsuarioTela(emailLogado: widget.emailLogado))),
+                                        ),
+                                        SizedBox(width: VariavelEstatica.largura*0.025,),
+                                      ],
+                                    )
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ),
                         ],
                       ),
                     ),

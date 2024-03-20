@@ -5,7 +5,7 @@ import 'package:instrucao_de_processos/modelos/bad_state_list.dart';
 import 'package:instrucao_de_processos/modelos/bad_state_string.dart';
 import 'package:instrucao_de_processos/telas/instrucao_segunda_etapa_tela.dart';
 import 'package:instrucao_de_processos/utilidades/variavel_estatica.dart';
-import 'package:instrucao_de_processos/widgets/nivel_etapa.dart';
+import 'package:instrucao_de_processos/widgets/nivel_etapa2.dart';
 import 'package:instrucao_de_processos/widgets/snackBars.dart';
 import 'package:instrucao_de_processos/widgets/texto_padrao.dart';
 import '../utilidades/cores.dart';

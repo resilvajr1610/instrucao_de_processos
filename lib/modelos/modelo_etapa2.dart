@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
-import 'modelo_analise.dart';
+import 'modelo_analise2.dart';
 
-class ModeloEtapa{
+class ModeloEtapa2{
   String idEsp;
   String nomeProcesso;
   int numeroFIP;
@@ -14,10 +14,10 @@ class ModeloEtapa{
   bool etapaAtiva;
   bool adicionarChaveRazao;
   bool aumentarAlturaContainer;
-  List <ModeloAnalise> listaAnalise;
+  List <ModeloAnalise2> listaAnalise;
   int adicionaNovo;
 
-  ModeloEtapa({
+  ModeloEtapa2({
     required this.idEsp,
     required this.nomeProcesso,
     required this.numeroFIP,

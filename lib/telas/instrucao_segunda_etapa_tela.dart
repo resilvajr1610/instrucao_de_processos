@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:instrucao_de_processos/modelos/modelo_etapa.dart';
-import 'package:instrucao_de_processos/modelos/modelo_analise.dart';
+import 'package:instrucao_de_processos/modelos/modelo_etapa2.dart';
+import 'package:instrucao_de_processos/modelos/modelo_analise2.dart';
 import 'package:instrucao_de_processos/telas/instrucao_terceira_etapa_tela.dart';
-import 'package:instrucao_de_processos/widgets/item_etapa.dart';
+import 'package:instrucao_de_processos/widgets/item_etapa2.dart';
 import 'package:instrucao_de_processos/widgets/snackBars.dart';
 import '../utilidades/cores.dart';
 import '../utilidades/variavel_estatica.dart';
 import '../widgets/appbar_padrao.dart';
 import '../widgets/botao_padrao_nova_instrucao.dart';
 import '../widgets/caixa_texto.dart';
-import '../widgets/item_analise.dart';
-import '../widgets/nivel_etapa.dart';
+import '../widgets/item_analise2.dart';
+import '../widgets/nivel_etapa2.dart';
 import '../widgets/texto_padrao.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -40,7 +40,7 @@ class _InstrucaoSegundaEtapaTelaState extends State<InstrucaoSegundaEtapaTela> {
   var observacoes = TextEditingController();
   var alteracao = TextEditingController();
 
-  List  <ModeloEtapa> listaEtapas = [];
+  List  <ModeloEtapa2> listaEtapas = [];
 
   double alturaMostrarIcones = 0;
 
@@ -54,7 +54,7 @@ class _InstrucaoSegundaEtapaTelaState extends State<InstrucaoSegundaEtapaTela> {
     }
 
     listaEtapas.add(
-        ModeloEtapa(
+        ModeloEtapa2(
             idEsp: widget.idEsp,
             nomeProcesso: widget.nomeProcesso,
             numeroFIP: widget.FIP,
@@ -64,7 +64,7 @@ class _InstrucaoSegundaEtapaTelaState extends State<InstrucaoSegundaEtapaTela> {
             tempoTotalEtapaMinutos: '0:00',
             etapaAtiva: false,
             listaAnalise: [
-              ModeloAnalise(
+              ModeloAnalise2(
                 analiseAtiva: false,
                 etapaAtiva: false,
                 imagemSelecionada: '',
@@ -94,11 +94,11 @@ class _InstrucaoSegundaEtapaTelaState extends State<InstrucaoSegundaEtapaTela> {
 
       for (int i = 0; i < listaMapEtapa.length; i++) {
         List<dynamic> listaMapAnalise = listaMapEtapa[i]['listaAnalise'];
-        List<ModeloAnalise> listaAnalise = [];
+        List<ModeloAnalise2> listaAnalise = [];
 
         for (int j = 0; j < listaMapAnalise.length; j++) {
           listaAnalise.add(
-              ModeloAnalise(
+              ModeloAnalise2(
                   analiseAtiva: true,
                   etapaAtiva: true,
                   imagemSelecionada: listaMapAnalise[j]['imagemSelecionada'],
@@ -107,13 +107,13 @@ class _InstrucaoSegundaEtapaTelaState extends State<InstrucaoSegundaEtapaTela> {
                   tempoAnalise: TextEditingController(text: listaMapAnalise[j]['tempoAnalise']),
                   pontoChave: TextEditingController(text: listaMapAnalise[j]['pontoChave']),
                   mostrarListaImagens: false,
-                  listaCompleta: true
+                  listaCompleta: true,
               )
           );
         }
 
         listaEtapas.add(
-            ModeloEtapa(
+            ModeloEtapa2(
                 idEsp: widget.idEsp,
                 nomeProcesso: widget.nomeProcesso,
                 numeroFIP: widget.FIP,
@@ -124,8 +124,8 @@ class _InstrucaoSegundaEtapaTelaState extends State<InstrucaoSegundaEtapaTela> {
                 etapaAtiva: true,
                 listaAnalise: listaAnalise,
                 aumentarAlturaContainer: false,
-                adicionarChaveRazao: true,
-                ativarCaixaEtapa: false,
+                adicionarChaveRazao: false,
+                ativarCaixaEtapa: true,
                 adicionaNovo: 1
             )
         );
@@ -256,9 +256,9 @@ class _InstrucaoSegundaEtapaTelaState extends State<InstrucaoSegundaEtapaTela> {
                       child: ListView.builder(
                           itemCount: listaEtapas.length,
                           itemBuilder: (context,i){
-                            return ItemEtapa(
-                                modeloEtapa: listaEtapas[i],
-                                botaoAtivaEtapa: (){
+                            return ItemEtapa2(
+                              modeloEtapa: listaEtapas[i],
+                              botaoAtivaEtapa: (){
                                   if(listaEtapas[i].nomeEtapa.text.isNotEmpty){
                                     listaEtapas[i].adicionarChaveRazao = listaEtapas[i].adicionarChaveRazao?false:true;
                                     if(listaEtapas[i].adicionarChaveRazao){
@@ -294,7 +294,7 @@ class _InstrucaoSegundaEtapaTelaState extends State<InstrucaoSegundaEtapaTela> {
                                     itemBuilder: (context, j){
                                       return Container(
                                         height: 60,
-                                        child: ItemAnalise(
+                                        child: ItemAnalise2(
                                             modeloAnalise: listaEtapas[i].listaAnalise[j],
                                             botaoMostrarListaImagem:  ()=>setState((){
                                               listaEtapas[i].listaAnalise[j].mostrarListaImagens=true;
@@ -318,7 +318,7 @@ class _InstrucaoSegundaEtapaTelaState extends State<InstrucaoSegundaEtapaTela> {
                                                       }
 
                                                     listaEtapas[i].listaAnalise.add(
-                                                        ModeloAnalise(
+                                                        ModeloAnalise2(
                                                             etapaAtiva: true,
                                                             imagemSelecionada: '',
                                                             numeroAnalise: listaEtapas[i].listaAnalise[j].numeroAnalise+10,

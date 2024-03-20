@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 
-class ModeloAnalise{
+class ModeloAnalise2{
   bool etapaAtiva;
   String imagemSelecionada;
   int numeroAnalise;
@@ -11,7 +11,7 @@ class ModeloAnalise{
   bool analiseAtiva;
   bool listaCompleta;
 
-  ModeloAnalise({
+  ModeloAnalise2({
     required this.etapaAtiva,
     required this.imagemSelecionada,
     required this.numeroAnalise,
