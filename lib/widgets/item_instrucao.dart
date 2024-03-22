@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:instrucao_de_processos/telas/instrucao_primeira_etapa_tela.dart';
+import 'package:instrucao_de_processos/telas/instrucao_usuario_tela.dart';
 import 'package:instrucao_de_processos/widgets/snackBars.dart';
 import 'package:instrucao_de_processos/widgets/texto_padrao.dart';
 import '../utilidades/cores.dart';
@@ -69,17 +70,27 @@ class ItemInstrucao extends StatelessWidget {
         ),
         idEsp!='' && nomeProcesso!=''?Card(
           child: GestureDetector(
-            onTap: ()=> Navigator.push(context, MaterialPageRoute(builder: (context)=>
-                InstrucaoPrimeiraEtapaTela(idDocumento: idDocumento,idFirebase: idFirebase,emailLogado: emailLogado,idEsp: idEsp,))),
+            onTap: ()=> Navigator.push(context, MaterialPageRoute(builder: (context)=>InstrucaoUsuarioTela(emailLogado: emailLogado, idEsp: idEsp))),
             child: Container(
               color: Cores.cardEsp,
               alignment: Alignment.centerLeft,
               width: largura,
               height: 65,
               padding: EdgeInsets.symmetric(horizontal: 15),
-              child: TextoPadrao(
-                texto: '$nomeProcesso - Versão $versao',
-                cor: Cores.primaria,
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  TextoPadrao(
+                    texto: '$nomeProcesso - Versão $versao',
+                    cor: Cores.primaria,
+                  ),
+                  IconButton(
+                    onPressed: ()=>Navigator.push(context, MaterialPageRoute(builder: (context)=>
+                      InstrucaoPrimeiraEtapaTela(idDocumento: idDocumento,idFirebase: idFirebase,emailLogado: emailLogado,idEsp: idEsp,))),
+                    icon: Icon(Icons.edit,color: Cores.primaria,)
+                  )
+                ],
               ),
             ),
           ),

@@ -7,5 +7,6 @@ class Cores{
   static const Color cinzaTexto = Color(0xff7A7A7A);
   static const Color cinzaTextoEscuro = Color(0xff262626);
   static const Color cardEsp = Color(0xffD3DEEA);
+  static const Color amarelo_icone_comentario = Color(0xffFFD43E);
   static const List<Color> degrade_azul = [Color(0xff2622F1),Color(0xff0A0879)];
 }

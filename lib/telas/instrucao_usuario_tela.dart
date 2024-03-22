@@ -1,12 +1,25 @@
 import 'package:flutter/material.dart';
+import 'package:instrucao_de_processos/utilidades/variavel_estatica.dart';
+import '../modelos/bad_state_int.dart';
+import '../modelos/bad_state_list.dart';
+import '../modelos/bad_state_string.dart';
+import '../modelos/modelo_analise3.dart';
 import '../utilidades/cores.dart';
 import '../widgets/appbar_padrao.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+
+import '../widgets/item_etapa3.dart';
+import '../widgets/item_etapa3_titulo.dart';
+import '../widgets/item_etapa3_um_titulo.dart';
+import '../widgets/texto_padrao.dart';
 
 class InstrucaoUsuarioTela extends StatefulWidget {
   String emailLogado;
+  String idEsp;
 
   InstrucaoUsuarioTela({
-    required this.emailLogado
+    required this.emailLogado,
+    required this.idEsp,
   });
 
   @override
@@ -14,11 +27,269 @@ class InstrucaoUsuarioTela extends StatefulWidget {
 }
 
 class _InstrucaoUsuarioTelaState extends State<InstrucaoUsuarioTela> {
+
+
+  DocumentSnapshot? dadosEspecificacao;
+  DocumentSnapshot? dadosEtapas;
+  List listaEtapas=[];
+
+  carregarDados(){
+    FirebaseFirestore.instance.collection('especificacao').doc(widget.idEsp).get().then((dadosEsp){
+      dadosEspecificacao = dadosEsp;
+      setState((){});
+    });
+    FirebaseFirestore.instance.collection('etapas').doc(widget.idEsp).get().then((dadosEta){
+      dadosEtapas = dadosEta;
+      listaEtapas = BadStateList(dadosEta, 'listaEtapa');
+      setState((){});
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    carregarDados();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Cores.cinzaClaro,
       appBar: AppBarPadrao(showUsuarios: false, emailLogado: widget.emailLogado),
+      body: Container(
+        height: VariavelEstatica.altura,
+        width: VariavelEstatica.largura,
+        child: Container(
+          width: VariavelEstatica.largura * 0.8,
+          height: VariavelEstatica.altura * 0.7,
+          margin: EdgeInsets.all(20),
+          padding: EdgeInsets.all(36),
+          alignment: Alignment.topLeft,
+          decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.all(Radius.circular(15))
+          ),
+          child: Container(
+            width: VariavelEstatica.largura * 0.95,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    Container(
+                        width: VariavelEstatica.largura * 0.45,
+                        child: TextoPadrao(texto: 'Instrução de Processos',cor: Cores.primaria,negrito: FontWeight.bold,tamanhoFonte: 20,)
+                    ),
+                    Container(
+                      width: VariavelEstatica.largura * 0.45,
+                      child: Row(
+                        children: [
+                          TextoPadrao(texto: 'Data de criação',cor: Cores.primaria,tamanhoFonte: 14,),
+                          SizedBox(width: 10,),
+                          TextoPadrao(texto: dadosEspecificacao==null?'00/00/0000':VariavelEstatica.mascaraData.format(dadosEspecificacao!['dataCriacao'].toDate()),cor: Cores.cinzaTextoEscuro,tamanhoFonte: 14,),
+                          SizedBox(width: 40,),
+                          TextoPadrao(texto: 'Visto',cor: Cores.primaria,tamanhoFonte: 14,),
+                          SizedBox(width: 10,),
+                          Container(
+                              width: VariavelEstatica.largura * 0.1,
+                              child: TextoPadrao(texto: BadStateString(dadosEspecificacao, 'visto'),cor: Cores.cinzaTextoEscuro,tamanhoFonte: 14,)
+                          ),
+                          SizedBox(width: 40,),
+                          TextoPadrao(texto: 'Versão',cor: Cores.primaria,tamanhoFonte: 14,),
+                          SizedBox(width: 10,),
+                          TextoPadrao(texto: BadStateInt(dadosEspecificacao, 'versao').toString(),cor: Cores.cinzaTextoEscuro,tamanhoFonte: 14,),
+                          SizedBox(width: 20,),
+                          TextoPadrao(texto: 'Data',cor: Cores.primaria,tamanhoFonte: 14,),
+                          SizedBox(width: 10,),
+                          TextoPadrao(texto: dadosEspecificacao==null?'00/00/0000':VariavelEstatica.mascaraData.format(dadosEspecificacao!['dataVersao'].toDate()),cor: Cores.cinzaTextoEscuro,tamanhoFonte: 14,),
+                        ],
+                      ),
+                    )
+                  ],
+                ),
+                Padding(
+                  padding: EdgeInsets.symmetric(vertical: 10),
+                  child: Row(
+                    crossAxisAlignment:CrossAxisAlignment.center ,
+                    children: [
+                      TextoPadrao(texto: 'N° FIP',cor: Cores.primaria,negrito: FontWeight.bold,tamanhoFonte: 16,),
+                      SizedBox(width: 10,),
+                      TextoPadrao(texto: BadStateInt(dadosEspecificacao, 'numeroFIP').toString(),cor: Cores.cinzaTextoEscuro,negrito: FontWeight.bold,tamanhoFonte: 16,),
+                      SizedBox(width: 40,),
+                      TextoPadrao(texto: 'Nome de Processos',cor: Cores.primaria,negrito: FontWeight.bold,tamanhoFonte: 16,),
+                      SizedBox(width: 10,),
+                      TextoPadrao(texto: BadStateString(dadosEspecificacao, 'nome'),cor: Cores.cinzaTextoEscuro,negrito: FontWeight.bold,tamanhoFonte: 16,),
+                    ],
+                  ),
+                ),
+                Divider(),
+                ItemEtapa3Titulo(
+                  dadosEspecificacao: dadosEspecificacao,
+                  item1: 'epi',
+                  item2: 'maquina',
+                  titulo1: 'EPI Necessário',
+                  titulo2: 'Máquina',
+                  dadoString1: false,
+                ),
+                ItemEtapaUmTitulo(dadosEspecificacao: dadosEspecificacao,item: 'ferramentas',titulo: 'Ferramentas utilizadas'),
+                Divider(),
+                ItemEtapa3Titulo(
+                  dadosEspecificacao: dadosEspecificacao,
+                  item1: 'materiaPrima',
+                  item2: 'licenca_qualificacoes',
+                  titulo1: 'Matéria-prima utilizada',
+                  titulo2: 'Tempo total das etapas',
+                  dadoString1: false,
+                ),
+                ItemEtapa3Titulo(
+                  dadosEspecificacao: dadosEspecificacao,
+                  item1: 'espeficicacao',
+                  item2: 'prazo',
+                  titulo1: 'Especificações',
+                  titulo2: 'Prazo de aprendizagem',
+                ),
+                ItemEtapa3Titulo(
+                  dadosEspecificacao: dadosEspecificacao,
+                  item1: 'esp_maquina',
+                  item2: 'licenca_qualificacoes',
+                  titulo1: 'Especificações máquina',
+                  titulo2: 'Licenças ou qualificações',
+                ),
+                Divider(),
+                Container(
+                  height: VariavelEstatica.altura*0.52,
+                  child: SingleChildScrollView(
+                    child: listaEtapas.isEmpty?Container():Container(
+                      height: listaEtapas.length*250+80,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Container(
+                            height: listaEtapas.length*200,
+                            width: VariavelEstatica.largura * 0.7,
+                            child: ListView.builder(
+                                itemCount: listaEtapas.length,
+                                itemBuilder: (context,i){
+
+                                  List aux = listaEtapas[i]['listaAnalise'];
+                                  List<ModeloAnalise3> listaAnalise = [];
+
+                                  for(int j = 0; aux.length > j ; j++){
+                                    listaAnalise.add(
+                                        ModeloAnalise3(
+                                            imagemSelecionada: aux[j]['imagemSelecionada'],
+                                            numeroAnalise: aux[j]['numeroAnalise'],
+                                            nomeAnalise: aux[j]['nomeAnalise'],
+                                            tempo: aux[j]['tempoAnalise'],
+                                            pontoChave: aux[j]['pontoChave']
+                                        )
+                                    );
+                                  }
+
+                                  return ItemEtapa3(
+                                    numeroEtapa: listaEtapas[i]['numeroEtapa'],
+                                    nomeEtapa: listaEtapas[i]['nomeEtapa'],
+                                    tempoTotalEtapa: listaEtapas[i]['tempoTotalEtapaMinutos'],
+                                    listaAnalise: listaAnalise,
+                                    comentario: true,
+                                  );
+                                }
+                            ),
+                          ),
+                          // TextoPadrao(texto: 'Observações Gerais/ O que é proibido e porque?',cor: Cores.primaria,negrito: FontWeight.bold,tamanhoFonte: 16,),
+                          // TextoPadrao(texto: BadStateString(dadosEtapas, 'observacoes'),cor: Cores.cinzaTextoEscuro,tamanhoFonte: 16,),
+                          // Container(
+                          //   width: 670,
+                          //   padding: EdgeInsets.all(10),
+                          //   margin: EdgeInsets.symmetric(vertical: 5,horizontal: 5),
+                          //   decoration: BoxDecoration(
+                          //     color: Colors.white,
+                          //     border: Border.all(color: Cores.cinzaTexto),
+                          //     borderRadius: BorderRadius.circular(10),
+                          //   ),
+                          //   child: Column(
+                          //     crossAxisAlignment: CrossAxisAlignment.start,
+                          //     children: [
+                          //       TextoPadrao(texto: 'Histórico',cor: Cores.primaria,negrito: FontWeight.bold,tamanhoFonte: 16,),
+                          //       Column(
+                          //         children: [
+                          //           Container(
+                          //             width: 650,
+                          //             child: Row(
+                          //               mainAxisSize: MainAxisSize.min,
+                          //               children: [
+                          //                 Container(
+                          //                     width: 50,
+                          //                     child: TextoPadrao(texto:'Versão',cor: Cores.primaria,tamanhoFonte: 14,)
+                          //                 ),
+                          //                 Container(
+                          //                     width: 100,
+                          //                     child: TextoPadrao(texto:'Data',cor: Cores.primaria,tamanhoFonte: 14,alinhamentoTexto: TextAlign.center,)
+                          //                 ),
+                          //                 SizedBox(width: 10,),
+                          //                 Container(
+                          //                     width: 200,
+                          //                     child: TextoPadrao(texto:'Resp. Alteração',cor: Cores.primaria,tamanhoFonte: 14,)
+                          //                 ),
+                          //                 SizedBox(width: 10,),
+                          //                 Container(
+                          //                     width: 250,
+                          //                     child: TextoPadrao(texto:'Razão',cor: Cores.primaria,tamanhoFonte: 14,)
+                          //                 ),
+                          //               ],
+                          //             ),
+                          //           ),
+                          //           Container(
+                          //             width: 650,
+                          //             child: Row(
+                          //               mainAxisSize: MainAxisSize.min,
+                          //               children: [
+                          //                 Container(
+                          //                     width: 50,
+                          //                     child: TextoPadrao(
+                          //                       texto:BadStateInt(dadosEspecificacao, 'versao').toString(),
+                          //                       cor: Cores.cinzaTextoEscuro,
+                          //                       tamanhoFonte: 14,
+                          //                       alinhamentoTexto: TextAlign.center,
+                          //                     )
+                          //                 ),
+                          //                 Container(
+                          //                     width: 100,
+                          //                     child: TextoPadrao(
+                          //                       texto:dadosEspecificacao==null?'':VariavelEstatica.mascaraData.format(dadosEspecificacao!['dataVersao'].toDate()),
+                          //                       cor: Cores.cinzaTextoEscuro,
+                          //                       tamanhoFonte: 14,
+                          //                       alinhamentoTexto: TextAlign.center,
+                          //                     )
+                          //                 ),
+                          //                 SizedBox(width: 10,),
+                          //                 Container(
+                          //                     width: 200,
+                          //                     child: TextoPadrao(texto:BadStateString(dadosEspecificacao, 'visto'),cor: Cores.cinzaTextoEscuro,tamanhoFonte: 14,)
+                          //                 ),
+                          //                 SizedBox(width: 10,),
+                          //                 Container(
+                          //                     width: 250,
+                          //                     child: TextoPadrao(texto:BadStateString(dadosEtapas, 'alteracao'),cor: Cores.cinzaTextoEscuro,tamanhoFonte: 14,)
+                          //                 ),
+                          //               ],
+                          //             ),
+                          //           ),
+                          //         ],
+                          //       ),
+                          //     ],
+                          //   ),
+                          // ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
     );
   }
 }

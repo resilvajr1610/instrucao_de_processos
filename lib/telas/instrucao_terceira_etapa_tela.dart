@@ -3,6 +3,7 @@ import 'package:instrucao_de_processos/modelos/bad_state_int.dart';
 import 'package:instrucao_de_processos/modelos/bad_state_list.dart';
 import 'package:instrucao_de_processos/modelos/bad_state_string.dart';
 import 'package:instrucao_de_processos/modelos/modelo_analise3.dart';
+import 'package:instrucao_de_processos/telas/home_tela.dart';
 import 'package:instrucao_de_processos/telas/instrucao_usuario_tela.dart';
 import 'package:instrucao_de_processos/widgets/item_etapa3.dart';
 import 'package:instrucao_de_processos/widgets/item_etapa3_titulo.dart';
@@ -302,7 +303,10 @@ class _InstrucaoTerceiraEtapaTelaState extends State<InstrucaoTerceiraEtapaTela>
                                           texto: 'Finalizar',
                                           largura: 150,
                                           margemVertical: 5,
-                                          onPressed: ()=>Navigator.push(context, MaterialPageRoute(builder: (context)=>InstrucaoUsuarioTela(emailLogado: widget.emailLogado))),
+                                          onPressed: ()=>
+                                            Navigator.pushAndRemoveUntil(context, MaterialPageRoute(
+                                              builder: (context)=>HomeTela(emailLogado: widget.emailLogado)),(route) => false,
+                                            ),
                                         ),
                                         SizedBox(width: VariavelEstatica.largura*0.025,),
                                       ],
