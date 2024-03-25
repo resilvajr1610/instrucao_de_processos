@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:instrucao_de_processos/utilidades/variavel_estatica.dart';
+import 'package:instrucao_de_processos/widgets/caixa_texto.dart';
+import 'package:instrucao_de_processos/widgets/snackBars.dart';
 import '../modelos/bad_state_int.dart';
 import '../modelos/bad_state_list.dart';
 import '../modelos/bad_state_string.dart';
@@ -7,7 +9,6 @@ import '../modelos/modelo_analise3.dart';
 import '../utilidades/cores.dart';
 import '../widgets/appbar_padrao.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-
 import '../widgets/item_etapa3.dart';
 import '../widgets/item_etapa3_titulo.dart';
 import '../widgets/item_etapa3_um_titulo.dart';
@@ -28,7 +29,7 @@ class InstrucaoUsuarioTela extends StatefulWidget {
 
 class _InstrucaoUsuarioTelaState extends State<InstrucaoUsuarioTela> {
 
-
+  var controllerComentario = TextEditingController();
   DocumentSnapshot? dadosEspecificacao;
   DocumentSnapshot? dadosEtapas;
   List listaEtapas=[];
@@ -45,6 +46,63 @@ class _InstrucaoUsuarioTelaState extends State<InstrucaoUsuarioTela> {
     });
   }
 
+  carregarWidget(int numEtapa, String descricaoEtapa,){
+    showDialog(context: context,
+        builder: (context){
+          return Center(
+            child: AlertDialog(
+              title: TextoPadrao(texto: 'Reportar Anomalia',cor: Cores.primaria,negrito: FontWeight.bold,),
+              content: Container(
+                height: 100,
+                width: 500,
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    TextoPadrao(
+                      texto:'Descreva anamolia encontrada.',
+                      cor: Cores.cinzaTextoEscuro,
+                      maxLines: 5,
+                    ),
+                    CaixaTexto(controller: controllerComentario, largura: 480)
+                  ],
+                ),
+              ),
+              actions: [
+                TextButton(child: TextoPadrao(texto: 'Voltar',cor: Cores.primaria,negrito: FontWeight.bold,),onPressed: ()=>Navigator.pop(context),),
+                TextButton(child: TextoPadrao(texto: 'Salvar',cor: Colors.green,negrito: FontWeight.bold,),onPressed: (){
+                  if(controllerComentario.text.isNotEmpty){
+                    salvarComentario(controllerComentario.text,numEtapa,descricaoEtapa);
+                  }else{
+                    showSnackBar(context, 'Preencha um texto para salvar', Colors.red);
+                  }
+                })
+              ],
+            ),
+          );
+        });
+  }
+
+  salvarComentario(String comentario,int numEtapa, String descricaoEtapa){
+    DocumentReference docRef = FirebaseFirestore.instance.collection('comentarios').doc();
+    docRef.set({
+      'id'              : docRef.id,
+      'data'            : DateTime.now(),
+      'usuario'         : widget.emailLogado,
+      'comentario'      : comentario,
+      'idEsp'           : widget.idEsp,
+      'fip'             : BadStateInt(dadosEspecificacao, 'numeroFIP'),
+      'processo'        : BadStateString(dadosEspecificacao, 'nome'),
+      'versao'          : BadStateInt(dadosEspecificacao, 'versao'),
+      'numEtapa'        : numEtapa,
+      'descricaoEtapa'  : descricaoEtapa,
+    }).then((value){
+      controllerComentario.clear();
+      showSnackBar(context, 'Sua anomalia foi enviada!', Colors.green);
+      Navigator.pop(context);
+      setState(() {});
+    });
+  }
+
   @override
   void initState() {
     super.initState();
@@ -55,7 +113,7 @@ class _InstrucaoUsuarioTelaState extends State<InstrucaoUsuarioTela> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Cores.cinzaClaro,
-      appBar: AppBarPadrao(showUsuarios: false, emailLogado: widget.emailLogado),
+      appBar: AppBarPadrao(mostrarUsuarios: false, emailLogado: widget.emailLogado),
       body: Container(
         height: VariavelEstatica.altura,
         width: VariavelEstatica.largura,
@@ -192,6 +250,9 @@ class _InstrucaoUsuarioTelaState extends State<InstrucaoUsuarioTela> {
                                     tempoTotalEtapa: listaEtapas[i]['tempoTotalEtapaMinutos'],
                                     listaAnalise: listaAnalise,
                                     comentario: true,
+                                    funcaoComentario: (){
+                                      carregarWidget(listaEtapas[i]['numeroEtapa'], listaEtapas[i]['nomeEtapa'],);
+                                    },
                                   );
                                 }
                             ),

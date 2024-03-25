@@ -4,7 +4,6 @@ import 'package:instrucao_de_processos/modelos/bad_state_list.dart';
 import 'package:instrucao_de_processos/modelos/bad_state_string.dart';
 import 'package:instrucao_de_processos/modelos/modelo_analise3.dart';
 import 'package:instrucao_de_processos/telas/home_tela.dart';
-import 'package:instrucao_de_processos/telas/instrucao_usuario_tela.dart';
 import 'package:instrucao_de_processos/widgets/item_etapa3.dart';
 import 'package:instrucao_de_processos/widgets/item_etapa3_titulo.dart';
 import '../utilidades/cores.dart';
@@ -34,6 +33,7 @@ class _InstrucaoTerceiraEtapaTelaState extends State<InstrucaoTerceiraEtapaTela>
   DocumentSnapshot? dadosEspecificacao;
   DocumentSnapshot? dadosEtapas;
   List listaEtapas=[];
+  String idDoc = '';
 
   carregarDados(){
     FirebaseFirestore.instance.collection('especificacao').doc(widget.idEtapa).get().then((dadosEsp){
@@ -44,6 +44,10 @@ class _InstrucaoTerceiraEtapaTelaState extends State<InstrucaoTerceiraEtapaTela>
       dadosEtapas = dadosEta;
       listaEtapas = BadStateList(dadosEta, 'listaEtapa');
       setState((){});
+    });
+    FirebaseFirestore.instance.collection('documentos').where('idEsp',isEqualTo: widget.idEtapa).get().then((dadosDocumento){
+      idDoc = dadosDocumento.docs[0].id;
+      print(dadosDocumento.docs[0].id);
     });
   }
   DateTime converterData(Timestamp timestamp) {
@@ -61,7 +65,7 @@ class _InstrucaoTerceiraEtapaTelaState extends State<InstrucaoTerceiraEtapaTela>
 
     return Scaffold(
         backgroundColor: Cores.cinzaClaro,
-        appBar: carregando? null: AppBarPadrao(showUsuarios: false, emailLogado: widget.emailLogado),
+        appBar: carregando? null: AppBarPadrao(mostrarUsuarios: false, emailLogado: widget.emailLogado),
         body: Container(
             height: VariavelEstatica.altura,
             width: VariavelEstatica.largura,
@@ -196,10 +200,11 @@ class _InstrucaoTerceiraEtapaTelaState extends State<InstrucaoTerceiraEtapaTela>
                                             }
 
                                             return ItemEtapa3(
-                                                numeroEtapa: listaEtapas[i]['numeroEtapa'],
-                                                nomeEtapa: listaEtapas[i]['nomeEtapa'],
-                                                tempoTotalEtapa: listaEtapas[i]['tempoTotalEtapaMinutos'],
-                                                listaAnalise: listaAnalise
+                                              numeroEtapa: listaEtapas[i]['numeroEtapa'],
+                                              nomeEtapa: listaEtapas[i]['nomeEtapa'],
+                                              tempoTotalEtapa: listaEtapas[i]['tempoTotalEtapaMinutos'],
+                                              listaAnalise: listaAnalise,
+                                              funcaoComentario: null,
                                             );
                                           }
                                       ),
@@ -304,9 +309,12 @@ class _InstrucaoTerceiraEtapaTelaState extends State<InstrucaoTerceiraEtapaTela>
                                           largura: 150,
                                           margemVertical: 5,
                                           onPressed: ()=>
+                                            FirebaseFirestore.instance.collection('documentos').doc(idDoc).update({
+                                              'situacao':'autorizado'
+                                            }).then((value) =>
                                             Navigator.pushAndRemoveUntil(context, MaterialPageRoute(
                                               builder: (context)=>HomeTela(emailLogado: widget.emailLogado)),(route) => false,
-                                            ),
+                                            )),
                                         ),
                                         SizedBox(width: VariavelEstatica.largura*0.025,),
                                       ],

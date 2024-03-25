@@ -10,12 +10,14 @@ class ItemEtapa3 extends StatelessWidget {
   String tempoTotalEtapa;
   List<ModeloAnalise3> listaAnalise;
   bool comentario;
+  var funcaoComentario;
 
   ItemEtapa3({
     required this.numeroEtapa,
     required this.nomeEtapa,
     required this.tempoTotalEtapa,
     required this.listaAnalise,
+    required this.funcaoComentario,
     this.comentario = false,
   });
 
@@ -170,7 +172,7 @@ class ItemEtapa3 extends StatelessWidget {
                         child: TextoPadrao(texto:listaAnalise[i].pontoChave,cor: Cores.cinzaTextoEscuro,tamanhoFonte: 14,)
                     ),
                     Spacer(),
-                    comentario?IconButton(onPressed: (){}, icon: Icon(Icons.report_problem,color: Cores.amarelo_icone_comentario,)):Container()
+                    comentario?IconButton(onPressed: funcaoComentario, icon: Icon(Icons.report_problem,color: Cores.amarelo_icone_comentario,)):Container()
                   ],
                 );
               },

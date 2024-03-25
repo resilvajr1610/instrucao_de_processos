@@ -19,6 +19,7 @@ class ItemInstrucao extends StatelessWidget {
   double largura;
   bool escrever;
   String emailLogado;
+  bool acesso_adm;
 
   ItemInstrucao({
     required this.idFirebase,
@@ -31,7 +32,8 @@ class ItemInstrucao extends StatelessWidget {
     required this.onPressed,
     required this.largura,
     required this.escrever,
-    required this.emailLogado
+    required this.emailLogado,
+    required this.acesso_adm,
   });
 
   @override
@@ -50,9 +52,9 @@ class ItemInstrucao extends StatelessWidget {
               child: Row(
                 children: [
                   TextoPadrao(texto: idDocumento,cor: Cores.cinzaTexto,),
-                  CaixaTexto(controller: controller, largura: largura,textoCaixa: 'Inserir',corCaixa: Cores.cinzaClaro,corBorda: Cores.cinzaClaro,mostrarTitulo: false,escrever: escrever,),
+                  !acesso_adm?Container():CaixaTexto(controller: controller, largura: largura,textoCaixa: 'Inserir',corCaixa: Cores.cinzaClaro,corBorda: Cores.cinzaClaro,mostrarTitulo: false,escrever: escrever,),
                   Spacer(),
-                  ativarBotaoAdicionarItemLista && idEsp=='' && nomeProcesso==''?BotaoPadraoNovaInstrucao(
+                  ativarBotaoAdicionarItemLista && idEsp=='' && nomeProcesso=='' && acesso_adm?BotaoPadraoNovaInstrucao(
                     texto: 'Criar Instrução',
                     onPressed: ()=>
                     controller.text.isNotEmpty?
@@ -60,10 +62,10 @@ class ItemInstrucao extends StatelessWidget {
                         InstrucaoPrimeiraEtapaTela(idDocumento: idDocumento,idFirebase: idFirebase,emailLogado: emailLogado,idEsp: idEsp,)))
                         :showSnackBar(context, 'Insira um texto para avançar', Colors.red),
                   ):Container(),
-                  IconButton(
-                    icon: ativarBotaoAdicionarItemLista?Icon(Icons.navigate_next_outlined,color: Cores.cinzaTexto,):Icon(Icons.add_box,color: Cores.primaria,),
-                    onPressed: ativarBotaoAdicionarItemLista?null:onPressed,
-                  )
+                  acesso_adm?IconButton(
+                    icon: ativarBotaoAdicionarItemLista ?Icon(Icons.navigate_next_outlined,color: Cores.cinzaTexto,):Icon(Icons.add_box,color: Cores.primaria,),
+                    onPressed: ativarBotaoAdicionarItemLista ?null:onPressed,
+                  ):Icon(Icons.navigate_next_outlined,color: Cores.cinzaTexto,)
                 ],
               )
           ),
@@ -81,11 +83,14 @@ class ItemInstrucao extends StatelessWidget {
                 mainAxisSize: MainAxisSize.min,
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
-                  TextoPadrao(
-                    texto: '$nomeProcesso - Versão $versao',
-                    cor: Cores.primaria,
+                  Container(
+                    width: !acesso_adm?largura*0.9:largura*0.8,
+                    child: TextoPadrao(
+                      texto: '$nomeProcesso - Versão $versao',
+                      cor: Cores.primaria,
+                    ),
                   ),
-                  IconButton(
+                  !acesso_adm?Container():IconButton(
                     onPressed: ()=>Navigator.push(context, MaterialPageRoute(builder: (context)=>
                       InstrucaoPrimeiraEtapaTela(idDocumento: idDocumento,idFirebase: idFirebase,emailLogado: emailLogado,idEsp: idEsp,))),
                     icon: Icon(Icons.edit,color: Cores.primaria,)

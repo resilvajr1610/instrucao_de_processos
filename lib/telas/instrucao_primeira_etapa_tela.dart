@@ -278,7 +278,7 @@ class _InstrucaoPrimeiraEtapaTelaState extends State<InstrucaoPrimeiraEtapaTela>
         VariavelEstatica.inicializarDimensoes(context);
         return  Scaffold(
           backgroundColor: Cores.cinzaClaro,
-          appBar: carregando?null:AppBarPadrao(showUsuarios: false,emailLogado: widget.emailLogado),
+          appBar: carregando?null:AppBarPadrao(mostrarUsuarios: false,emailLogado: widget.emailLogado),
           body: Container(
             height: VariavelEstatica.altura,
             width: VariavelEstatica.largura,

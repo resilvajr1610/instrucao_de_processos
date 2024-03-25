@@ -3,7 +3,7 @@ import 'package:intl/intl.dart';
 
 class VariavelEstatica{
 
-  static DateFormat mascaraDataHora = DateFormat('yyyy-MM-dd hh:mm');
+  static DateFormat mascaraDataHora = DateFormat('yyyy-MM-dd HH:mm');
   static DateFormat mascaraData = DateFormat('dd/MM/yyyy');
   static double largura = 0.0;
   static double altura = 0.0;

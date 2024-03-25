@@ -3,17 +3,21 @@ import 'package:instrucao_de_processos/telas/home_tela.dart';
 import 'package:instrucao_de_processos/telas/login_tela.dart';
 import 'package:instrucao_de_processos/telas/usuarios_tela.dart';
 import 'package:instrucao_de_processos/widgets/texto_padrao.dart';
+import '../servicos/shared_preferences_servicos.dart';
+import '../telas/comentarios_tela.dart';
 import '../utilidades/cores.dart';
 import '../utilidades/variavel_estatica.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 class AppBarPadrao extends StatelessWidget implements PreferredSizeWidget{
-  bool showUsuarios;
+  bool mostrarUsuarios;
+  bool mostrarComentarios;
   String emailLogado;
 
   AppBarPadrao({
     required this.emailLogado,
-    this.showUsuarios = false,
+    this.mostrarUsuarios = false,
+    this.mostrarComentarios = false,
   });
 
   @override
@@ -40,7 +44,11 @@ class AppBarPadrao extends StatelessWidget implements PreferredSizeWidget{
             ),
             TextoPadrao(texto: 'Instrução de processos',tamanhoFonte: 24,negrito: FontWeight.bold),
             Spacer(),
-            showUsuarios?Padding(
+            mostrarComentarios?Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: IconButton(onPressed: ()=>Navigator.push(context, MaterialPageRoute(builder: (context)=>ComentarioTela(emailLogado: emailLogado,))), icon: Icon(Icons.report_problem,color: Colors.white,size: 35,)),
+            ):Container(),
+            mostrarUsuarios && mostrarComentarios?Padding(
               padding: const EdgeInsets.all(8.0),
               child: IconButton(onPressed: ()=>Navigator.push(context, MaterialPageRoute(builder: (context)=>UsuariosTela(emailLogado: emailLogado,))), icon: Icon(Icons.person_add_alt_1,color: Colors.white,size: 35,)),
             ):Padding(
@@ -50,7 +58,12 @@ class AppBarPadrao extends StatelessWidget implements PreferredSizeWidget{
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: IconButton(
-                  onPressed: ()=>FirebaseAuth.instance.signOut().then((value) => Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>LoginTela()))),
+                  onPressed: ()=>
+                    PrefService().removerConta().then((value)=>
+                      FirebaseAuth.instance.signOut().then((value) =>
+                          Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>LoginTela()))
+                      )
+                    ),
                   icon: Icon(Icons.logout,color: Colors.white,size: 35,)),
             ),
           ],

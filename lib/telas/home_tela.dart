@@ -38,8 +38,8 @@ class _HomeTelaState extends State<HomeTela> {
   double alturaItens = 75;
   double alturaListaFinal = 0;
   double alturaListaInicio = 0;
-
   bool carregando = true;
+  bool acesso_adm = false;
 
   adicionarListaInicio(String idDoc,String idFire,String idEsp,String nomeProcesso,int versao, String titulo,bool ativarBotaoAdicionarItemLista, bool escrever ){
     listaInstrucaoPrincipal.add(
@@ -68,12 +68,23 @@ class _HomeTelaState extends State<HomeTela> {
     FirebaseFirestore.instance.collection('documentos').where('posicao',isEqualTo: 'inicio').orderBy('idDoc').get().then((docs){
       if(docs.docs.isNotEmpty){
         for(int i = 0; docs.docs.length > i; i++) {
-          // print(docs.docs[i]['idDoc']);
-          adicionarListaInicio(docs.docs[i]['idDoc'], docs.docs[i]['idFire'],BadStateString(docs.docs[i], 'idEsp'),BadStateString(docs.docs[i], 'nomeProcesso'),BadStateInt(docs.docs[i], 'versao'),docs.docs[i]['titulo'], false, true);
-          if(docs.docs.length == i+1){
-            adicionarListaInicio('${i+2}.0.0','','','',0,'teste flutter inicio', false, true);
-            carregarDadosMeio();
-            setState(() {});
+          if(acesso_adm){
+            // print(docs.docs[i]['idDoc']);
+            adicionarListaInicio(docs.docs[i]['idDoc'], docs.docs[i]['idFire'],BadStateString(docs.docs[i], 'idEsp'),BadStateString(docs.docs[i], 'nomeProcesso'),BadStateInt(docs.docs[i], 'versao'),docs.docs[i]['titulo'], false, true);
+            if(docs.docs.length == i+1){
+              adicionarListaInicio('${i+2}.0.0','','','',0,'', false, true);
+              carregarDadosMeio();
+              setState(() {});
+            }
+          }else{
+            if(BadStateString(docs.docs[i],'situacao')!=''){
+              adicionarListaInicio(docs.docs[i]['idDoc'], docs.docs[i]['idFire'],BadStateString(docs.docs[i], 'idEsp'),BadStateString(docs.docs[i], 'nomeProcesso'),BadStateInt(docs.docs[i], 'versao'),docs.docs[i]['titulo'], false, true);
+              if(docs.docs.length == i+1){
+                adicionarListaInicio('${i+2}.0.0','','','',0,'', false, true);
+                carregarDadosMeio();
+                setState(() {});
+              }
+            }
           }
         }
       }else{
@@ -110,42 +121,77 @@ class _HomeTelaState extends State<HomeTela> {
     if(addPrincipal){
       alturaListaInicio = alturaListaInicio + alturaItens + alturaItens;
       listaInstrucaoPrincipal[inicio].alturaListaMeio = listaInstrucaoPrincipal[inicio].alturaListaMeio + alturaItens;
-      adicionarListaInicio('${listaInstrucaoPrincipal.length+1}.0.0','','','',0,'inicio flutter',false,true);
+      adicionarListaInicio('${listaInstrucaoPrincipal.length+1}.0.0','','','',0,'',false,true);
     }
     setState(() {});
   }
   carregarDadosMeio()async{
     FirebaseFirestore.instance.collection('documentos').where('posicao',isEqualTo: 'meio').orderBy('idDoc').get().then((docs){
       for(int i = 0; docs.docs.length > i; i++) {
-        // print(docs.docs[i]['idDoc']);
-        List dividirDoc = docs.docs[i]['idDoc'].toString().split('.');
-        int inicio = int.parse(dividirDoc[0]);
-        int meio = int.parse(dividirDoc[1]);
-        listaInstrucaoPrincipal[inicio-1].ativarBotaoAdicionarItemLista = false;
-        if(BadStateString(docs.docs[i],'nomeProcesso')!=''){
-          alturaListaInicio = alturaListaInicio + alturaItens;
-        }
-        adicionarListaMeio(inicio-1,false,docs.docs[i]['idFire'],docs.docs[i]['idDoc'],BadStateString(docs.docs[i],'idEsp'),BadStateString(docs.docs[i],'nomeProcesso'),BadStateInt(docs.docs[i], 'versao'),docs.docs[i]['titulo'], true, false);
-        if(docs.docs.length == i+1){
-          alturaListaInicio = alturaListaInicio + alturaItens;
-          listaInstrucaoPrincipal[inicio-1].alturaListaMeio = listaInstrucaoPrincipal[inicio-1].alturaListaMeio + alturaItens;
-          listaInstrucaoPrincipal[inicio-1].listaMeio.add(
-              ModeloInstrucaoLista_1_1_0(
-                  idFire: '',
-                  idEsp: '',
-                  nomeProcesso: '',
-                  versao: 0,
-                  idDoc: '$inicio.${meio+1}.0',
-                  controller: TextEditingController(text: 'add meio'),
-                  ativarBotaoAdicionarItemLista: false,
-                  largura: larguraMeioCaixaTexto,
-                  escrever: true,
-                  listaFinal: [],
-                  alturaListaFinal: 0
-              )
-          );
-          setState(() {});
-          carregarDadosFim();
+        if(acesso_adm){
+          // print(docs.docs[i]['idDoc']);
+          List dividirDoc = docs.docs[i]['idDoc'].toString().split('.');
+          int inicio = int.parse(dividirDoc[0]);
+          int meio = int.parse(dividirDoc[1]);
+          listaInstrucaoPrincipal[inicio-1].ativarBotaoAdicionarItemLista = false;
+          if(BadStateString(docs.docs[i],'nomeProcesso')!=''){
+            alturaListaInicio = alturaListaInicio + alturaItens;
+          }
+          adicionarListaMeio(inicio-1,false,docs.docs[i]['idFire'],docs.docs[i]['idDoc'],BadStateString(docs.docs[i],'idEsp'),BadStateString(docs.docs[i],'nomeProcesso'),BadStateInt(docs.docs[i], 'versao'),docs.docs[i]['titulo'], true, false);
+          if(docs.docs.length == i+1){
+            alturaListaInicio = alturaListaInicio + alturaItens;
+            listaInstrucaoPrincipal[inicio-1].alturaListaMeio = listaInstrucaoPrincipal[inicio-1].alturaListaMeio + alturaItens;
+            listaInstrucaoPrincipal[inicio-1].listaMeio.add(
+                ModeloInstrucaoLista_1_1_0(
+                    idFire: '',
+                    idEsp: '',
+                    nomeProcesso: '',
+                    versao: 0,
+                    idDoc: '$inicio.${meio+1}.0',
+                    controller: TextEditingController(text: 'add meio'),
+                    ativarBotaoAdicionarItemLista: false,
+                    largura: larguraMeioCaixaTexto,
+                    escrever: true,
+                    listaFinal: [],
+                    alturaListaFinal: 0
+                )
+            );
+            setState(() {});
+            carregarDadosFim();
+          }
+        }else{
+          if(BadStateString(docs.docs[i],'situacao')!=''){
+            // print(docs.docs[i]['idDoc']);
+            List dividirDoc = docs.docs[i]['idDoc'].toString().split('.');
+            int inicio = int.parse(dividirDoc[0]);
+            int meio = int.parse(dividirDoc[1]);
+            listaInstrucaoPrincipal[inicio-1].ativarBotaoAdicionarItemLista = false;
+            if(BadStateString(docs.docs[i],'nomeProcesso')!=''){
+              alturaListaInicio = alturaListaInicio + alturaItens;
+            }
+            adicionarListaMeio(inicio-1,false,docs.docs[i]['idFire'],docs.docs[i]['idDoc'],BadStateString(docs.docs[i],'idEsp'),BadStateString(docs.docs[i],'nomeProcesso'),BadStateInt(docs.docs[i], 'versao'),docs.docs[i]['titulo'], true, false);
+            if(docs.docs.length == i+1){
+              alturaListaInicio = alturaListaInicio + alturaItens;
+              listaInstrucaoPrincipal[inicio-1].alturaListaMeio = listaInstrucaoPrincipal[inicio-1].alturaListaMeio + alturaItens;
+              listaInstrucaoPrincipal[inicio-1].listaMeio.add(
+                  ModeloInstrucaoLista_1_1_0(
+                      idFire: '',
+                      idEsp: '',
+                      nomeProcesso: '',
+                      versao: 0,
+                      idDoc: '$inicio.${meio+1}.0',
+                      controller: TextEditingController(text: 'add meio'),
+                      ativarBotaoAdicionarItemLista: false,
+                      largura: larguraMeioCaixaTexto,
+                      escrever: true,
+                      listaFinal: [],
+                      alturaListaFinal: 0
+                  )
+              );
+              setState(() {});
+              carregarDadosFim();
+            }
+          }
         }
       }
     });
@@ -187,7 +233,7 @@ class _HomeTelaState extends State<HomeTela> {
               nomeProcesso: '',
               versao: 0,
               idDoc: '${inicio+1}.${meio+2}.0',
-              controller: TextEditingController(text: 'meio flutter'),
+              controller: TextEditingController(),
               ativarBotaoAdicionarItemLista: false,
               largura: larguraMeioCaixaTexto,
               escrever: true,
@@ -202,18 +248,35 @@ class _HomeTelaState extends State<HomeTela> {
   carregarDadosFim()async{
     FirebaseFirestore.instance.collection('documentos').where('posicao',isEqualTo: 'fim').orderBy('idDoc').get().then((docs){
       for(int i = 0; docs.docs.length > i; i++) {
-        print(docs.docs[i]['idDoc']);
-        List dividirDoc = docs.docs[i]['idDoc'].toString().split('.');
-        int inicio = int.parse(dividirDoc[0]);
-        int meio = int.parse(dividirDoc[1]);
-        listaInstrucaoPrincipal[inicio-1].listaMeio[meio-1].ativarBotaoAdicionarItemLista = false;
-        adicionarListaFim(inicio-1,meio-1,false,docs.docs[i]['idFire'],docs.docs[i]['idDoc'],BadStateString(docs.docs[i],'idEsp'),BadStateString(docs.docs[i],'nomeProcesso'),BadStateInt(docs.docs[i], 'versao'),docs.docs[i]['titulo'], true, false);
-        if(docs.docs.length == i+1){
-          alturaListaInicio = alturaListaInicio + alturaItens;
-          listaInstrucaoPrincipal[inicio-1].alturaListaMeio = listaInstrucaoPrincipal[inicio-1].alturaListaMeio + alturaItens;
-          // adicionarListaFinal(inicio - 1,meio-1,false,'','$inicio.${meio}.1','flutter fim',true,false);
-          setState(() {});
-        }
+       if(acesso_adm){
+         // print(docs.docs[i]['idDoc']);
+         List dividirDoc = docs.docs[i]['idDoc'].toString().split('.');
+         int inicio = int.parse(dividirDoc[0]);
+         int meio = int.parse(dividirDoc[1]);
+         listaInstrucaoPrincipal[inicio-1].listaMeio[meio-1].ativarBotaoAdicionarItemLista = false;
+         adicionarListaFim(inicio-1,meio-1,false,docs.docs[i]['idFire'],docs.docs[i]['idDoc'],BadStateString(docs.docs[i],'idEsp'),BadStateString(docs.docs[i],'nomeProcesso'),BadStateInt(docs.docs[i], 'versao'),docs.docs[i]['titulo'], true, false);
+         if(docs.docs.length == i+1){
+           alturaListaInicio = alturaListaInicio + alturaItens;
+           listaInstrucaoPrincipal[inicio-1].alturaListaMeio = listaInstrucaoPrincipal[inicio-1].alturaListaMeio + alturaItens;
+           // adicionarListaFinal(inicio - 1,meio-1,false,'','$inicio.${meio}.1','flutter fim',true,false);
+           setState(() {});
+         }else{
+           if(BadStateString(docs.docs[i],'situacao')!=''){
+             print(docs.docs[i]['idDoc']);
+             List dividirDoc = docs.docs[i]['idDoc'].toString().split('.');
+             int inicio = int.parse(dividirDoc[0]);
+             int meio = int.parse(dividirDoc[1]);
+             listaInstrucaoPrincipal[inicio-1].listaMeio[meio-1].ativarBotaoAdicionarItemLista = false;
+             adicionarListaFim(inicio-1,meio-1,false,docs.docs[i]['idFire'],docs.docs[i]['idDoc'],BadStateString(docs.docs[i],'idEsp'),BadStateString(docs.docs[i],'nomeProcesso'),BadStateInt(docs.docs[i], 'versao'),docs.docs[i]['titulo'], true, false);
+             if(docs.docs.length == i+1){
+               alturaListaInicio = alturaListaInicio + alturaItens;
+               listaInstrucaoPrincipal[inicio-1].alturaListaMeio = listaInstrucaoPrincipal[inicio-1].alturaListaMeio + alturaItens;
+               // adicionarListaFinal(inicio - 1,meio-1,false,'','$inicio.${meio}.1','flutter fim',true,false);
+               setState(() {});
+             }
+           }
+         }
+       }
       }
     });
   }
@@ -229,17 +292,26 @@ class _HomeTelaState extends State<HomeTela> {
     return docRef.id;
   }
 
+  carregarFuncao()async{
+    FirebaseFirestore.instance.collection('usuarios').where('email',isEqualTo: widget.emailLogado).get().then((dadosUsuario){
+      if(dadosUsuario.docs[0]['tipo_acesso']=='ADM'){
+        acesso_adm = true;
+      }
+      carregarDadosInicio();
+    });
+  }
+
   @override
   void initState() {
     super.initState();
-    carregarDadosInicio();
+    carregarFuncao();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Cores.cinzaClaro,
-      appBar: carregando?null:AppBarPadrao(showUsuarios: true,emailLogado: widget.emailLogado),
+      appBar: carregando?null:AppBarPadrao(mostrarUsuarios: true,emailLogado: widget.emailLogado,mostrarComentarios: acesso_adm),
       body: Container(
         width: VariavelEstatica.largura,
         height: VariavelEstatica.altura,
@@ -279,6 +351,7 @@ class _HomeTelaState extends State<HomeTela> {
                           crossAxisAlignment: CrossAxisAlignment.end,
                           children: [
                             ItemInstrucao(
+                              acesso_adm: acesso_adm,
                               controller: listaInstrucaoPrincipal[inicio].controller,
                               ativarBotaoAdicionarItemLista: listaInstrucaoPrincipal[inicio].ativarBotaoAdicionarItemLista,
                               largura: listaInstrucaoPrincipal[inicio].largura,
@@ -290,13 +363,13 @@ class _HomeTelaState extends State<HomeTela> {
                               versao: listaInstrucaoPrincipal[inicio].versao,
                               emailLogado: widget.emailLogado,
                               onPressed: ()async{
-                                if(listaInstrucaoPrincipal[inicio].controller.text.isNotEmpty){
+                                if(listaInstrucaoPrincipal[inicio].controller.text.isNotEmpty && listaInstrucaoPrincipal[inicio].controller.text !=''){
                                   if(listaInstrucaoPrincipal[inicio].idFire!=''){
                                     listaInstrucaoPrincipal[inicio].ativarBotaoAdicionarItemLista = true;
                                     FirebaseFirestore.instance.collection('documentos').doc(listaInstrucaoPrincipal[inicio].idFire).update({
                                           'titulo':listaInstrucaoPrincipal[inicio].controller.text
                                         }).then((value){
-                                      adicionarListaMeio(inicio,false,'','${inicio+1}.1.0','','',0,'teste meio flutter',false,true);
+                                      adicionarListaMeio(inicio,false,'','${inicio+1}.1.0','','',0,'',false,true);
                                       setState(() {});
                                     });
                                   }else{
@@ -321,6 +394,7 @@ class _HomeTelaState extends State<HomeTela> {
                                     crossAxisAlignment: CrossAxisAlignment.end,
                                     children: [
                                       ItemInstrucao(
+                                        acesso_adm: acesso_adm,
                                         controller: listaInstrucaoPrincipal[inicio].listaMeio[meio].controller,
                                         ativarBotaoAdicionarItemLista: listaInstrucaoPrincipal[inicio].listaMeio[meio].ativarBotaoAdicionarItemLista,
                                         largura: listaInstrucaoPrincipal[inicio].listaMeio[meio].largura,
@@ -332,14 +406,14 @@ class _HomeTelaState extends State<HomeTela> {
                                         versao: listaInstrucaoPrincipal[inicio].listaMeio[meio].versao,
                                         emailLogado: widget.emailLogado,
                                         onPressed: ()async{
-                                          if(listaInstrucaoPrincipal[inicio].listaMeio[meio].controller.text.isNotEmpty){
+                                          if(listaInstrucaoPrincipal[inicio].listaMeio[meio].controller.text.isNotEmpty && listaInstrucaoPrincipal[inicio].listaMeio[meio].controller.text !=''){
                                             if(listaInstrucaoPrincipal[inicio].listaMeio[meio].idFire!=''){
                                               listaInstrucaoPrincipal[inicio].listaMeio[meio].ativarBotaoAdicionarItemLista = true;
                                               listaInstrucaoPrincipal[inicio].alturaListaMeio = listaInstrucaoPrincipal[inicio].alturaListaMeio + alturaItens;
                                               FirebaseFirestore.instance.collection('documentos').doc(listaInstrucaoPrincipal[inicio].listaMeio[meio].idFire).update({
                                                 'titulo':listaInstrucaoPrincipal[inicio].listaMeio[meio].controller.text
                                               }).then((value){
-                                                adicionarListaFim(inicio,meio,false,'','${inicio+1}.${meio+1}.1','','',0,'teste fim flutter',false,true);
+                                                adicionarListaFim(inicio,meio,false,'','${inicio+1}.${meio+1}.1','','',0,'',false,true);
                                               });
                                             }else{
                                               await salvarFirebase('documentos',listaInstrucaoPrincipal[inicio].listaMeio[meio].controller.text,
@@ -361,6 +435,7 @@ class _HomeTelaState extends State<HomeTela> {
                                             itemCount: listaInstrucaoPrincipal[inicio].listaMeio[meio].listaFinal.length,
                                             itemBuilder: (context,fim){
                                               return ItemInstrucao(
+                                                acesso_adm: acesso_adm,
                                                 controller: listaInstrucaoPrincipal[inicio].listaMeio[meio].listaFinal[fim].controller,
                                                 ativarBotaoAdicionarItemLista: listaInstrucaoPrincipal[inicio].listaMeio[meio].listaFinal[fim].checkFinal,
                                                 largura: listaInstrucaoPrincipal[inicio].listaMeio[meio].listaFinal[fim].largura,
@@ -372,7 +447,7 @@ class _HomeTelaState extends State<HomeTela> {
                                                 versao: listaInstrucaoPrincipal[inicio].listaMeio[meio].listaFinal[fim].versao,
                                                 emailLogado: widget.emailLogado,
                                                 onPressed: ()async{
-                                                  if(listaInstrucaoPrincipal[inicio].listaMeio[meio].listaFinal[fim].controller.text.isNotEmpty){
+                                                  if(listaInstrucaoPrincipal[inicio].listaMeio[meio].listaFinal[fim].controller.text.isNotEmpty && listaInstrucaoPrincipal[inicio].listaMeio[meio].listaFinal[fim].controller.text !=''){
                                                     listaInstrucaoPrincipal[inicio].listaMeio[meio].listaFinal[fim].checkFinal = true;
                                                     await salvarFirebase(
                                                         'documentos',listaInstrucaoPrincipal[inicio].listaMeio[meio].listaFinal[fim].controller.text,

@@ -1,8 +1,11 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:instrucao_de_processos/servicos/shared_preferences_servicos.dart';
 import 'package:instrucao_de_processos/telas/home_tela.dart';
 import 'package:instrucao_de_processos/utilidades/cores.dart';
 import 'package:instrucao_de_processos/widgets/caixa_texto.dart';
 import 'package:instrucao_de_processos/widgets/snackBars.dart';
+import 'package:instrucao_de_processos/widgets/texto_padrao.dart';
 import '../utilidades/variavel_estatica.dart';
 import '../widgets/botao_padrao.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -17,13 +20,14 @@ class LoginTela extends StatefulWidget {
 
 class _LoginTelaState extends State<LoginTela> {
 
-  var email = TextEditingController(text: 'teste123@gmail.com');
-  var senha = TextEditingController(text: 'senha123');
-
-  // var email = TextEditingController();
-  // var senha = TextEditingController();
+  // var email = TextEditingController(text: 'teste123@gmail.com');
+  // var senha = TextEditingController(text: 'senha123');
+  //
+  var email = TextEditingController();
+  var senha = TextEditingController();
 
   bool obscure = true;
+  bool carregandoConta = true;
 
   checkLogin(){
     if(email.text.isNotEmpty && senha.text.isNotEmpty){
@@ -36,7 +40,9 @@ class _LoginTelaState extends State<LoginTela> {
           'ultimo_acesso' : DateTime.now()
         },SetOptions(merge: true)).then((value) {
           showSnackBar(context, 'Usuário Logado!',Colors.green);
-          Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => HomeTela(emailLogado: email.text,)));
+          PrefService().salvarConta(email.text, senha.text).then((value){
+            Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => HomeTela(emailLogado: email.text,)));
+          });
         });
       }).catchError((error) async {
 
@@ -63,13 +69,57 @@ class _LoginTelaState extends State<LoginTela> {
     }
   }
 
+
+  carregarConta()async{
+
+    PrefService().carregarConta().then((value){
+      if(value[0]!=null){
+        carregandoConta = false;
+        if(value[1]!='senha123'){
+          Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => HomeTela(emailLogado: value[0],)));
+        }else{
+          FirebaseAuth.instance.sendPasswordResetEmail(email: value[0]).then((res){
+            showCupertinoDialog(context: context,
+                builder: (context){
+                  return Center(
+                    child: CupertinoAlertDialog(
+                      title: TextoPadrao(texto: 'Resetar senha',cor: Cores.cinzaTextoEscuro,negrito: FontWeight.bold,),
+                      content: TextoPadrao(
+                        texto:'Enviamos uma redefinição de senha no seu e-mail ${value[0]}.\n'
+                              'Verifique lixo eletrônico e span, caso o e-mail não chegou na caixa de entrada.\n'
+                              'Só poderá continuar o acesso depois que fazer essa alteração de acesso.',
+                        cor: Cores.cinzaTextoEscuro,
+                        maxLines: 5,
+                      ),
+                      actions: [
+                        CupertinoDialogAction(child: TextoPadrao(texto: 'OK',cor: Cores.cinzaTextoEscuro,negrito: FontWeight.bold,),onPressed: ()=>Navigator.pop(context),)
+                      ],
+                    ),
+                  );
+                });
+          });
+        }
+
+      }else{
+        carregandoConta = false;
+        setState(() {});
+      }
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    carregarConta();
+  }
+
   @override
   Widget build(BuildContext context) {
 
     VariavelEstatica.inicializarDimensoes(context);
 
     return Scaffold(
-      body: Container(
+      body: carregandoConta?Container():Container(
         width: VariavelEstatica.largura,
         height: VariavelEstatica.altura,
         alignment: Alignment.bottomCenter,
