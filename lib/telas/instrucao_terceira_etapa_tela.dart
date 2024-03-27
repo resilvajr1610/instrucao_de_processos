@@ -192,6 +192,8 @@ class _InstrucaoTerceiraEtapaTelaState extends State<InstrucaoTerceiraEtapaTela>
                                                   ModeloAnalise3(
                                                       imagemSelecionada: aux[j]['imagemSelecionada'],
                                                       numeroAnalise: aux[j]['numeroAnalise'],
+                                                      urlFotos: [],
+                                                      urlVideos: [],
                                                       nomeAnalise: aux[j]['nomeAnalise'],
                                                       tempo: aux[j]['tempoAnalise'],
                                                       pontoChave: aux[j]['pontoChave']
@@ -205,6 +207,7 @@ class _InstrucaoTerceiraEtapaTelaState extends State<InstrucaoTerceiraEtapaTela>
                                               tempoTotalEtapa: listaEtapas[i]['tempoTotalEtapaMinutos'],
                                               listaAnalise: listaAnalise,
                                               funcaoComentario: null,
+                                              // funcaoExibirMidias: null,
                                             );
                                           }
                                       ),

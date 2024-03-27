@@ -69,14 +69,8 @@
     const app = initializeApp(firebaseConfig);
     firebase.analytics(app);
   </script>
-  <script>
-    script type="text/javascript">
-    let useHtml = true;
-    if(useHtml) {
-      window.flutterWebRenderer = "html";
-    } else {
-      window.flutterWebRenderer = "canvaskit";
-    }
-  </script>
+<script type="text/javascript">
+    window.flutterWebRenderer = "html";
+</script>
 </body>
 </html>

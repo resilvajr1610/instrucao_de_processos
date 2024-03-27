@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:instrucao_de_processos/modelos/fotos_modelo.dart';
 import 'package:instrucao_de_processos/utilidades/variavel_estatica.dart';
 import 'package:instrucao_de_processos/widgets/caixa_texto.dart';
 import 'package:instrucao_de_processos/widgets/snackBars.dart';
@@ -33,6 +34,7 @@ class _InstrucaoUsuarioTelaState extends State<InstrucaoUsuarioTela> {
   DocumentSnapshot? dadosEspecificacao;
   DocumentSnapshot? dadosEtapas;
   List listaEtapas=[];
+  List<FotosModelo> listaUrlFotosEtapas =[];
 
   carregarDados(){
     FirebaseFirestore.instance.collection('especificacao').doc(widget.idEsp).get().then((dadosEsp){
@@ -42,6 +44,14 @@ class _InstrucaoUsuarioTelaState extends State<InstrucaoUsuarioTela> {
     FirebaseFirestore.instance.collection('etapas').doc(widget.idEsp).get().then((dadosEta){
       dadosEtapas = dadosEta;
       listaEtapas = BadStateList(dadosEta, 'listaEtapa');
+      for(int posicaoEtapa = 0; listaEtapas.length > posicaoEtapa; posicaoEtapa++){
+        List listaAnalise = listaEtapas[posicaoEtapa]['listaAnalise'];
+        for(int posicaoAnalise = 0; listaAnalise.length > posicaoAnalise; posicaoAnalise++){
+          if(listaAnalise[posicaoAnalise]['j']==posicaoAnalise){
+            listaUrlFotosEtapas.add(FotosModelo(posicaoEtapa: posicaoEtapa, posicaoAnalise: posicaoAnalise, url: BadStateList(dadosEta, 'fotos_etapa${posicaoEtapa}_analise${posicaoAnalise}')));
+          }
+        }
+      }
       setState((){});
     });
   }
@@ -101,6 +111,59 @@ class _InstrucaoUsuarioTelaState extends State<InstrucaoUsuarioTela> {
       Navigator.pop(context);
       setState(() {});
     });
+  }
+
+  carregarWidgetMidias(int posicaoEtapa, int posicaoAnalise){
+    showDialog(context: context,
+      builder: (context){
+        return Center(
+          child: AlertDialog(
+            title: TextoPadrao(texto: 'Qual mídia gostaria de adicionar?',cor: Cores.primaria,negrito: FontWeight.bold,),
+            content: Container(
+              height: 150,
+              width: 200,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  TextoPadrao(
+                    texto: 'Fotos adicionadas : ${listaEtapas[posicaoEtapa].listaAnalise[posicaoAnalise].listaFotos.length}',
+                    cor: Cores.cinzaTextoEscuro,
+                  ),
+                  SizedBox(height: 20,),
+                  TextoPadrao(
+                    texto: 'Videos adicionados : ${listaEtapas[posicaoEtapa].listaAnalise[posicaoAnalise].listaVideos.length}',
+                    cor: Cores.cinzaTextoEscuro,
+                  ),
+                  SizedBox(height: 20,),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      Card(
+                        child: TextButton(
+                            child: TextoPadrao(texto: 'Foto',cor: Cores.cinzaTextoEscuro,negrito: FontWeight.bold,),
+                            onPressed: (){},
+                            // onPressed: ()=>escolherImagens(posicaoEtapa,posicaoAnalise)
+                        ),
+                      ),
+                      Card(
+                        child: TextButton(
+                            child: TextoPadrao(texto: 'Video',cor: Cores.cinzaTextoEscuro,negrito: FontWeight.bold,),
+                            onPressed: (){},
+                            // onPressed: ()=>escolherVideo(posicaoEtapa,posicaoAnalise)
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+            actions: [
+              TextButton(child: TextoPadrao(texto: 'Voltar',cor: Colors.red,negrito: FontWeight.bold,),onPressed: ()=>Navigator.pop(context),),
+            ],
+          ),
+        );
+      }
+    );
   }
 
   @override
@@ -231,15 +294,24 @@ class _InstrucaoUsuarioTelaState extends State<InstrucaoUsuarioTela> {
 
                                   List aux = listaEtapas[i]['listaAnalise'];
                                   List<ModeloAnalise3> listaAnalise = [];
+                                  List fotos = [];
 
                                   for(int j = 0; aux.length > j ; j++){
+                                    for(int posicaoAnalise = 0; listaUrlFotosEtapas.length > posicaoAnalise ; posicaoAnalise++){
+                                      if(listaUrlFotosEtapas[posicaoAnalise].posicaoEtapa==i && listaUrlFotosEtapas[posicaoAnalise].posicaoAnalise==j){
+                                        fotos=listaUrlFotosEtapas[posicaoAnalise].url;
+                                        print(fotos);
+                                      }
+                                    }
                                     listaAnalise.add(
                                         ModeloAnalise3(
                                             imagemSelecionada: aux[j]['imagemSelecionada'],
                                             numeroAnalise: aux[j]['numeroAnalise'],
                                             nomeAnalise: aux[j]['nomeAnalise'],
                                             tempo: aux[j]['tempoAnalise'],
-                                            pontoChave: aux[j]['pontoChave']
+                                            pontoChave: aux[j]['pontoChave'],
+                                            urlFotos: fotos,
+                                            urlVideos: []
                                         )
                                     );
                                   }
@@ -250,97 +322,12 @@ class _InstrucaoUsuarioTelaState extends State<InstrucaoUsuarioTela> {
                                     tempoTotalEtapa: listaEtapas[i]['tempoTotalEtapaMinutos'],
                                     listaAnalise: listaAnalise,
                                     comentario: true,
-                                    funcaoComentario: (){
-                                      carregarWidget(listaEtapas[i]['numeroEtapa'], listaEtapas[i]['nomeEtapa'],);
-                                    },
+                                    funcaoComentario: ()=>carregarWidget(listaEtapas[i]['numeroEtapa'], listaEtapas[i]['nomeEtapa'],),
+                                    // funcaoExibirMidias: ()=>carregarWidgetMidias(listaEtapas[i]['numeroEtapa'], listaEtapas[i]['nomeEtapa']),
                                   );
                                 }
                             ),
                           ),
-                          // TextoPadrao(texto: 'Observações Gerais/ O que é proibido e porque?',cor: Cores.primaria,negrito: FontWeight.bold,tamanhoFonte: 16,),
-                          // TextoPadrao(texto: BadStateString(dadosEtapas, 'observacoes'),cor: Cores.cinzaTextoEscuro,tamanhoFonte: 16,),
-                          // Container(
-                          //   width: 670,
-                          //   padding: EdgeInsets.all(10),
-                          //   margin: EdgeInsets.symmetric(vertical: 5,horizontal: 5),
-                          //   decoration: BoxDecoration(
-                          //     color: Colors.white,
-                          //     border: Border.all(color: Cores.cinzaTexto),
-                          //     borderRadius: BorderRadius.circular(10),
-                          //   ),
-                          //   child: Column(
-                          //     crossAxisAlignment: CrossAxisAlignment.start,
-                          //     children: [
-                          //       TextoPadrao(texto: 'Histórico',cor: Cores.primaria,negrito: FontWeight.bold,tamanhoFonte: 16,),
-                          //       Column(
-                          //         children: [
-                          //           Container(
-                          //             width: 650,
-                          //             child: Row(
-                          //               mainAxisSize: MainAxisSize.min,
-                          //               children: [
-                          //                 Container(
-                          //                     width: 50,
-                          //                     child: TextoPadrao(texto:'Versão',cor: Cores.primaria,tamanhoFonte: 14,)
-                          //                 ),
-                          //                 Container(
-                          //                     width: 100,
-                          //                     child: TextoPadrao(texto:'Data',cor: Cores.primaria,tamanhoFonte: 14,alinhamentoTexto: TextAlign.center,)
-                          //                 ),
-                          //                 SizedBox(width: 10,),
-                          //                 Container(
-                          //                     width: 200,
-                          //                     child: TextoPadrao(texto:'Resp. Alteração',cor: Cores.primaria,tamanhoFonte: 14,)
-                          //                 ),
-                          //                 SizedBox(width: 10,),
-                          //                 Container(
-                          //                     width: 250,
-                          //                     child: TextoPadrao(texto:'Razão',cor: Cores.primaria,tamanhoFonte: 14,)
-                          //                 ),
-                          //               ],
-                          //             ),
-                          //           ),
-                          //           Container(
-                          //             width: 650,
-                          //             child: Row(
-                          //               mainAxisSize: MainAxisSize.min,
-                          //               children: [
-                          //                 Container(
-                          //                     width: 50,
-                          //                     child: TextoPadrao(
-                          //                       texto:BadStateInt(dadosEspecificacao, 'versao').toString(),
-                          //                       cor: Cores.cinzaTextoEscuro,
-                          //                       tamanhoFonte: 14,
-                          //                       alinhamentoTexto: TextAlign.center,
-                          //                     )
-                          //                 ),
-                          //                 Container(
-                          //                     width: 100,
-                          //                     child: TextoPadrao(
-                          //                       texto:dadosEspecificacao==null?'':VariavelEstatica.mascaraData.format(dadosEspecificacao!['dataVersao'].toDate()),
-                          //                       cor: Cores.cinzaTextoEscuro,
-                          //                       tamanhoFonte: 14,
-                          //                       alinhamentoTexto: TextAlign.center,
-                          //                     )
-                          //                 ),
-                          //                 SizedBox(width: 10,),
-                          //                 Container(
-                          //                     width: 200,
-                          //                     child: TextoPadrao(texto:BadStateString(dadosEspecificacao, 'visto'),cor: Cores.cinzaTextoEscuro,tamanhoFonte: 14,)
-                          //                 ),
-                          //                 SizedBox(width: 10,),
-                          //                 Container(
-                          //                     width: 250,
-                          //                     child: TextoPadrao(texto:BadStateString(dadosEtapas, 'alteracao'),cor: Cores.cinzaTextoEscuro,tamanhoFonte: 14,)
-                          //                 ),
-                          //               ],
-                          //             ),
-                          //           ),
-                          //         ],
-                          //       ),
-                          //     ],
-                          //   ),
-                          // ),
                         ],
                       ),
                     ),

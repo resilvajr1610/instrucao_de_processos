@@ -54,7 +54,7 @@ class CaixaTexto extends StatelessWidget {
           width: largura,
           margin: EdgeInsets.only(bottom: margimBottom),
           decoration: BoxDecoration(
-            color: ativarCaixa?corCaixa:Colors.white,
+            color: corCaixa,
             borderRadius: BorderRadius.circular(5),
           ),
           child: Row(

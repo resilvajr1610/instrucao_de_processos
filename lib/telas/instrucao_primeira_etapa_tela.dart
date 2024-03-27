@@ -41,6 +41,7 @@ class _InstrucaoPrimeiraEtapaTelaState extends State<InstrucaoPrimeiraEtapaTela>
   TextEditingController epi = TextEditingController();
   TextEditingController ferramentas = TextEditingController();
   TextEditingController materiaPrima = TextEditingController();
+  TextEditingController tempoEtapas = TextEditingController(text: 'Cálculo automático após finalização das etapas');
   TextEditingController espeficicacao = TextEditingController();
   TextEditingController prazo = TextEditingController();
   TextEditingController esp_maquina = TextEditingController();
@@ -94,6 +95,7 @@ class _InstrucaoPrimeiraEtapaTelaState extends State<InstrucaoPrimeiraEtapaTela>
         prazo.text = BadStateString(dados, 'prazo');
         esp_maquina.text = BadStateString(dados, 'esp_maquina');
         licenca_qualificacoes.text = BadStateString(dados, 'licenca_qualificacoes');
+        tempoEtapas.text = BadStateInt(dados, 'totalEtapas')!=0?'${BadStateInt(dados, 'totalEtapas')} min':'Cálculo automático após finalização das etapas';
         setState(() {});
       });
     }
@@ -698,10 +700,10 @@ class _InstrucaoPrimeiraEtapaTelaState extends State<InstrucaoPrimeiraEtapaTela>
                             SizedBox(width: 30,),
                             CaixaTexto(
                               titulo: 'Tempo total das Etapas',
-                              controller: TextEditingController(text: 'Cálculo automático após finalização das etapas'),
+                              controller: tempoEtapas,
                               largura: VariavelEstatica.largura*0.25,
                               corCaixa: Cores.cinzaClaro,
-                              escrever: false,
+                              ativarCaixa: false,
                             ),
                           ],
                         ),

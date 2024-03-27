@@ -1,7 +1,8 @@
 class ModeloAnalise3{
   String imagemSelecionada;
   int numeroAnalise;
-  //lista de midias fotos e videos
+  List urlFotos;
+  List urlVideos;
   String nomeAnalise;
   String tempo;
   String pontoChave;
@@ -9,6 +10,8 @@ class ModeloAnalise3{
   ModeloAnalise3({
     required this.imagemSelecionada,
     required this.numeroAnalise,
+    required this.urlFotos,
+    required this.urlVideos,
     required this.nomeAnalise,
     required this.tempo,
     required this.pontoChave,

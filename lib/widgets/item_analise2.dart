@@ -11,12 +11,14 @@ class ItemAnalise2 extends StatelessWidget {
   var botaoSalvarNovaAnalise;
   var botaoMostrarListaImagem;
   Widget listViewImagens;
+  var funcaoFotoVideo;
 
   ItemAnalise2({
     required this.modeloAnalise,
     required this.botaoSalvarNovaAnalise,
     required this.listViewImagens,
     required this.botaoMostrarListaImagem,
+    required this.funcaoFotoVideo
   });
 
   @override
@@ -72,7 +74,7 @@ class ItemAnalise2 extends StatelessWidget {
           padding: EdgeInsets.symmetric(vertical: 8),
           child: IconButton(
             icon: Icon(Icons.add_photo_alternate_outlined,color: Cores.cinzaTexto,),
-            onPressed: !modeloAnalise.analiseAtiva?null:(){},
+            onPressed: !modeloAnalise.analiseAtiva?null:funcaoFotoVideo,
           ),
         ),
         SizedBox(width: 10,),

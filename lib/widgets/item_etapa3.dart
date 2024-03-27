@@ -11,6 +11,7 @@ class ItemEtapa3 extends StatelessWidget {
   List<ModeloAnalise3> listaAnalise;
   bool comentario;
   var funcaoComentario;
+  // var funcaoExibirMidias;
 
   ItemEtapa3({
     required this.numeroEtapa,
@@ -18,11 +19,13 @@ class ItemEtapa3 extends StatelessWidget {
     required this.tempoTotalEtapa,
     required this.listaAnalise,
     required this.funcaoComentario,
+    // required this.funcaoExibirMidias,
     this.comentario = false,
   });
 
   @override
   Widget build(BuildContext context) {
+
     return Container(
       width: VariavelEstatica.largura * 0.3,
       padding: EdgeInsets.all(10),
@@ -146,7 +149,44 @@ class ItemEtapa3 extends StatelessWidget {
                       width: 90,
                       child: IconButton(
                         icon: Icon(Icons.photo,color: Cores.cinzaTexto,),
-                        onPressed: (){},
+                        onPressed: (){
+                            showDialog(context: context,
+                                builder: (context){
+                                  return Center(
+                                    child: AlertDialog(
+                                      title: TextoPadrao(texto: 'Mídias',cor: Cores.primaria,negrito: FontWeight.bold,),
+                                      content: Container(
+                                        height: 300,
+                                        width: 1000,
+                                        child: listaAnalise[i].urlFotos.length==0?Center(
+                                          child: TextoPadrao(texto: 'Sem mídia',cor: Cores.primaria,),
+                                        ):ListView.builder(
+                                          scrollDirection: Axis.horizontal,
+                                          itemCount: listaAnalise[i].urlFotos.length,
+                                          itemBuilder: (context, j) {
+                                            return FutureBuilder(
+                                              future: precacheImage(NetworkImage(listaAnalise[i].urlFotos[j]), context),
+                                              builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
+                                                if (snapshot.connectionState == ConnectionState.waiting) {
+                                                  return Center(child: CircularProgressIndicator());
+                                                } else if (snapshot.hasError) {
+                                                  return Center(child: Text('Erro ao carregar imagem'));
+                                                } else {
+                                                  return Image.network(listaAnalise[i].urlFotos[j]);
+                                                }
+                                              },
+                                            );
+                                          },
+                                        )
+                                      ),
+                                      actions: [
+                                        TextButton(child: TextoPadrao(texto: 'Voltar',cor: Colors.red,negrito: FontWeight.bold,),onPressed: ()=>Navigator.pop(context),),
+                                      ],
+                                    ),
+                                  );
+                                }
+                            );
+                        },
                       ),
                       margin: EdgeInsets.only(right: 20),
                     ),

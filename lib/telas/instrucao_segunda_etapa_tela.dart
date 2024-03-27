@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:instrucao_de_processos/modelos/modelo_etapa2.dart';
@@ -15,6 +16,9 @@ import '../widgets/nivel_etapa2.dart';
 import '../widgets/texto_padrao.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:file_picker/file_picker.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 
 class InstrucaoSegundaEtapaTela extends StatefulWidget {
   String emailLogado;
@@ -73,7 +77,9 @@ class _InstrucaoSegundaEtapaTelaState extends State<InstrucaoSegundaEtapaTela> {
                 tempoAnalise: TextEditingController(),
                 pontoChave: TextEditingController(),
                 mostrarListaImagens: false,
-                listaCompleta: false
+                listaCompleta: false,
+                listaFotos: [],
+                listaVideos: []
               )
             ],
             aumentarAlturaContainer: false,
@@ -85,6 +91,9 @@ class _InstrucaoSegundaEtapaTelaState extends State<InstrucaoSegundaEtapaTela> {
   }
 
   carregarEtapa() {
+
+    double tempoTotal = 0;
+
     FirebaseFirestore.instance
         .collection('etapas')
         .doc(widget.idEsp)
@@ -108,8 +117,11 @@ class _InstrucaoSegundaEtapaTelaState extends State<InstrucaoSegundaEtapaTela> {
                   pontoChave: TextEditingController(text: listaMapAnalise[j]['pontoChave']),
                   mostrarListaImagens: false,
                   listaCompleta: true,
+                  listaFotos: [],
+                  listaVideos: []
               )
           );
+          tempoTotal = tempoTotal + double.parse(listaMapAnalise[j]['tempoAnalise']);
         }
 
         listaEtapas.add(
@@ -130,6 +142,9 @@ class _InstrucaoSegundaEtapaTelaState extends State<InstrucaoSegundaEtapaTela> {
             )
         );
       }
+      FirebaseFirestore.instance.collection('especificacao').doc(widget.idEsp).update({
+        'totalEtapas' : tempoTotal
+      });
       observacoes.text = etapasDoc['observacoes'];
       alteracao.text = etapasDoc['alteracao'];
       iniciarEtapa(false,0);
@@ -137,14 +152,14 @@ class _InstrucaoSegundaEtapaTelaState extends State<InstrucaoSegundaEtapaTela> {
     });
   }
 
-
-
   editarEtapa() {
     showSnackBar(context, 'Etapas foram salvas', Colors.green);
     Navigator.of(context).push(MaterialPageRoute(builder: (context)=>InstrucaoTerceiraEtapaTela(emailLogado: widget.emailLogado,idEtapa: widget.idEsp,)));
   }
 
   salvarEtapa() {
+
+    double tempoTotal = 0;
 
     if(observacoes.text.isNotEmpty && alteracao.text.isNotEmpty && listaEtapas[0].adicionaNovo!=0){
 
@@ -165,6 +180,9 @@ class _InstrucaoSegundaEtapaTelaState extends State<InstrucaoSegundaEtapaTela> {
           }
         }
         if(listaEtapas[i].nomeEtapa.text.isNotEmpty){
+
+          tempoTotal = tempoTotal + listaEtapas[i].tempoTotalEtapaSegundos;
+
           listaMapEtapa.add({
             'i':i,
             'nomeProcesso': listaEtapas[i].nomeProcesso,
@@ -188,7 +206,8 @@ class _InstrucaoSegundaEtapaTelaState extends State<InstrucaoSegundaEtapaTela> {
         'dataCriacao' : DateTime.now(),
       },SetOptions(merge: true)).then((value){
         FirebaseFirestore.instance.collection('especificacao').doc(widget.idEsp).update({
-          'etapa' : 'criada'
+          'etapa'     : 'criada',
+          'tempoTotal': tempoTotal
         }).then((value){
           showSnackBar(context, 'Etapas foram salvas', Colors.green);
           Navigator.of(context).push(MaterialPageRoute(builder: (context)=>InstrucaoTerceiraEtapaTela(emailLogado: widget.emailLogado,idEtapa: widget.idEsp,)));
@@ -199,6 +218,164 @@ class _InstrucaoSegundaEtapaTelaState extends State<InstrucaoSegundaEtapaTela> {
     }
   }
 
+  carregarWidget(int posicaoEtapa, int posicaoAnalise){
+    showDialog(context: context,
+        builder: (context){
+          return Center(
+            child: AlertDialog(
+              title: TextoPadrao(texto: 'Qual mídia gostaria de adicionar?',cor: Cores.primaria,negrito: FontWeight.bold,),
+              content: Container(
+                height: 150,
+                width: 200,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    TextoPadrao(
+                      texto: 'Fotos adicionadas : ${listaEtapas[posicaoEtapa].listaAnalise[posicaoAnalise].listaFotos.length}',
+                      cor: Cores.cinzaTextoEscuro,
+                    ),
+                    SizedBox(height: 20,),
+                    TextoPadrao(
+                      texto: 'Videos adicionados : ${listaEtapas[posicaoEtapa].listaAnalise[posicaoAnalise].listaVideos.length}',
+                      cor: Cores.cinzaTextoEscuro,
+                    ),
+                    SizedBox(height: 20,),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        Card(
+                          child: TextButton(
+                            child: TextoPadrao(texto: 'Foto',cor: Cores.cinzaTextoEscuro,negrito: FontWeight.bold,),
+                            onPressed: ()=>escolherImagens(posicaoEtapa,posicaoAnalise)
+                          ),
+                        ),
+                        Card(
+                          child: TextButton(
+                            child: TextoPadrao(texto: 'Video',cor: Cores.cinzaTextoEscuro,negrito: FontWeight.bold,),
+                            onPressed: ()=>escolherVideo(posicaoEtapa,posicaoAnalise)
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+              actions: [
+                TextButton(child: TextoPadrao(texto: 'Voltar',cor: Colors.red,negrito: FontWeight.bold,),onPressed: ()=>Navigator.pop(context),),
+              ],
+            ),
+          );
+        });
+  }
+
+  Future escolherImagens(int posicaoEtapa, int posicaoAnalise) async {
+    final multiPicker = ImagePicker();
+    List <XFile> imageFromWebList = [];
+    if(imageFromWebList!=[]){
+      imageFromWebList.clear();
+    }
+
+    if(mounted){
+      await multiPicker.pickMultiImage(imageQuality: 30,).then((value){
+        setState(() {
+          if(value.isNotEmpty){
+            listaEtapas[posicaoEtapa].listaAnalise[posicaoAnalise].listaFotos.addAll(value);
+            Navigator.pop(context);
+            carregando = true;
+            salvarFotos(posicaoEtapa,posicaoAnalise);
+          }else{
+            print('sem imagens');
+          }
+        });
+      });
+    }
+  }
+
+  salvarFotos(int posicaoEtapa, int posicaoAnalise)async{
+    for(int i = 0; listaEtapas[posicaoEtapa].listaAnalise[posicaoAnalise].listaFotos.length > i ; i++){
+      Uint8List arquivoSelecionado = await listaEtapas[posicaoEtapa].listaAnalise[posicaoAnalise].listaFotos[i].readAsBytes();
+      FirebaseStorage storage = FirebaseStorage.instance;
+      String nomearquivo = "Processo/${listaEtapas[posicaoEtapa].nomeProcesso}/Etapa/${listaEtapas[posicaoEtapa].nomeEtapa.text}/Analise/"
+          "${listaEtapas[posicaoEtapa].listaAnalise[posicaoAnalise].nomeAnalise.text}/Fotos/${DateTime.now()}.jpeg";
+      Reference reference = storage.ref(nomearquivo);
+      UploadTask uploadTaskSnapshot = reference.putData(arquivoSelecionado, SettableMetadata(contentType: 'image/jpeg'));
+      await uploadTaskSnapshot.whenComplete(()async{
+        print(reference.getDownloadURL().toString());
+        await uploadTaskSnapshot.then((downloadUrl)async{
+          await downloadUrl.ref.getDownloadURL().then((url){
+            FirebaseFirestore.instance.collection('etapas').doc(widget.idEsp).update({
+              "fotos_etapa${posicaoEtapa}_analise${posicaoAnalise}": FieldValue.arrayUnion([url])
+            }).then((value){
+              print('url : $url');
+            });
+          });
+        });
+      });
+    }
+
+    carregando = false;
+    carregarWidget(posicaoEtapa,posicaoAnalise);
+    setState(() {});
+  }
+
+  escolherVideo(int posicaoEtapa, int posicaoAnalise)async {
+
+    if (kIsWeb) {
+      FilePickerResult? result;
+      try {
+        result = await FilePicker.platform.pickFiles(type: FileType.custom,
+          allowedExtensions: ['avi', 'wmv', 'wma', 'mp4', 'mov'],
+        );
+      } catch (e) {
+        print(e);
+      }
+
+      if (result != null) {
+        try {
+          setState(() {
+            Uint8List?uploadfile = result!.files.single.bytes;
+            // String filename = result.files.single.name;
+            // nomearquivo.text = result.files.single.name;
+            listaEtapas[posicaoEtapa].listaAnalise[posicaoAnalise].listaVideos.add(uploadfile!);
+            print('videos');
+            print(listaEtapas[posicaoEtapa].listaAnalise[posicaoAnalise].listaVideos.length);
+            if (listaEtapas[posicaoEtapa].listaAnalise[posicaoAnalise].listaVideos.isNotEmpty) {
+              var arquivo = XFile.fromData(uploadfile);
+              String fileName = arquivo.path.split('/').last;
+              String nomearquivo = "Processo/${listaEtapas[posicaoEtapa].nomeProcesso}/Etapa/${listaEtapas[posicaoEtapa].nomeEtapa.text}/Analise/"
+                  "${listaEtapas[posicaoEtapa].listaAnalise[posicaoAnalise].nomeAnalise.text}/Videos/${DateTime.now()}.mp4";
+              carregando = true;
+              Navigator.pop(context);
+              salvarVideo(nomearquivo, arquivo,posicaoEtapa,posicaoAnalise);
+            }
+          });
+        } catch (e) {
+          print(e);
+        }
+      }
+    }
+  }
+
+  salvarVideo(String nomeArquivo,var arquivo,int posicaoEtapa, int posicaoAnalise)async{
+    String url='';
+    Uint8List arquivoSelecionado = await arquivo.readAsBytes();
+    FirebaseStorage storage = FirebaseStorage.instance;
+    Reference reference = storage.ref(nomeArquivo);
+    UploadTask uploadTaskSnapshot = reference.putData(arquivoSelecionado);
+    final TaskSnapshot downloadUrl = await uploadTaskSnapshot;
+    url = (await downloadUrl.ref.getDownloadURL());
+    if(url!=''){
+      FirebaseFirestore.instance.collection('etapas').doc(widget.idEsp).update({
+        "videos_etapa${posicaoEtapa}_analise${posicaoAnalise}": FieldValue.arrayUnion([url])
+      }).then((value){
+        carregando = false;
+        Navigator.pop(context);
+        carregarWidget(posicaoEtapa,posicaoAnalise);
+      });
+      print('url dentro $url');
+    }
+  }
+  
   @override
   void initState() {
     super.initState();
@@ -221,7 +398,19 @@ class _InstrucaoSegundaEtapaTelaState extends State<InstrucaoSegundaEtapaTela> {
         child: ListView(
           children: [
             NivelEtapa(nivel: 2),
-            Container(
+            carregando?Container(
+              width: VariavelEstatica.largura,
+              height: VariavelEstatica.altura*0.8,
+              child: Center(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    TextoPadrao(texto: 'Aguarde ...',cor: Cores.primaria,),
+                    CircularProgressIndicator(color: Cores.primaria,),
+                  ],
+                ),
+              ),
+            ):Container(
               width: VariavelEstatica.largura*0.8,
               height: VariavelEstatica.altura*0.75,
               margin: EdgeInsets.all(20),
@@ -263,19 +452,11 @@ class _InstrucaoSegundaEtapaTelaState extends State<InstrucaoSegundaEtapaTela> {
                                     listaEtapas[i].adicionarChaveRazao = listaEtapas[i].adicionarChaveRazao?false:true;
                                     if(listaEtapas[i].adicionarChaveRazao){
                                       alturaMostrarIcones = alturaMostrarIcones + 60;
-                                      print('add geral');
-                                      print(alturaGeral);
-                                      print('add icones');
-                                      print(alturaMostrarIcones);
 
                                     }else{
                                       if(listaEtapas[i].listaAnalise.length!=1){
                                         alturaMostrarIcones = alturaMostrarIcones - 60;
                                       }
-                                      print('menos geral');
-                                      print(alturaGeral);
-                                      print('menos icones');
-                                      print(alturaMostrarIcones);
                                     }
 
                                     if(!listaEtapas[i].ativarCaixaEtapa){
@@ -327,7 +508,9 @@ class _InstrucaoSegundaEtapaTelaState extends State<InstrucaoSegundaEtapaTela> {
                                                             pontoChave: TextEditingController(),
                                                             mostrarListaImagens: false,
                                                             analiseAtiva: true,
-                                                            listaCompleta: false
+                                                            listaCompleta: false,
+                                                            listaFotos: [],
+                                                            listaVideos: []
                                                         )
                                                     );
                                                     int minutos = listaEtapas[i].tempoTotalEtapaSegundos ~/60;
@@ -373,7 +556,10 @@ class _InstrucaoSegundaEtapaTelaState extends State<InstrucaoSegundaEtapaTela> {
                                                   ),
                                                 );
                                               },
-                                            )
+                                            ),
+                                            funcaoFotoVideo: (){
+                                              carregarWidget(i,j);
+                                            },
                                         ),
                                       );
                                     }

@@ -1,4 +1,6 @@
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:image_picker/image_picker.dart';
 
 class ModeloAnalise2{
   bool etapaAtiva;
@@ -10,6 +12,8 @@ class ModeloAnalise2{
   bool mostrarListaImagens;
   bool analiseAtiva;
   bool listaCompleta;
+  List <XFile> listaFotos;
+  List <Uint8List> listaVideos;
 
   ModeloAnalise2({
     required this.etapaAtiva,
@@ -21,5 +25,7 @@ class ModeloAnalise2{
     required this.mostrarListaImagens,
     required this.analiseAtiva,
     required this.listaCompleta,
+    required this.listaFotos,
+    required this.listaVideos,
   });
 }
