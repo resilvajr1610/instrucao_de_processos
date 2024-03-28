@@ -24,14 +24,16 @@ class InstrucaoSegundaEtapaTela extends StatefulWidget {
   String emailLogado;
   String nomeProcesso;
   int FIP;
-  String idEsp;
+  String idEspAtual;
+  String idEspAnterior;
   bool etapaCriada;
 
   InstrucaoSegundaEtapaTela({
     required this.emailLogado,
     required this.nomeProcesso,
     required this.FIP,
-    required this.idEsp,
+    required this.idEspAtual,
+    required this.idEspAnterior,
     required this.etapaCriada,
   });
 
@@ -45,9 +47,7 @@ class _InstrucaoSegundaEtapaTelaState extends State<InstrucaoSegundaEtapaTela> {
   var alteracao = TextEditingController();
 
   List  <ModeloEtapa2> listaEtapas = [];
-
   double alturaMostrarIcones = 0;
-
   double alturaGeral = 150;
   double estenderItem = 40;
 
@@ -59,7 +59,7 @@ class _InstrucaoSegundaEtapaTelaState extends State<InstrucaoSegundaEtapaTela> {
 
     listaEtapas.add(
         ModeloEtapa2(
-            idEsp: widget.idEsp,
+            idEsp: widget.idEspAnterior,
             nomeProcesso: widget.nomeProcesso,
             numeroFIP: widget.FIP,
             numeroEtapa: listaEtapas.length +1,
@@ -96,10 +96,13 @@ class _InstrucaoSegundaEtapaTelaState extends State<InstrucaoSegundaEtapaTela> {
 
     FirebaseFirestore.instance
         .collection('etapas')
-        .doc(widget.idEsp)
+        .doc(widget.idEspAnterior)
         .get()
         .then((etapasDoc) {
       List<dynamic> listaMapEtapa = etapasDoc['listaEtapa'];
+
+      print('listaMapEtapa.length');
+      print(listaMapEtapa.length);
 
       for (int i = 0; i < listaMapEtapa.length; i++) {
         List<dynamic> listaMapAnalise = listaMapEtapa[i]['listaAnalise'];
@@ -126,7 +129,7 @@ class _InstrucaoSegundaEtapaTelaState extends State<InstrucaoSegundaEtapaTela> {
 
         listaEtapas.add(
             ModeloEtapa2(
-                idEsp: widget.idEsp,
+                idEsp: widget.idEspAnterior,
                 nomeProcesso: widget.nomeProcesso,
                 numeroFIP: widget.FIP,
                 numeroEtapa: listaMapEtapa[i]['numeroEtapa'],
@@ -142,7 +145,7 @@ class _InstrucaoSegundaEtapaTelaState extends State<InstrucaoSegundaEtapaTela> {
             )
         );
       }
-      FirebaseFirestore.instance.collection('especificacao').doc(widget.idEsp).update({
+      FirebaseFirestore.instance.collection('especificacao').doc(widget.idEspAtual).update({
         'totalEtapas' : tempoTotal
       });
       observacoes.text = etapasDoc['observacoes'];
@@ -153,8 +156,64 @@ class _InstrucaoSegundaEtapaTelaState extends State<InstrucaoSegundaEtapaTela> {
   }
 
   editarEtapa() {
-    showSnackBar(context, 'Etapas foram salvas', Colors.green);
-    Navigator.of(context).push(MaterialPageRoute(builder: (context)=>InstrucaoTerceiraEtapaTela(emailLogado: widget.emailLogado,idEtapa: widget.idEsp,)));
+
+    double tempoTotal = 0;
+
+    if(observacoes.text.isNotEmpty && alteracao.text.isNotEmpty && listaEtapas[0].adicionaNovo!=0){
+
+      List <Map> listaMapEtapa = [];
+
+      for(int i = 0; listaEtapas.length > i; i++){
+        List <Map> listaMapAnalise = [];
+        for(int j = 0; listaEtapas[i].listaAnalise.length > j; j++){
+          if(listaEtapas[i].listaAnalise[j].nomeAnalise.text.isNotEmpty){
+            listaMapAnalise.add({
+              'j':j,
+              'imagemSelecionada' : listaEtapas[i].listaAnalise[j].imagemSelecionada,
+              'numeroAnalise' : listaEtapas[i].listaAnalise[j].numeroAnalise,
+              'nomeAnalise' : listaEtapas[i].listaAnalise[j].nomeAnalise.text.trim().toUpperCase(),
+              'tempoAnalise' : listaEtapas[i].listaAnalise[j].tempoAnalise.text,
+              'pontoChave' : listaEtapas[i].listaAnalise[j].pontoChave.text.trim().toUpperCase(),
+            });
+          }
+        }
+        if(listaEtapas[i].nomeEtapa.text.isNotEmpty){
+
+          tempoTotal = tempoTotal + listaEtapas[i].tempoTotalEtapaSegundos;
+
+          listaMapEtapa.add({
+            'i':i,
+            'nomeProcesso': listaEtapas[i].nomeProcesso,
+            'numeroFIP': listaEtapas[i].numeroFIP,
+            'numeroEtapa': listaEtapas[i].numeroEtapa,
+            'nomeEtapa': listaEtapas[i].nomeEtapa.text.trim().toUpperCase(),
+            'tempoTotalEtapaSegundos': listaEtapas[i].tempoTotalEtapaSegundos,
+            'tempoTotalEtapaMinutos': listaEtapas[i].tempoTotalEtapaMinutos,
+            'listaAnalise': listaMapAnalise,
+          });
+        }
+      }
+
+      FirebaseFirestore.instance.collection('etapas').doc(widget.idEspAtual).set({
+        'idEsp'       : widget.idEspAtual,
+        'listaEtapa'  : listaMapEtapa,
+        'observacoes' : observacoes.text,
+        'alteracao'   : alteracao.text,
+        'idUsuario'   : FirebaseAuth.instance.currentUser!.uid,
+        'idEmail'     : FirebaseAuth.instance.currentUser!.email,
+        'dataCriacao' : DateTime.now(),
+      },SetOptions(merge: true)).then((value){
+        FirebaseFirestore.instance.collection('especificacao').doc(widget.idEspAtual).update({
+          'etapa'     : 'criada',
+          'tempoTotal': tempoTotal
+        }).then((value){
+          showSnackBar(context, 'Etapas foram salvas', Colors.green);
+          Navigator.of(context).push(MaterialPageRoute(builder: (context)=>InstrucaoTerceiraEtapaTela(emailLogado: widget.emailLogado,idEtapa: widget.idEspAtual,)));
+        });
+      });
+    }else{
+      showSnackBar(context, 'Insira ao menos uma etapa e uma análise para avançar', Colors.red);
+    }
   }
 
   salvarEtapa() {
@@ -196,8 +255,8 @@ class _InstrucaoSegundaEtapaTelaState extends State<InstrucaoSegundaEtapaTela> {
         }
       }
 
-      FirebaseFirestore.instance.collection('etapas').doc(widget.idEsp).set({
-        'idEsp'       : widget.idEsp,
+      FirebaseFirestore.instance.collection('etapas').doc(widget.idEspAtual).set({
+        'idEsp'       : widget.idEspAtual,
         'listaEtapa'  : listaMapEtapa,
         'observacoes' : observacoes.text,
         'alteracao'   : alteracao.text,
@@ -205,12 +264,12 @@ class _InstrucaoSegundaEtapaTelaState extends State<InstrucaoSegundaEtapaTela> {
         'idEmail'     : FirebaseAuth.instance.currentUser!.email,
         'dataCriacao' : DateTime.now(),
       },SetOptions(merge: true)).then((value){
-        FirebaseFirestore.instance.collection('especificacao').doc(widget.idEsp).update({
+        FirebaseFirestore.instance.collection('especificacao').doc(widget.idEspAtual).update({
           'etapa'     : 'criada',
           'tempoTotal': tempoTotal
         }).then((value){
           showSnackBar(context, 'Etapas foram salvas', Colors.green);
-          Navigator.of(context).push(MaterialPageRoute(builder: (context)=>InstrucaoTerceiraEtapaTela(emailLogado: widget.emailLogado,idEtapa: widget.idEsp,)));
+          Navigator.of(context).push(MaterialPageRoute(builder: (context)=>InstrucaoTerceiraEtapaTela(emailLogado: widget.emailLogado,idEtapa: widget.idEspAtual,)));
         });
       });
     }else{
@@ -303,7 +362,7 @@ class _InstrucaoSegundaEtapaTelaState extends State<InstrucaoSegundaEtapaTela> {
         print(reference.getDownloadURL().toString());
         await uploadTaskSnapshot.then((downloadUrl)async{
           await downloadUrl.ref.getDownloadURL().then((url){
-            FirebaseFirestore.instance.collection('etapas').doc(widget.idEsp).update({
+            FirebaseFirestore.instance.collection('etapas').doc(widget.idEspAtual).update({
               "fotos_etapa${posicaoEtapa}_analise${posicaoAnalise}": FieldValue.arrayUnion([url])
             }).then((value){
               print('url : $url');
@@ -361,11 +420,11 @@ class _InstrucaoSegundaEtapaTelaState extends State<InstrucaoSegundaEtapaTela> {
     Uint8List arquivoSelecionado = await arquivo.readAsBytes();
     FirebaseStorage storage = FirebaseStorage.instance;
     Reference reference = storage.ref(nomeArquivo);
-    UploadTask uploadTaskSnapshot = reference.putData(arquivoSelecionado);
+    UploadTask uploadTaskSnapshot = reference.putData(arquivoSelecionado, SettableMetadata(contentType: '	video/mp4'));
     final TaskSnapshot downloadUrl = await uploadTaskSnapshot;
     url = (await downloadUrl.ref.getDownloadURL());
     if(url!=''){
-      FirebaseFirestore.instance.collection('etapas').doc(widget.idEsp).update({
+      FirebaseFirestore.instance.collection('etapas').doc(widget.idEspAtual).update({
         "videos_etapa${posicaoEtapa}_analise${posicaoAnalise}": FieldValue.arrayUnion([url])
       }).then((value){
         carregando = false;

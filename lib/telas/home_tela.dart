@@ -1,17 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:instrucao_de_processos/modelos/bad_state_int.dart';
+import 'package:instrucao_de_processos/modelos/bad_state_list.dart';
 import 'package:instrucao_de_processos/modelos/bad_state_string.dart';
 import 'package:instrucao_de_processos/modelos/modelo_instrucao_lista_1_0_0.dart';
 import 'package:instrucao_de_processos/modelos/modelo_instrucao_lista_1_1_0.dart';
 import 'package:instrucao_de_processos/modelos/modelo_instrucao_lista_1_1_1.dart';
+import 'package:instrucao_de_processos/modelos/modelo_pesquisa.dart';
 import 'package:instrucao_de_processos/utilidades/cores.dart';
 import 'package:instrucao_de_processos/utilidades/variavel_estatica.dart';
 import 'package:instrucao_de_processos/widgets/appbar_padrao.dart';
-import 'package:instrucao_de_processos/widgets/caixa_texto_pesquisa.dart';
 import 'package:instrucao_de_processos/widgets/item_instrucao.dart';
 import 'package:instrucao_de_processos/widgets/snackBars.dart';
 import '../widgets/texto_padrao.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'instrucao_usuario_tela.dart';
 
 class HomeTela extends StatefulWidget {
   String emailLogado;
@@ -41,24 +43,30 @@ class _HomeTelaState extends State<HomeTela> {
   bool carregando = true;
   bool acesso_adm = false;
 
-  adicionarListaInicio(String idDoc,String idFire,String idEsp,String nomeProcesso,int versao, String titulo,bool ativarBotaoAdicionarItemLista, bool escrever ){
+  List<ModeloPesquisa> listaCompletaPesquisa = [];
+  List<ModeloPesquisa> listaRetornoPesquisa = [];
+
+  final ScrollController scrollPesquisa = ScrollController();
+
+  adicionarListaInicio(String idDoc,String idFire,List listaIdEsp,String nomeProcesso,List listaVersao, String titulo,bool ativarBotaoAdicionarItemLista, bool escrever ){
     listaInstrucaoPrincipal.add(
       ModeloInstrucaoLista_1_0_0(
         idDoc: idDoc,
         idFire: idFire,
-        idEsp: idEsp,
+        listaIdEsp: listaIdEsp,
         nomeProcesso: nomeProcesso,
-        versao: versao,
+        listaVersao: listaVersao,
         controller: TextEditingController(text: titulo),
         ativarBotaoAdicionarItemLista: ativarBotaoAdicionarItemLista,
         escrever: escrever,
         largura: 450,
         listaMeio: [],
-        alturaListaMeio: 0
+        alturaListaMeio: 0,
+        mostrarLista: escrever
       )
     );
     alturaListaInicio = alturaListaInicio + alturaItens;
-    if(idEsp!=''){
+    if(listaIdEsp.isNotEmpty){
       alturaListaInicio = alturaListaInicio + alturaItens;
     }
     carregando = false;
@@ -70,17 +78,53 @@ class _HomeTelaState extends State<HomeTela> {
         for(int i = 0; docs.docs.length > i; i++) {
           if(acesso_adm){
             // print(docs.docs[i]['idDoc']);
-            adicionarListaInicio(docs.docs[i]['idDoc'], docs.docs[i]['idFire'],BadStateString(docs.docs[i], 'idEsp'),BadStateString(docs.docs[i], 'nomeProcesso'),BadStateInt(docs.docs[i], 'versao'),docs.docs[i]['titulo'], false, true);
+            adicionarListaInicio(
+                docs.docs[i]['idDoc'],
+                docs.docs[i]['idFire'],
+                BadStateList(docs.docs[i], 'listaIdEsp'),
+                BadStateString(docs.docs[i], 'nomeProcesso'),
+                BadStateList(docs.docs[i], 'listaVersao'),
+                docs.docs[i]['titulo'],
+                false,
+                false
+            );
+            listaCompletaPesquisa.add(
+                ModeloPesquisa(
+                    idDocumento: docs.docs[i]['idDoc'],
+                    idFirebase: docs.docs[i]['idFire'],
+                    listaIdEsp: BadStateList(docs.docs[i], 'listaIdEsp'),
+                    titulo: docs.docs[i]['titulo'],
+                    listaVersao: BadStateList(docs.docs[i], 'listaVersao'),
+                )
+            );
             if(docs.docs.length == i+1){
-              adicionarListaInicio('${i+2}.0.0','','','',0,'', false, true);
+              adicionarListaInicio('${i+2}.0.0','',[],'',[],'', false, true);
               carregarDadosMeio();
               setState(() {});
             }
           }else{
             if(BadStateString(docs.docs[i],'situacao')!=''){
-              adicionarListaInicio(docs.docs[i]['idDoc'], docs.docs[i]['idFire'],BadStateString(docs.docs[i], 'idEsp'),BadStateString(docs.docs[i], 'nomeProcesso'),BadStateInt(docs.docs[i], 'versao'),docs.docs[i]['titulo'], false, true);
+              adicionarListaInicio(
+                  docs.docs[i]['idDoc'],
+                  docs.docs[i]['idFire'],
+                  BadStateList(docs.docs[i], 'listaIdEsp'),
+                  BadStateString(docs.docs[i], 'nomeProcesso'),
+                  BadStateList(docs.docs[i], 'listaVersao'),
+                  docs.docs[i]['titulo'],
+                  false,
+                  false
+              );
+              listaCompletaPesquisa.add(
+                  ModeloPesquisa(
+                      idDocumento: docs.docs[i]['idDoc'],
+                      idFirebase: docs.docs[i]['idFire'],
+                      listaIdEsp: BadStateList(docs.docs[i], 'listaIdEsp'),
+                      titulo: docs.docs[i]['titulo'],
+                      listaVersao: BadStateList(docs.docs[i], 'listaVersao'),
+                  )
+              );
               if(docs.docs.length == i+1){
-                adicionarListaInicio('${i+2}.0.0','','','',0,'', false, true);
+                adicionarListaInicio('${i+2}.0.0','',[],'',[],'', false, true);
                 carregarDadosMeio();
                 setState(() {});
               }
@@ -88,40 +132,41 @@ class _HomeTelaState extends State<HomeTela> {
           }
         }
       }else{
-        adicionarListaInicio('1.0.0', '','','',0,'inicio vazio', false, true);
+        adicionarListaInicio('1.0.0', '',[],'',[],'inicio vazio', false, true);
         carregando = false;
         setState((){});
       }
     });
   }
 
-  adicionarListaMeio(int inicio, bool addPrincipal,String idFire, String idDoc, String idEsp, String nomeProcesso, int versao, String titulo, bool ativarBotaoAdicionarItemLista, bool escrever){
+  adicionarListaMeio(int inicio, bool addPrincipal,String idFire, String idDoc, List listaIdEsp, String nomeProcesso, List listaVersao, String titulo, bool ativarBotaoAdicionarItemLista, bool escrever){
     listaInstrucaoPrincipal[inicio].listaMeio.add(
       ModeloInstrucaoLista_1_1_0(
         idFire: idFire,
         idDoc: idDoc,
-        idEsp: idEsp,
+        listaIdEsp: listaIdEsp,
         nomeProcesso: nomeProcesso,
-        versao: versao,
+        listaVersao: listaVersao,
         controller: TextEditingController(text: titulo),
         ativarBotaoAdicionarItemLista: false,
         largura: larguraMeioCaixaTexto,
         escrever: true,
         listaFinal: [],
-        alturaListaFinal: 0
+        alturaListaFinal: 0,
+        mostrarLista: escrever
       )
     );
     listaInstrucaoPrincipal[inicio].escrever = false;
     listaInstrucaoPrincipal[inicio].ativarBotaoAdicionarItemLista = true;
     alturaListaInicio = alturaListaInicio + alturaItens;
     listaInstrucaoPrincipal[inicio].alturaListaMeio = listaInstrucaoPrincipal[inicio].alturaListaMeio + alturaItens;
-    if(idEsp!=''){
+    if(listaIdEsp.isNotEmpty){
       alturaListaInicio = alturaListaInicio + alturaItens;
     }
     if(addPrincipal){
       alturaListaInicio = alturaListaInicio + alturaItens + alturaItens;
       listaInstrucaoPrincipal[inicio].alturaListaMeio = listaInstrucaoPrincipal[inicio].alturaListaMeio + alturaItens;
-      adicionarListaInicio('${listaInstrucaoPrincipal.length+1}.0.0','','','',0,'',false,true);
+      adicionarListaInicio('${listaInstrucaoPrincipal.length+1}.0.0','',[],'',[],'',false,true);
     }
     setState(() {});
   }
@@ -137,23 +182,45 @@ class _HomeTelaState extends State<HomeTela> {
           if(BadStateString(docs.docs[i],'nomeProcesso')!=''){
             alturaListaInicio = alturaListaInicio + alturaItens;
           }
-          adicionarListaMeio(inicio-1,false,docs.docs[i]['idFire'],docs.docs[i]['idDoc'],BadStateString(docs.docs[i],'idEsp'),BadStateString(docs.docs[i],'nomeProcesso'),BadStateInt(docs.docs[i], 'versao'),docs.docs[i]['titulo'], true, false);
+          adicionarListaMeio(
+              inicio-1,
+              false,
+              docs.docs[i]['idFire'],
+              docs.docs[i]['idDoc'],
+              BadStateList(docs.docs[i],'listaIdEsp'),
+              BadStateString(docs.docs[i],'nomeProcesso'),
+              BadStateList(docs.docs[i], 'listaVersao'),
+              docs.docs[i]['titulo'],
+              true,
+              false
+          );
+          listaCompletaPesquisa.add(
+              ModeloPesquisa(
+                  idDocumento: docs.docs[i]['idDoc'],
+                  idFirebase: docs.docs[i]['idFire'],
+                  listaIdEsp: BadStateList(docs.docs[i], 'listaIdEsp'),
+                  titulo: docs.docs[i]['titulo'],
+                  listaVersao: BadStateList(docs.docs[i], 'listaVersao'),
+              )
+          );
+
           if(docs.docs.length == i+1){
             alturaListaInicio = alturaListaInicio + alturaItens;
             listaInstrucaoPrincipal[inicio-1].alturaListaMeio = listaInstrucaoPrincipal[inicio-1].alturaListaMeio + alturaItens;
             listaInstrucaoPrincipal[inicio-1].listaMeio.add(
                 ModeloInstrucaoLista_1_1_0(
                     idFire: '',
-                    idEsp: '',
+                    listaIdEsp: [],
                     nomeProcesso: '',
-                    versao: 0,
+                    listaVersao: [],
                     idDoc: '$inicio.${meio+1}.0',
                     controller: TextEditingController(text: 'add meio'),
                     ativarBotaoAdicionarItemLista: false,
                     largura: larguraMeioCaixaTexto,
                     escrever: true,
                     listaFinal: [],
-                    alturaListaFinal: 0
+                    alturaListaFinal: 0,
+                    mostrarLista: true
                 )
             );
             setState(() {});
@@ -169,23 +236,44 @@ class _HomeTelaState extends State<HomeTela> {
             if(BadStateString(docs.docs[i],'nomeProcesso')!=''){
               alturaListaInicio = alturaListaInicio + alturaItens;
             }
-            adicionarListaMeio(inicio-1,false,docs.docs[i]['idFire'],docs.docs[i]['idDoc'],BadStateString(docs.docs[i],'idEsp'),BadStateString(docs.docs[i],'nomeProcesso'),BadStateInt(docs.docs[i], 'versao'),docs.docs[i]['titulo'], true, false);
+            adicionarListaMeio(
+                inicio-1,
+                false,
+                docs.docs[i]['idFire'],
+                docs.docs[i]['idDoc'],
+                BadStateList(docs.docs[i],'listaIdEsp'),
+                BadStateString(docs.docs[i],'nomeProcesso'),
+                BadStateList(docs.docs[i], 'listaVersao'),
+                docs.docs[i]['titulo'],
+                true,
+                false
+            );
+            listaCompletaPesquisa.add(
+                ModeloPesquisa(
+                    idDocumento: docs.docs[i]['idDoc'],
+                    idFirebase: docs.docs[i]['idFire'],
+                    listaIdEsp: BadStateList(docs.docs[i], 'listaIdEsp'),
+                    titulo: docs.docs[i]['titulo'],
+                    listaVersao: BadStateList(docs.docs[i], 'listaVersao'),
+                )
+            );
             if(docs.docs.length == i+1){
               alturaListaInicio = alturaListaInicio + alturaItens;
               listaInstrucaoPrincipal[inicio-1].alturaListaMeio = listaInstrucaoPrincipal[inicio-1].alturaListaMeio + alturaItens;
               listaInstrucaoPrincipal[inicio-1].listaMeio.add(
                   ModeloInstrucaoLista_1_1_0(
                       idFire: '',
-                      idEsp: '',
+                      listaIdEsp: [],
                       nomeProcesso: '',
-                      versao: 0,
+                      listaVersao: [],
                       idDoc: '$inicio.${meio+1}.0',
                       controller: TextEditingController(text: 'add meio'),
                       ativarBotaoAdicionarItemLista: false,
                       largura: larguraMeioCaixaTexto,
                       escrever: true,
                       listaFinal: [],
-                      alturaListaFinal: 0
+                      alturaListaFinal: 0,
+                      mostrarLista: true
                   )
               );
               setState(() {});
@@ -197,19 +285,20 @@ class _HomeTelaState extends State<HomeTela> {
     });
   }
 
-  adicionarListaFim(int inicio, int meio,bool addMeio,String idFire, String idDoc,String idEsp, String nomeProcesso,int versao, String titulo, bool checkFinal, bool escrever){
+  adicionarListaFim(int inicio, int meio,bool addMeio,String idFire, String idDoc,List listaIdEsp, String nomeProcesso,List listaVersao, String titulo, bool checkFinal, bool escrever){
     List<ModeloInstrucaoLista_1_1_1> listaFinal = [];
     listaFinal.add(
       ModeloInstrucaoLista_1_1_1(
         idFire: idFire,
         idDoc: idDoc,
-        idEsp: idEsp,
+        listaIdEsp: listaIdEsp,
         nomeProcesso: nomeProcesso,
-        versao: versao,
+        listaVersao: listaVersao,
         controller: TextEditingController(text: titulo),
         checkFinal: checkFinal,
         largura: larguraFinalCaixaTexto,
-        escrever: escrever
+        escrever: escrever,
+        mostrarLista: escrever
       )
     );
     listaInstrucaoPrincipal[inicio].listaMeio[meio].listaFinal = listaFinal;
@@ -218,7 +307,7 @@ class _HomeTelaState extends State<HomeTela> {
     listaInstrucaoPrincipal[inicio].escrever = false;
     listaInstrucaoPrincipal[inicio].ativarBotaoAdicionarItemLista = true;
     alturaListaFinal = alturaListaFinal + alturaItens;
-    if(idEsp!=''){
+    if(listaIdEsp.isNotEmpty){
       alturaListaFinal = alturaListaFinal + alturaItens;
     }
     listaInstrucaoPrincipal[inicio].listaMeio[meio].alturaListaFinal = listaInstrucaoPrincipal[inicio].listaMeio[meio].alturaListaFinal + alturaItens;
@@ -229,16 +318,17 @@ class _HomeTelaState extends State<HomeTela> {
       listaInstrucaoPrincipal[inicio].listaMeio.add(
           ModeloInstrucaoLista_1_1_0(
               idFire: '',
-              idEsp: '',
+              listaIdEsp: [],
               nomeProcesso: '',
-              versao: 0,
+              listaVersao: [],
               idDoc: '${inicio+1}.${meio+2}.0',
               controller: TextEditingController(),
               ativarBotaoAdicionarItemLista: false,
               largura: larguraMeioCaixaTexto,
               escrever: true,
               listaFinal: [],
-              alturaListaFinal: 0
+              alturaListaFinal: 0,
+              mostrarLista: true
           )
       );
     }
@@ -254,7 +344,28 @@ class _HomeTelaState extends State<HomeTela> {
          int inicio = int.parse(dividirDoc[0]);
          int meio = int.parse(dividirDoc[1]);
          listaInstrucaoPrincipal[inicio-1].listaMeio[meio-1].ativarBotaoAdicionarItemLista = false;
-         adicionarListaFim(inicio-1,meio-1,false,docs.docs[i]['idFire'],docs.docs[i]['idDoc'],BadStateString(docs.docs[i],'idEsp'),BadStateString(docs.docs[i],'nomeProcesso'),BadStateInt(docs.docs[i], 'versao'),docs.docs[i]['titulo'], true, false);
+         adicionarListaFim(
+             inicio-1,
+             meio-1,
+             false,
+             docs.docs[i]['idFire'],
+             docs.docs[i]['idDoc'],
+             BadStateList(docs.docs[i],'listaIdEsp'),
+             BadStateString(docs.docs[i],'nomeProcesso'),
+             BadStateList(docs.docs[i], 'listaVersao'),
+             docs.docs[i]['titulo'],
+             true,
+             false
+         );
+         listaCompletaPesquisa.add(
+             ModeloPesquisa(
+                 idDocumento: docs.docs[i]['idDoc'],
+                 idFirebase: docs.docs[i]['idFire'],
+                 listaIdEsp: BadStateList(docs.docs[i], 'listaIdEsp'),
+                 titulo: docs.docs[i]['titulo'],
+                 listaVersao: BadStateList(docs.docs[i], 'listaVersao'),
+             )
+         );
          if(docs.docs.length == i+1){
            alturaListaInicio = alturaListaInicio + alturaItens;
            listaInstrucaoPrincipal[inicio-1].alturaListaMeio = listaInstrucaoPrincipal[inicio-1].alturaListaMeio + alturaItens;
@@ -267,7 +378,28 @@ class _HomeTelaState extends State<HomeTela> {
              int inicio = int.parse(dividirDoc[0]);
              int meio = int.parse(dividirDoc[1]);
              listaInstrucaoPrincipal[inicio-1].listaMeio[meio-1].ativarBotaoAdicionarItemLista = false;
-             adicionarListaFim(inicio-1,meio-1,false,docs.docs[i]['idFire'],docs.docs[i]['idDoc'],BadStateString(docs.docs[i],'idEsp'),BadStateString(docs.docs[i],'nomeProcesso'),BadStateInt(docs.docs[i], 'versao'),docs.docs[i]['titulo'], true, false);
+             adicionarListaFim(
+                 inicio-1,
+                 meio-1,
+                 false,
+                 docs.docs[i]['idFire'],
+                 docs.docs[i]['idDoc'],
+                 BadStateList(docs.docs[i],'listaIdEsp'),
+                 BadStateString(docs.docs[i],'nomeProcesso'),
+                 BadStateList(docs.docs[i], 'listaVersao'),
+                 docs.docs[i]['titulo'],
+                 true,
+                 false
+             );
+             listaCompletaPesquisa.add(
+                 ModeloPesquisa(
+                     idDocumento: docs.docs[i]['idDoc'],
+                     idFirebase: docs.docs[i]['idFire'],
+                     listaIdEsp: BadStateList(docs.docs[i], 'listaIdEsp'),
+                     titulo: docs.docs[i]['titulo'],
+                     listaVersao: BadStateList(docs.docs[i], 'listaVersao'),
+                 )
+             );
              if(docs.docs.length == i+1){
                alturaListaInicio = alturaListaInicio + alturaItens;
                listaInstrucaoPrincipal[inicio-1].alturaListaMeio = listaInstrucaoPrincipal[inicio-1].alturaListaMeio + alturaItens;
@@ -299,6 +431,31 @@ class _HomeTelaState extends State<HomeTela> {
       }
       carregarDadosInicio();
     });
+  }
+
+  void pesquisarDoc(String palavra) {
+    List<ModeloPesquisa> listaTodosDoc = [];
+    listaTodosDoc.addAll(listaCompletaPesquisa);
+    if (palavra.isNotEmpty) {
+      print('palavra ${pesquisa.text}');
+      List<ModeloPesquisa> listaFerramentaFiltro = [];
+      listaTodosDoc.forEach((item) {
+        if (item.listaVersao[0].toLowerCase().contains(palavra.toLowerCase())) {
+          print(item.listaVersao);
+          listaFerramentaFiltro.add(item);
+        }
+      });
+      setState(() {
+        listaRetornoPesquisa.clear();
+        listaRetornoPesquisa.addAll(listaFerramentaFiltro);
+      });
+      return;
+    } else {
+      setState(() {
+        listaRetornoPesquisa.clear();
+        listaRetornoPesquisa.addAll(listaCompletaPesquisa);
+      });
+    }
   }
 
   @override
@@ -333,13 +490,90 @@ class _HomeTelaState extends State<HomeTela> {
                 children: [
                   TextoPadrao(texto: 'Documentos disponíveis',cor: Cores.primaria,negrito: FontWeight.bold,tamanhoFonte: 20,),
                   SizedBox(height: 40,),
-                  CaixaTextoPesquisa(
-                    textoCaixa: 'Pesquisar',
-                    controller: pesquisa,
-                    largura: 600,
+                  Container(
+                    width: 600,
+                    margin: EdgeInsets.only(bottom: 5),
+                    decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(5),
+                        border: Border.all(color: Cores.primaria)
+                    ),
+                    child: Row(
+                      children: [
+                        Container(
+                          width: 600*0.9,
+                          child: TextFormField(
+                              keyboardType: TextInputType.text,
+                              maxLines: 1,
+                              onChanged: (texto){
+                                if(texto.length>1){
+                                  pesquisarDoc(texto);
+                                }
+                              },
+                              controller: pesquisa,
+                              cursorColor: Cores.primaria,
+                              style: TextStyle(
+                                color: Cores.cinzaTexto,
+                                fontSize: 16,
+                              ),
+                              decoration: InputDecoration(
+                                  fillColor: Colors.black87,
+                                  // labelText: label,
+                                  border: OutlineInputBorder(
+                                      borderSide: BorderSide(width: 1,color: Colors.white)
+                                  ),
+                                  focusedBorder: OutlineInputBorder(
+                                    borderSide: BorderSide(width: 1, color: Colors.white),
+                                    borderRadius: BorderRadius.circular(3),
+                                  ),
+                                  enabledBorder: OutlineInputBorder(
+                                    borderSide: BorderSide(width: 1, color: Colors.white),
+                                    borderRadius: BorderRadius.circular(3),
+                                  ),
+                                  disabledBorder: OutlineInputBorder(
+                                    borderSide: BorderSide(width: 1, color: Colors.white),
+                                    borderRadius: BorderRadius.circular(3),
+                                  ),
+                                  hintText: 'Pesquisar',
+                                  hintStyle: TextStyle(
+                                      color: Cores.cinzaTexto,
+                                      fontSize: 16,
+                                      fontFamily: "Nunito"
+                                  )
+                              )
+                          ),
+                        ),
+                        Icon(Icons.search, color: Cores.primaria,)
+                      ],
+                    ),
                   ),
                   SizedBox(height: 33,),
-                  Container(
+                  pesquisa.text.isNotEmpty?
+                      Container(
+                        width: 1000,
+                        height: 500,
+                        child: Scrollbar(
+                          controller: scrollPesquisa,
+                          thumbVisibility: true,
+                          trackVisibility: true,
+                          child: ListView.builder(
+                            controller: scrollPesquisa,
+                            itemCount: listaRetornoPesquisa.length,
+                            itemBuilder: (BuildContext context, int index) {
+                              return listaRetornoPesquisa[index].listaVersao==''?Container():ListTile(
+                                onTap: (){
+                                  Navigator.push(context, MaterialPageRoute(builder: (context)=>InstrucaoUsuarioTela(emailLogado: widget.emailLogado, idEsp: listaRetornoPesquisa[index].listaVersao[0])));
+                                },
+                                title: TextoPadrao(
+                                  texto: '${listaRetornoPesquisa[index].listaVersao[0]}',
+                                  cor: Cores.primaria,
+                                ),
+                              );
+                            },
+                          ),
+                        ),
+                      )
+                      :Container(
                     // color: Colors.green,
                     height: alturaListaInicio,
                     width: larguraInicioCard,
@@ -358,10 +592,14 @@ class _HomeTelaState extends State<HomeTela> {
                               escrever: listaInstrucaoPrincipal[inicio].escrever,
                               idFirebase: listaInstrucaoPrincipal[inicio].idFire,
                               idDocumento: listaInstrucaoPrincipal[inicio].idDoc,
-                              idEsp: listaInstrucaoPrincipal[inicio].idEsp,
+                              listaIdEsp: listaInstrucaoPrincipal[inicio].listaIdEsp,
                               nomeProcesso: listaInstrucaoPrincipal[inicio].nomeProcesso,
-                              versao: listaInstrucaoPrincipal[inicio].versao,
+                              listaVersao: listaInstrucaoPrincipal[inicio].listaVersao,
+                              mostrarLista: listaInstrucaoPrincipal[inicio].mostrarLista,
                               emailLogado: widget.emailLogado,
+                              funcaoMostrarLista: ()=>setState(()=>listaInstrucaoPrincipal[inicio].mostrarLista
+                                  ?listaInstrucaoPrincipal[inicio].mostrarLista=false
+                                  :listaInstrucaoPrincipal[inicio].mostrarLista=true),
                               onPressed: ()async{
                                 if(listaInstrucaoPrincipal[inicio].controller.text.isNotEmpty && listaInstrucaoPrincipal[inicio].controller.text !=''){
                                   if(listaInstrucaoPrincipal[inicio].idFire!=''){
@@ -369,7 +607,7 @@ class _HomeTelaState extends State<HomeTela> {
                                     FirebaseFirestore.instance.collection('documentos').doc(listaInstrucaoPrincipal[inicio].idFire).update({
                                           'titulo':listaInstrucaoPrincipal[inicio].controller.text
                                         }).then((value){
-                                      adicionarListaMeio(inicio,false,'','${inicio+1}.1.0','','',0,'',false,true);
+                                      adicionarListaMeio(inicio,false,'','${inicio+1}.1.0',[],'',[],'',false,true);
                                       setState(() {});
                                     });
                                   }else{
@@ -401,10 +639,14 @@ class _HomeTelaState extends State<HomeTela> {
                                         escrever: listaInstrucaoPrincipal[inicio].listaMeio[meio].escrever,
                                         idFirebase: listaInstrucaoPrincipal[inicio].listaMeio[meio].idFire,
                                         idDocumento: listaInstrucaoPrincipal[inicio].listaMeio[meio].idDoc,
-                                        idEsp: listaInstrucaoPrincipal[inicio].listaMeio[meio].idEsp,
+                                        listaIdEsp: listaInstrucaoPrincipal[inicio].listaMeio[meio].listaIdEsp,
                                         nomeProcesso: listaInstrucaoPrincipal[inicio].listaMeio[meio].nomeProcesso,
-                                        versao: listaInstrucaoPrincipal[inicio].listaMeio[meio].versao,
+                                        listaVersao: listaInstrucaoPrincipal[inicio].listaMeio[meio].listaVersao,
+                                        mostrarLista: listaInstrucaoPrincipal[inicio].listaMeio[meio].mostrarLista,
                                         emailLogado: widget.emailLogado,
+                                        funcaoMostrarLista: ()=>setState(()=>listaInstrucaoPrincipal[inicio].listaMeio[meio].mostrarLista
+                                          ?listaInstrucaoPrincipal[inicio].listaMeio[meio].mostrarLista=false
+                                          :listaInstrucaoPrincipal[inicio].listaMeio[meio].mostrarLista=true),
                                         onPressed: ()async{
                                           if(listaInstrucaoPrincipal[inicio].listaMeio[meio].controller.text.isNotEmpty && listaInstrucaoPrincipal[inicio].listaMeio[meio].controller.text !=''){
                                             if(listaInstrucaoPrincipal[inicio].listaMeio[meio].idFire!=''){
@@ -413,7 +655,7 @@ class _HomeTelaState extends State<HomeTela> {
                                               FirebaseFirestore.instance.collection('documentos').doc(listaInstrucaoPrincipal[inicio].listaMeio[meio].idFire).update({
                                                 'titulo':listaInstrucaoPrincipal[inicio].listaMeio[meio].controller.text
                                               }).then((value){
-                                                adicionarListaFim(inicio,meio,false,'','${inicio+1}.${meio+1}.1','','',0,'',false,true);
+                                                adicionarListaFim(inicio,meio,false,'','${inicio+1}.${meio+1}.1',[],'',[],'',false,true);
                                               });
                                             }else{
                                               await salvarFirebase('documentos',listaInstrucaoPrincipal[inicio].listaMeio[meio].controller.text,
@@ -442,10 +684,14 @@ class _HomeTelaState extends State<HomeTela> {
                                                 escrever: listaInstrucaoPrincipal[inicio].listaMeio[meio].listaFinal[fim].escrever,
                                                 idFirebase: listaInstrucaoPrincipal[inicio].listaMeio[meio].listaFinal[fim].idFire,
                                                 idDocumento: listaInstrucaoPrincipal[inicio].listaMeio[meio].listaFinal[fim].idDoc,
-                                                idEsp: listaInstrucaoPrincipal[inicio].listaMeio[meio].listaFinal[fim].idEsp,
+                                                listaIdEsp: listaInstrucaoPrincipal[inicio].listaMeio[meio].listaFinal[fim].listaIdEsp,
                                                 nomeProcesso: listaInstrucaoPrincipal[inicio].listaMeio[meio].listaFinal[fim].nomeProcesso,
-                                                versao: listaInstrucaoPrincipal[inicio].listaMeio[meio].listaFinal[fim].versao,
+                                                listaVersao: listaInstrucaoPrincipal[inicio].listaMeio[meio].listaFinal[fim].listaVersao,
+                                                mostrarLista: listaInstrucaoPrincipal[inicio].listaMeio[meio].listaFinal[fim].mostrarLista,
                                                 emailLogado: widget.emailLogado,
+                                                funcaoMostrarLista: ()=>setState(()=>listaInstrucaoPrincipal[inicio].listaMeio[meio].listaFinal[fim].mostrarLista
+                                                    ?listaInstrucaoPrincipal[inicio].listaMeio[meio].listaFinal[fim].mostrarLista=false
+                                                    :listaInstrucaoPrincipal[inicio].listaMeio[meio].listaFinal[fim].mostrarLista=true),
                                                 onPressed: ()async{
                                                   if(listaInstrucaoPrincipal[inicio].listaMeio[meio].listaFinal[fim].controller.text.isNotEmpty && listaInstrucaoPrincipal[inicio].listaMeio[meio].listaFinal[fim].controller.text !=''){
                                                     listaInstrucaoPrincipal[inicio].listaMeio[meio].listaFinal[fim].checkFinal = true;

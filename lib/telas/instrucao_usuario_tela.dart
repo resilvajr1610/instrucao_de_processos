@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:instrucao_de_processos/modelos/fotos_modelo.dart';
+import 'package:instrucao_de_processos/modelos/modelo_fotos.dart';
+import 'package:instrucao_de_processos/modelos/modelo_videos.dart';
 import 'package:instrucao_de_processos/utilidades/variavel_estatica.dart';
 import 'package:instrucao_de_processos/widgets/caixa_texto.dart';
 import 'package:instrucao_de_processos/widgets/snackBars.dart';
@@ -14,6 +15,7 @@ import '../widgets/item_etapa3.dart';
 import '../widgets/item_etapa3_titulo.dart';
 import '../widgets/item_etapa3_um_titulo.dart';
 import '../widgets/texto_padrao.dart';
+import 'package:video_player/video_player.dart';
 
 class InstrucaoUsuarioTela extends StatefulWidget {
   String emailLogado;
@@ -34,7 +36,8 @@ class _InstrucaoUsuarioTelaState extends State<InstrucaoUsuarioTela> {
   DocumentSnapshot? dadosEspecificacao;
   DocumentSnapshot? dadosEtapas;
   List listaEtapas=[];
-  List<FotosModelo> listaUrlFotosEtapas =[];
+  List<ModeloFotos> listaUrlFotosEtapas =[];
+  List<ModeloVideos> listaUrlVideosEtapas =[];
 
   carregarDados(){
     FirebaseFirestore.instance.collection('especificacao').doc(widget.idEsp).get().then((dadosEsp){
@@ -46,9 +49,25 @@ class _InstrucaoUsuarioTelaState extends State<InstrucaoUsuarioTela> {
       listaEtapas = BadStateList(dadosEta, 'listaEtapa');
       for(int posicaoEtapa = 0; listaEtapas.length > posicaoEtapa; posicaoEtapa++){
         List listaAnalise = listaEtapas[posicaoEtapa]['listaAnalise'];
+
         for(int posicaoAnalise = 0; listaAnalise.length > posicaoAnalise; posicaoAnalise++){
           if(listaAnalise[posicaoAnalise]['j']==posicaoAnalise){
-            listaUrlFotosEtapas.add(FotosModelo(posicaoEtapa: posicaoEtapa, posicaoAnalise: posicaoAnalise, url: BadStateList(dadosEta, 'fotos_etapa${posicaoEtapa}_analise${posicaoAnalise}')));
+
+            listaUrlFotosEtapas.add(
+                ModeloFotos(
+                    posicaoEtapa: posicaoEtapa,
+                    posicaoAnalise: posicaoAnalise,
+                    url: BadStateList(dadosEta, 'fotos_etapa${posicaoEtapa}_analise${posicaoAnalise}')
+                )
+            );
+
+            listaUrlVideosEtapas.add(
+                ModeloVideos(
+                    posicaoEtapa: posicaoEtapa,
+                    posicaoAnalise: posicaoAnalise,
+                    urlVideo: BadStateList(dadosEta, 'videos_etapa${posicaoEtapa}_analise${posicaoAnalise}')
+                )
+            );
           }
         }
       }
@@ -295,12 +314,13 @@ class _InstrucaoUsuarioTelaState extends State<InstrucaoUsuarioTela> {
                                   List aux = listaEtapas[i]['listaAnalise'];
                                   List<ModeloAnalise3> listaAnalise = [];
                                   List fotos = [];
+                                  List videos = [];
 
                                   for(int j = 0; aux.length > j ; j++){
                                     for(int posicaoAnalise = 0; listaUrlFotosEtapas.length > posicaoAnalise ; posicaoAnalise++){
                                       if(listaUrlFotosEtapas[posicaoAnalise].posicaoEtapa==i && listaUrlFotosEtapas[posicaoAnalise].posicaoAnalise==j){
-                                        fotos=listaUrlFotosEtapas[posicaoAnalise].url;
-                                        print(fotos);
+                                        fotos = listaUrlFotosEtapas[posicaoAnalise].url;
+                                        videos = listaUrlVideosEtapas[posicaoAnalise].urlVideo;
                                       }
                                     }
                                     listaAnalise.add(
@@ -311,7 +331,7 @@ class _InstrucaoUsuarioTelaState extends State<InstrucaoUsuarioTela> {
                                             tempo: aux[j]['tempoAnalise'],
                                             pontoChave: aux[j]['pontoChave'],
                                             urlFotos: fotos,
-                                            urlVideos: []
+                                            urlVideos: videos
                                         )
                                     );
                                   }
@@ -323,7 +343,6 @@ class _InstrucaoUsuarioTelaState extends State<InstrucaoUsuarioTela> {
                                     listaAnalise: listaAnalise,
                                     comentario: true,
                                     funcaoComentario: ()=>carregarWidget(listaEtapas[i]['numeroEtapa'], listaEtapas[i]['nomeEtapa'],),
-                                    // funcaoExibirMidias: ()=>carregarWidgetMidias(listaEtapas[i]['numeroEtapa'], listaEtapas[i]['nomeEtapa']),
                                   );
                                 }
                             ),

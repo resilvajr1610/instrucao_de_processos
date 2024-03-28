@@ -75,6 +75,9 @@ class _InstrucaoPrimeiraEtapaTelaState extends State<InstrucaoPrimeiraEtapaTela>
   final ScrollController scrollFerramenta = ScrollController();
   final ScrollController scrollMaterial = ScrollController();
 
+  DateTime dataCriacao = DateTime.now();
+  DateTime dataVersao = DateTime.now();
+
   buscarDadosProcesso()async{
     if(widget.idEsp == ''){
       FirebaseFirestore.instance.collection('especificacao').get().then((dadosEspecificacao){
@@ -96,6 +99,8 @@ class _InstrucaoPrimeiraEtapaTelaState extends State<InstrucaoPrimeiraEtapaTela>
         esp_maquina.text = BadStateString(dados, 'esp_maquina');
         licenca_qualificacoes.text = BadStateString(dados, 'licenca_qualificacoes');
         tempoEtapas.text = BadStateInt(dados, 'totalEtapas')!=0?'${BadStateInt(dados, 'totalEtapas')} min':'Cálculo automático após finalização das etapas';
+        dataCriacao = dados['dataCriacao'].toDate();
+        dataVersao = dados['dataVersao'].toDate();
         setState(() {});
       });
     }
@@ -139,7 +144,16 @@ class _InstrucaoPrimeiraEtapaTelaState extends State<InstrucaoPrimeiraEtapaTela>
           }).then((value){
             showSnackBar(context, 'Dados salvos com sucesso!', Colors.green);
             Navigator.push(context, MaterialPageRoute(builder: (context)=>
-                InstrucaoSegundaEtapaTela(emailLogado: widget.emailLogado,nomeProcesso: nomeProcesso.text,FIP: numFIP,idEsp: docRef.id,etapaCriada: false,)));
+                InstrucaoSegundaEtapaTela(
+                  emailLogado: widget.emailLogado,
+                  nomeProcesso: nomeProcesso.text,
+                  FIP: numFIP,
+                  idEspAtual: docRef.id,
+                  etapaCriada: false,
+                  idEspAnterior: '',
+                )
+              )
+            );
           });
         });
     }else{
@@ -148,12 +162,51 @@ class _InstrucaoPrimeiraEtapaTelaState extends State<InstrucaoPrimeiraEtapaTela>
   }
 
   editarInstrucao() {
-    // showSnackBar(context, 'Dados salvos com sucesso!', Colors.green);
+    if(nomeProcesso.text.isNotEmpty && maquina.text.isNotEmpty && espeficicacao.text.isNotEmpty
+        && esp_maquina.text.isNotEmpty && licenca_qualificacoes.text.isNotEmpty){
 
-    FirebaseFirestore.instance.collection('especificacao').doc(widget.idEsp).get().then((doc){
-      Navigator.push(context, MaterialPageRoute(builder: (context)=>
-          InstrucaoSegundaEtapaTela(emailLogado: widget.emailLogado,nomeProcesso: nomeProcesso.text,FIP: numFIP,idEsp: widget.idEsp,etapaCriada: BadStateString(doc,'etapa')!=''?true:false)));
-    });
+      DocumentReference docRef = FirebaseFirestore.instance.collection('especificacao').doc();
+      docRef.set({
+        'id' : docRef.id,
+        'nome' : nomeProcesso.text.trim().toUpperCase(),
+        'maquina' : maquina.text.trim().toUpperCase(),
+        'epi' : listaTagDocEpi,
+        'ferramentas' : listaTagDocFerramenta,
+        'materiaPrima' : listaTagDocMaterial,
+        'espeficicacao' : espeficicacao.text.trim().toUpperCase(),
+        'esp_maquina' : esp_maquina.text.trim().toUpperCase(),
+        'licenca_qualificacoes' : licenca_qualificacoes.text.trim().toUpperCase(),
+        'prazo' : prazo.text.trim().toUpperCase(),
+        'visto': dadosUsuarioFire['nome'],
+        'idCriador': dadosUsuarioFire['id'],
+        'numeroFIP' : numFIP,
+        'versao' : versao+1,
+        'dataCriacao':dataCriacao,
+        'dataVersao':DateTime.now(),
+      }).then((value){
+        FirebaseFirestore.instance.collection('documentos').doc(widget.idFirebase).update({
+          'listaIdEsp'  : FieldValue.arrayUnion([docRef.id]),
+          'nomeProcesso': nomeProcesso.text.trim().toUpperCase(),
+          'listaVersao' : FieldValue.arrayUnion(['${nomeProcesso.text.trim().toUpperCase()} - versão ${versao+1}']),
+          'numeroFIP'   : numFIP,
+        }).then((value){
+          showSnackBar(context, 'Dados salvos com sucesso!', Colors.green);
+          Navigator.push(context, MaterialPageRoute(builder: (context)=>
+              InstrucaoSegundaEtapaTela(
+                emailLogado: widget.emailLogado,
+                nomeProcesso: nomeProcesso.text,
+                FIP: numFIP,
+                idEspAtual: docRef.id,
+                etapaCriada: true,
+                idEspAnterior: widget.idEsp,
+              )
+            )
+          );
+        });
+      });
+    }else{
+      showSnackBar(context, 'Preencha todos os campos para avançar!', Colors.red);
+    }
   }
 
   buscarListaEPI(){
@@ -310,7 +363,7 @@ class _InstrucaoPrimeiraEtapaTelaState extends State<InstrucaoPrimeiraEtapaTela>
                             SizedBox(width: 40,),
                             TextoPadrao(texto: 'Data de criação',cor: Cores.primaria,tamanhoFonte: 14,),
                             SizedBox(width: 10,),
-                            TextoPadrao(texto: '01/03/2024',cor: Cores.cinzaTextoEscuro,tamanhoFonte: 14,),
+                            TextoPadrao(texto: VariavelEstatica.mascaraData.format(dataCriacao),cor: Cores.cinzaTextoEscuro,tamanhoFonte: 14,),
                             SizedBox(width: 40,),
                             TextoPadrao(texto: 'Visto',cor: Cores.primaria,tamanhoFonte: 14,),
                             SizedBox(width: 10,),
@@ -322,7 +375,7 @@ class _InstrucaoPrimeiraEtapaTelaState extends State<InstrucaoPrimeiraEtapaTela>
                             SizedBox(width: 30,),
                             TextoPadrao(texto: 'Data',cor: Cores.primaria,tamanhoFonte: 14,),
                             SizedBox(width: 10,),
-                            TextoPadrao(texto: VariavelEstatica.mascaraData.format(DateTime.now()),cor: Cores.cinzaTextoEscuro,tamanhoFonte: 14,),
+                            TextoPadrao(texto: VariavelEstatica.mascaraData.format(dataVersao),cor: Cores.cinzaTextoEscuro,tamanhoFonte: 14,),
                           ],
                         ),
                         CaixaTexto(
@@ -331,6 +384,7 @@ class _InstrucaoPrimeiraEtapaTelaState extends State<InstrucaoPrimeiraEtapaTela>
                           controller: nomeProcesso,
                           largura: VariavelEstatica.largura*0.3,
                           corCaixa: Cores.cinzaClaro,
+                          ativarCaixa: widget.idEsp=='',
                         ),
                         Row(
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -528,8 +582,8 @@ class _InstrucaoPrimeiraEtapaTelaState extends State<InstrucaoPrimeiraEtapaTela>
                                     padding: EdgeInsets.only(left: 10),
                                     child: TextField(
                                       controller: ferramentas,
-                                      onChanged: (value) {
-                                        buscaFerramenta(value);
+                                      onChanged: (texto) {
+                                        buscaFerramenta(texto);
                                       },
                                       decoration: InputDecoration(
                                         hintText: 'Informe ferramenta necessária',

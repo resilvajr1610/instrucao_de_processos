@@ -1,3 +1,5 @@
+import 'modelo_videos.dart';
+
 class ModeloAnalise3{
   String imagemSelecionada;
   int numeroAnalise;

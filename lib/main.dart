@@ -2,6 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:instrucao_de_processos/telas/login_tela.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:instrucao_de_processos/telas/teste.dart';
 import 'package:instrucao_de_processos/telas/usuarios_tela.dart';
 
 void main()async {
@@ -27,6 +28,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Instrução de Processos',
       home: LoginTela(),
+      // home: Teste(),
     );
   }
 }

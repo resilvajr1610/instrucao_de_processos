@@ -207,7 +207,6 @@ class _InstrucaoTerceiraEtapaTelaState extends State<InstrucaoTerceiraEtapaTela>
                                               tempoTotalEtapa: listaEtapas[i]['tempoTotalEtapaMinutos'],
                                               listaAnalise: listaAnalise,
                                               funcaoComentario: null,
-                                              // funcaoExibirMidias: null,
                                             );
                                           }
                                       ),

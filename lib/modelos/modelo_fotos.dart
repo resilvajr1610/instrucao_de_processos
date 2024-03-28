@@ -1,9 +1,9 @@
-class FotosModelo{
+class ModeloFotos{
   int posicaoEtapa;
   int posicaoAnalise;
   List url;
 
-  FotosModelo({
+  ModeloFotos({
     required this.posicaoEtapa,
     required this.posicaoAnalise,
     required this.url,

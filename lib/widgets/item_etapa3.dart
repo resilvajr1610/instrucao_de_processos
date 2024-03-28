@@ -3,6 +3,7 @@ import 'package:instrucao_de_processos/modelos/modelo_analise3.dart';
 import 'package:instrucao_de_processos/widgets/texto_padrao.dart';
 import '../utilidades/cores.dart';
 import '../utilidades/variavel_estatica.dart';
+import 'package:video_player/video_player.dart';
 
 class ItemEtapa3 extends StatelessWidget {
   num numeroEtapa;
@@ -11,7 +12,7 @@ class ItemEtapa3 extends StatelessWidget {
   List<ModeloAnalise3> listaAnalise;
   bool comentario;
   var funcaoComentario;
-  // var funcaoExibirMidias;
+  var funcaoVideo;
 
   ItemEtapa3({
     required this.numeroEtapa,
@@ -19,7 +20,6 @@ class ItemEtapa3 extends StatelessWidget {
     required this.tempoTotalEtapa,
     required this.listaAnalise,
     required this.funcaoComentario,
-    // required this.funcaoExibirMidias,
     this.comentario = false,
   });
 
@@ -156,27 +156,115 @@ class ItemEtapa3 extends StatelessWidget {
                                     child: AlertDialog(
                                       title: TextoPadrao(texto: 'Mídias',cor: Cores.primaria,negrito: FontWeight.bold,),
                                       content: Container(
-                                        height: 300,
+                                        height: 650,
                                         width: 1000,
-                                        child: listaAnalise[i].urlFotos.length==0?Center(
-                                          child: TextoPadrao(texto: 'Sem mídia',cor: Cores.primaria,),
-                                        ):ListView.builder(
-                                          scrollDirection: Axis.horizontal,
-                                          itemCount: listaAnalise[i].urlFotos.length,
-                                          itemBuilder: (context, j) {
-                                            return FutureBuilder(
-                                              future: precacheImage(NetworkImage(listaAnalise[i].urlFotos[j]), context),
-                                              builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
-                                                if (snapshot.connectionState == ConnectionState.waiting) {
-                                                  return Center(child: CircularProgressIndicator());
-                                                } else if (snapshot.hasError) {
-                                                  return Center(child: Text('Erro ao carregar imagem'));
-                                                } else {
-                                                  return Image.network(listaAnalise[i].urlFotos[j]);
-                                                }
-                                              },
-                                            );
-                                          },
+                                        child: Column(
+                                          children: [
+                                            listaAnalise[i].urlFotos.length==0?Container(
+                                              height: 300,
+                                              width: 500,
+                                              child: Center(
+                                                child: TextoPadrao(texto: 'Sem Fotos',cor: Cores.primaria,),
+                                              ),
+                                            ):Container(
+                                              height: 300,
+                                              width: 500,
+                                              padding: EdgeInsets.symmetric(horizontal: 5),
+                                              child: ListView.builder(
+                                                scrollDirection: Axis.horizontal,
+                                                itemCount: listaAnalise[i].urlFotos.length,
+                                                itemBuilder: (context, j) {
+                                                  return FutureBuilder(
+                                                    future: precacheImage(NetworkImage(listaAnalise[i].urlFotos[j]), context),
+                                                    builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
+                                                      if (snapshot.connectionState == ConnectionState.waiting) {
+                                                        return Center(child: CircularProgressIndicator());
+                                                      } else if (snapshot.hasError) {
+                                                        return Center(child: Text('Erro ao carregar imagem'));
+                                                      } else {
+                                                        return Image.network(listaAnalise[i].urlFotos[j]);
+                                                      }
+                                                    },
+                                                  );
+                                                },
+                                              ),
+                                            ),
+                                            listaAnalise[i].urlVideos.length==0?Container(
+                                              height: 300,
+                                              width: 500,
+                                              child: Center(
+                                                child: TextoPadrao(texto: 'Sem Videos',cor: Cores.primaria,),
+                                              ),
+                                            ):Container(
+                                              padding: EdgeInsets.symmetric(horizontal: 5),
+                                              alignment: Alignment.center,
+                                              height: 300,
+                                              width: 500,
+                                              child: ListView.builder(
+                                                scrollDirection: Axis.horizontal,
+                                                itemCount: listaAnalise[i].urlVideos.length,
+                                                itemBuilder: (context, j) {
+
+                                                  VideoPlayerController? controller;
+                                                  Future<void>? iniciarVideo;
+                                                  controller = VideoPlayerController.networkUrl(Uri.parse(listaAnalise[i].urlVideos[j]));
+                                                  controller.setLooping(true);
+                                                  controller.setVolume(1.0);
+                                                  iniciarVideo = controller!.initialize();
+
+                                                  return FutureBuilder(
+                                                    future: iniciarVideo,
+                                                    builder: (context,snapshot){
+                                                      if(snapshot.connectionState == ConnectionState.done){
+                                                        return Container(
+                                                          height: 300,
+                                                          alignment: Alignment.center,
+                                                          child: Column(
+                                                            mainAxisSize: MainAxisSize.min,
+                                                            children: [
+                                                              Container(
+                                                                alignment: Alignment.center,
+                                                                height: 250,
+                                                                width: 400,
+                                                                child: AspectRatio(
+                                                                  aspectRatio: controller!.value.aspectRatio,
+                                                                  child: VideoPlayer(controller),
+                                                                ),
+                                                              ),
+                                                              Container(
+                                                                child: IconButton(
+                                                                  style: IconButton.styleFrom(backgroundColor: Cores.primaria),
+                                                                  icon: Icon(controller.value.isPlaying? Icons.pause:Icons.play_arrow,color: Colors.white),
+                                                                  onPressed: (){
+                                                                    if(controller!.value.isPlaying){
+                                                                      controller!.pause();
+                                                                    }else{
+                                                                      controller.play();
+                                                                    }
+                                                                    // setState(() {});
+                                                                  },
+                                                                ),
+                                                              ),
+                                                              Container(
+                                                                  width: 400,
+                                                                  child: VideoProgressIndicator(controller, allowScrubbing: true,)
+                                                              )
+                                                            ],
+                                                          ),
+                                                        );
+                                                      }else{
+                                                        return Container(
+                                                            width: 400,
+                                                            height: 350,
+                                                            child: Center(child: CircularProgressIndicator(),)
+                                                        );
+                                                      }
+                                                    },
+                                                  );
+                                                },
+                                              ),
+                                            )
+                                          ],
                                         )
                                       ),
                                       actions: [
