@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:instrucao_de_processos/modelos/bad_state_int.dart';
 import 'package:instrucao_de_processos/modelos/bad_state_list.dart';
 import 'package:instrucao_de_processos/modelos/bad_state_string.dart';
 import 'package:instrucao_de_processos/modelos/modelo_instrucao_lista_1_0_0.dart';
@@ -34,7 +33,7 @@ class _HomeTelaState extends State<HomeTela> {
   double larguraMeioCaixaTexto = 350;
   double larguraFinalCaixaTexto = 300;
 
-  double larguraInicioCard = 680;
+  double larguraInicioCard = 800;
   double larguraMeioCard = 600;
   double larguraFinalCard = 550;
   double alturaItens = 75;
@@ -48,7 +47,7 @@ class _HomeTelaState extends State<HomeTela> {
 
   final ScrollController scrollPesquisa = ScrollController();
 
-  adicionarListaInicio(String idDoc,String idFire,List listaIdEsp,String nomeProcesso,List listaVersao, String titulo,bool ativarBotaoAdicionarItemLista, bool escrever ){
+  adicionarListaInicio(String idDoc,String idFire,List listaIdEsp,String nomeProcesso,List listaVersao, String titulo,bool ativarBotaoAdicionarItemLista, bool escrever, bool mostrarLista ){
     listaInstrucaoPrincipal.add(
       ModeloInstrucaoLista_1_0_0(
         idDoc: idDoc,
@@ -62,7 +61,7 @@ class _HomeTelaState extends State<HomeTela> {
         largura: 450,
         listaMeio: [],
         alturaListaMeio: 0,
-        mostrarLista: escrever
+        mostrarLista: mostrarLista,
       )
     );
     alturaListaInicio = alturaListaInicio + alturaItens;
@@ -85,6 +84,7 @@ class _HomeTelaState extends State<HomeTela> {
                 BadStateString(docs.docs[i], 'nomeProcesso'),
                 BadStateList(docs.docs[i], 'listaVersao'),
                 docs.docs[i]['titulo'],
+                true,
                 false,
                 false
             );
@@ -98,7 +98,7 @@ class _HomeTelaState extends State<HomeTela> {
                 )
             );
             if(docs.docs.length == i+1){
-              adicionarListaInicio('${i+2}.0.0','',[],'',[],'', false, true);
+              adicionarListaInicio('${i+2}.0.0','',[],'',[],'', false, true,true);
               carregarDadosMeio();
               setState(() {});
             }
@@ -112,6 +112,7 @@ class _HomeTelaState extends State<HomeTela> {
                   BadStateList(docs.docs[i], 'listaVersao'),
                   docs.docs[i]['titulo'],
                   false,
+                  false,
                   false
               );
               listaCompletaPesquisa.add(
@@ -124,7 +125,7 @@ class _HomeTelaState extends State<HomeTela> {
                   )
               );
               if(docs.docs.length == i+1){
-                adicionarListaInicio('${i+2}.0.0','',[],'',[],'', false, true);
+                adicionarListaInicio('${i+2}.0.0','',[],'',[],'', false, true,true);
                 carregarDadosMeio();
                 setState(() {});
               }
@@ -132,7 +133,7 @@ class _HomeTelaState extends State<HomeTela> {
           }
         }
       }else{
-        adicionarListaInicio('1.0.0', '',[],'',[],'inicio vazio', false, true);
+        adicionarListaInicio('1.0.0', '',[],'',[],'', false, true,true);
         carregando = false;
         setState((){});
       }
@@ -166,7 +167,7 @@ class _HomeTelaState extends State<HomeTela> {
     if(addPrincipal){
       alturaListaInicio = alturaListaInicio + alturaItens + alturaItens;
       listaInstrucaoPrincipal[inicio].alturaListaMeio = listaInstrucaoPrincipal[inicio].alturaListaMeio + alturaItens;
-      adicionarListaInicio('${listaInstrucaoPrincipal.length+1}.0.0','',[],'',[],'',false,true);
+      adicionarListaInicio('${listaInstrucaoPrincipal.length+1}.0.0','',[],'',[],'',false,true,true);
     }
     setState(() {});
   }
@@ -585,6 +586,9 @@ class _HomeTelaState extends State<HomeTela> {
                           crossAxisAlignment: CrossAxisAlignment.end,
                           children: [
                             ItemInstrucao(
+                              indexInicio: inicio,
+                              indexMeio: 0,
+                              indexFim: 0,
                               acesso_adm: acesso_adm,
                               controller: listaInstrucaoPrincipal[inicio].controller,
                               ativarBotaoAdicionarItemLista: listaInstrucaoPrincipal[inicio].ativarBotaoAdicionarItemLista,
@@ -600,7 +604,7 @@ class _HomeTelaState extends State<HomeTela> {
                               funcaoMostrarLista: ()=>setState(()=>listaInstrucaoPrincipal[inicio].mostrarLista
                                   ?listaInstrucaoPrincipal[inicio].mostrarLista=false
                                   :listaInstrucaoPrincipal[inicio].mostrarLista=true),
-                              onPressed: ()async{
+                              funcaoItemLista: ()async{
                                 if(listaInstrucaoPrincipal[inicio].controller.text.isNotEmpty && listaInstrucaoPrincipal[inicio].controller.text !=''){
                                   if(listaInstrucaoPrincipal[inicio].idFire!=''){
                                     listaInstrucaoPrincipal[inicio].ativarBotaoAdicionarItemLista = true;
@@ -619,6 +623,35 @@ class _HomeTelaState extends State<HomeTela> {
                                   showSnackBar(context, 'Adicione um texto para avançar', Colors.red);
                                 }
                               },
+                              funcaoExcluir: (){
+                                setState(() {
+                                  showDialog(context: context,
+                                      builder: (context){
+                                        return Center(
+                                          child: AlertDialog(
+                                            title: TextoPadrao(texto: 'Deseja excluír esse item?',cor: Cores.primaria,negrito: FontWeight.bold,),
+                                            content: Container(
+                                              height: 40,
+                                              width: 350,
+                                              child: TextoPadrao(
+                                                texto: 'Após exclusão esse item não aparecerá novamente.',
+                                                cor: Cores.cinzaTextoEscuro,
+                                              ),
+                                            ),
+                                            actions: [
+                                              TextButton(child: TextoPadrao(texto: 'Não',cor: Colors.green,negrito: FontWeight.bold,),onPressed: ()=>Navigator.pop(context),),
+                                              TextButton(child: TextoPadrao(texto: 'Confimar Exclusão',cor: Colors.red,negrito: FontWeight.bold,),onPressed: (){
+                                                FirebaseFirestore.instance.collection('documentos').doc(listaInstrucaoPrincipal[inicio].idFire).delete().then((value){
+                                                  Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>HomeTela(emailLogado: widget.emailLogado)));
+                                                });
+                                              }),
+                                            ],
+                                          ),
+                                        );
+                                      });
+                                  ///
+                                });
+                              },
                             ),
                             Container(
                               // color: Colors.red,
@@ -632,6 +665,9 @@ class _HomeTelaState extends State<HomeTela> {
                                     crossAxisAlignment: CrossAxisAlignment.end,
                                     children: [
                                       ItemInstrucao(
+                                        indexInicio: inicio,
+                                        indexMeio: listaInstrucaoPrincipal[inicio].listaMeio.length==0?0:meio,
+                                        indexFim: 0,
                                         acesso_adm: acesso_adm,
                                         controller: listaInstrucaoPrincipal[inicio].listaMeio[meio].controller,
                                         ativarBotaoAdicionarItemLista: listaInstrucaoPrincipal[inicio].listaMeio[meio].ativarBotaoAdicionarItemLista,
@@ -647,7 +683,7 @@ class _HomeTelaState extends State<HomeTela> {
                                         funcaoMostrarLista: ()=>setState(()=>listaInstrucaoPrincipal[inicio].listaMeio[meio].mostrarLista
                                           ?listaInstrucaoPrincipal[inicio].listaMeio[meio].mostrarLista=false
                                           :listaInstrucaoPrincipal[inicio].listaMeio[meio].mostrarLista=true),
-                                        onPressed: ()async{
+                                        funcaoItemLista: ()async{
                                           if(listaInstrucaoPrincipal[inicio].listaMeio[meio].controller.text.isNotEmpty && listaInstrucaoPrincipal[inicio].listaMeio[meio].controller.text !=''){
                                             if(listaInstrucaoPrincipal[inicio].listaMeio[meio].idFire!=''){
                                               listaInstrucaoPrincipal[inicio].listaMeio[meio].ativarBotaoAdicionarItemLista = true;
@@ -667,6 +703,7 @@ class _HomeTelaState extends State<HomeTela> {
                                             showSnackBar(context, 'Adicione um texto para avançar', Colors.red);
                                           }
                                         },
+                                        funcaoExcluir: (){},
                                       ),
                                       Container(
                                         // color: Colors.amber,
@@ -677,6 +714,9 @@ class _HomeTelaState extends State<HomeTela> {
                                             itemCount: listaInstrucaoPrincipal[inicio].listaMeio[meio].listaFinal.length,
                                             itemBuilder: (context,fim){
                                               return ItemInstrucao(
+                                                indexInicio: inicio,
+                                                indexMeio: meio,
+                                                indexFim: listaInstrucaoPrincipal[inicio].listaMeio[meio].listaFinal.length==0?0:fim,
                                                 acesso_adm: acesso_adm,
                                                 controller: listaInstrucaoPrincipal[inicio].listaMeio[meio].listaFinal[fim].controller,
                                                 ativarBotaoAdicionarItemLista: listaInstrucaoPrincipal[inicio].listaMeio[meio].listaFinal[fim].checkFinal,
@@ -692,7 +732,7 @@ class _HomeTelaState extends State<HomeTela> {
                                                 funcaoMostrarLista: ()=>setState(()=>listaInstrucaoPrincipal[inicio].listaMeio[meio].listaFinal[fim].mostrarLista
                                                     ?listaInstrucaoPrincipal[inicio].listaMeio[meio].listaFinal[fim].mostrarLista=false
                                                     :listaInstrucaoPrincipal[inicio].listaMeio[meio].listaFinal[fim].mostrarLista=true),
-                                                onPressed: ()async{
+                                                funcaoItemLista: ()async{
                                                   if(listaInstrucaoPrincipal[inicio].listaMeio[meio].listaFinal[fim].controller.text.isNotEmpty && listaInstrucaoPrincipal[inicio].listaMeio[meio].listaFinal[fim].controller.text !=''){
                                                     listaInstrucaoPrincipal[inicio].listaMeio[meio].listaFinal[fim].checkFinal = true;
                                                     await salvarFirebase(
@@ -705,6 +745,7 @@ class _HomeTelaState extends State<HomeTela> {
                                                     showSnackBar(context, 'Adicione um texto para avançar', Colors.red);
                                                   }
                                                 },
+                                                funcaoExcluir: (){},
                                               );
                                             }
                                         ),
