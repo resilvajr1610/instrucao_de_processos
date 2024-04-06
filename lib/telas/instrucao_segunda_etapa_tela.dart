@@ -101,9 +101,6 @@ class _InstrucaoSegundaEtapaTelaState extends State<InstrucaoSegundaEtapaTela> {
         .then((etapasDoc) {
       List<dynamic> listaMapEtapa = etapasDoc['listaEtapa'];
 
-      print('listaMapEtapa.length');
-      print(listaMapEtapa.length);
-
       for (int i = 0; i < listaMapEtapa.length; i++) {
         List<dynamic> listaMapAnalise = listaMapEtapa[i]['listaAnalise'];
         List<ModeloAnalise2> listaAnalise = [];

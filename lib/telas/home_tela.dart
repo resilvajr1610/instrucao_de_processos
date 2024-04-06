@@ -29,12 +29,12 @@ class _HomeTelaState extends State<HomeTela> {
 
   List<ModeloInstrucaoLista_1_0_0> listaInstrucaoPrincipal=[];
   var pesquisa = TextEditingController();
-  double larguraInicioCaixaTexto = 450;
-  double larguraMeioCaixaTexto = 350;
+  double larguraInicioCaixaTexto = 600;
+  double larguraMeioCaixaTexto = 450;
   double larguraFinalCaixaTexto = 300;
 
-  double larguraInicioCard = 800;
-  double larguraMeioCard = 600;
+  double larguraInicioCard = 850;
+  double larguraMeioCard = 750;
   double larguraFinalCard = 550;
   double alturaItens = 75;
   double alturaListaFinal = 0;
@@ -48,6 +48,7 @@ class _HomeTelaState extends State<HomeTela> {
   final ScrollController scrollPesquisa = ScrollController();
 
   adicionarListaInicio(String idDoc,String idFire,List listaIdEsp,String nomeProcesso,List listaVersao, String titulo,bool ativarBotaoAdicionarItemLista, bool escrever, bool mostrarLista ){
+
     listaInstrucaoPrincipal.add(
       ModeloInstrucaoLista_1_0_0(
         idDoc: idDoc,
@@ -58,10 +59,10 @@ class _HomeTelaState extends State<HomeTela> {
         controller: TextEditingController(text: titulo),
         ativarBotaoAdicionarItemLista: ativarBotaoAdicionarItemLista,
         escrever: escrever,
-        largura: 450,
+        larguraInicio: 550,
         listaMeio: [],
         alturaListaMeio: 0,
-        mostrarLista: mostrarLista,
+        mostrarListaInicio: mostrarLista,
       )
     );
     alturaListaInicio = alturaListaInicio + alturaItens;
@@ -140,7 +141,7 @@ class _HomeTelaState extends State<HomeTela> {
     });
   }
 
-  adicionarListaMeio(int inicio, bool addPrincipal,String idFire, String idDoc, List listaIdEsp, String nomeProcesso, List listaVersao, String titulo, bool ativarBotaoAdicionarItemLista, bool escrever){
+  adicionarListaMeio(int inicio, bool addPrincipal,String idFire, String idDoc, List listaIdEsp, String nomeProcesso, List listaVersao, String titulo, bool ativarBotaoAdicionarItemLista, bool escrever,bool mostrarListaMeio){
     listaInstrucaoPrincipal[inicio].listaMeio.add(
       ModeloInstrucaoLista_1_1_0(
         idFire: idFire,
@@ -150,11 +151,11 @@ class _HomeTelaState extends State<HomeTela> {
         listaVersao: listaVersao,
         controller: TextEditingController(text: titulo),
         ativarBotaoAdicionarItemLista: false,
-        largura: larguraMeioCaixaTexto,
-        escrever: true,
+        larguraMeio: larguraMeioCaixaTexto,
+        escrever: escrever,
         listaFinal: [],
         alturaListaFinal: 0,
-        mostrarLista: escrever
+        mostrarListaMeio: mostrarListaMeio
       )
     );
     listaInstrucaoPrincipal[inicio].escrever = false;
@@ -193,6 +194,7 @@ class _HomeTelaState extends State<HomeTela> {
               BadStateList(docs.docs[i], 'listaVersao'),
               docs.docs[i]['titulo'],
               true,
+              false,
               false
           );
           listaCompletaPesquisa.add(
@@ -217,11 +219,11 @@ class _HomeTelaState extends State<HomeTela> {
                     idDoc: '$inicio.${meio+1}.0',
                     controller: TextEditingController(text: 'add meio'),
                     ativarBotaoAdicionarItemLista: false,
-                    largura: larguraMeioCaixaTexto,
+                    larguraMeio: larguraMeioCaixaTexto,
                     escrever: true,
                     listaFinal: [],
                     alturaListaFinal: 0,
-                    mostrarLista: true
+                    mostrarListaMeio: true
                 )
             );
             setState(() {});
@@ -247,6 +249,7 @@ class _HomeTelaState extends State<HomeTela> {
                 BadStateList(docs.docs[i], 'listaVersao'),
                 docs.docs[i]['titulo'],
                 true,
+                false,
                 false
             );
             listaCompletaPesquisa.add(
@@ -270,11 +273,11 @@ class _HomeTelaState extends State<HomeTela> {
                       idDoc: '$inicio.${meio+1}.0',
                       controller: TextEditingController(text: 'add meio'),
                       ativarBotaoAdicionarItemLista: false,
-                      largura: larguraMeioCaixaTexto,
+                      larguraMeio: larguraMeioCaixaTexto,
                       escrever: true,
                       listaFinal: [],
                       alturaListaFinal: 0,
-                      mostrarLista: true
+                      mostrarListaMeio: true
                   )
               );
               setState(() {});
@@ -286,7 +289,7 @@ class _HomeTelaState extends State<HomeTela> {
     });
   }
 
-  adicionarListaFim(int inicio, int meio,bool addMeio,String idFire, String idDoc,List listaIdEsp, String nomeProcesso,List listaVersao, String titulo, bool checkFinal, bool escrever){
+  adicionarListaFim(int inicio, int meio,bool addMeio,String idFire, String idDoc,List listaIdEsp, String nomeProcesso,List listaVersao, String titulo, bool checkFinal, bool escrever, bool mostrarListaFinal){
     List<ModeloInstrucaoLista_1_1_1> listaFinal = [];
     listaFinal.add(
       ModeloInstrucaoLista_1_1_1(
@@ -297,9 +300,9 @@ class _HomeTelaState extends State<HomeTela> {
         listaVersao: listaVersao,
         controller: TextEditingController(text: titulo),
         checkFinal: checkFinal,
-        largura: larguraFinalCaixaTexto,
+        larguraFinal: larguraFinalCaixaTexto,
         escrever: escrever,
-        mostrarLista: escrever
+        mostrarListaFinal: mostrarListaFinal
       )
     );
     listaInstrucaoPrincipal[inicio].listaMeio[meio].listaFinal = listaFinal;
@@ -325,11 +328,11 @@ class _HomeTelaState extends State<HomeTela> {
               idDoc: '${inicio+1}.${meio+2}.0',
               controller: TextEditingController(),
               ativarBotaoAdicionarItemLista: false,
-              largura: larguraMeioCaixaTexto,
+              larguraMeio: larguraMeioCaixaTexto,
               escrever: true,
               listaFinal: [],
               alturaListaFinal: 0,
-              mostrarLista: true
+              mostrarListaMeio: true
           )
       );
     }
@@ -356,6 +359,7 @@ class _HomeTelaState extends State<HomeTela> {
              BadStateList(docs.docs[i], 'listaVersao'),
              docs.docs[i]['titulo'],
              true,
+             false,
              false
          );
          listaCompletaPesquisa.add(
@@ -390,6 +394,7 @@ class _HomeTelaState extends State<HomeTela> {
                  BadStateList(docs.docs[i], 'listaVersao'),
                  docs.docs[i]['titulo'],
                  true,
+                 false,
                  false
              );
              listaCompletaPesquisa.add(
@@ -418,6 +423,7 @@ class _HomeTelaState extends State<HomeTela> {
     DocumentReference docRef = FirebaseFirestore.instance.collection(colecao).doc();
     await docRef.set({
       'idFire': docRef.id,
+      'listaIdEsp' : [],
       'idDoc'     : idDocumento,
       'titulo'    : titulo,
       'posicao'   : nivel
@@ -587,23 +593,30 @@ class _HomeTelaState extends State<HomeTela> {
                           children: [
                             ItemInstrucao(
                               indexInicio: inicio,
-                              indexMeio: 0,
-                              indexFim: 0,
+                              indexMeio: -1,
+                              indexFim: -1,
                               acesso_adm: acesso_adm,
                               controller: listaInstrucaoPrincipal[inicio].controller,
                               ativarBotaoAdicionarItemLista: listaInstrucaoPrincipal[inicio].ativarBotaoAdicionarItemLista,
-                              largura: listaInstrucaoPrincipal[inicio].largura,
+                              largura: listaInstrucaoPrincipal[inicio].larguraInicio,
                               escrever: listaInstrucaoPrincipal[inicio].escrever,
                               idFirebase: listaInstrucaoPrincipal[inicio].idFire,
                               idDocumento: listaInstrucaoPrincipal[inicio].idDoc,
                               listaIdEsp: listaInstrucaoPrincipal[inicio].listaIdEsp,
                               nomeProcesso: listaInstrucaoPrincipal[inicio].nomeProcesso,
                               listaVersao: listaInstrucaoPrincipal[inicio].listaVersao,
-                              mostrarLista: listaInstrucaoPrincipal[inicio].mostrarLista,
+                              mostrarLista: listaInstrucaoPrincipal[inicio].mostrarListaInicio,
                               emailLogado: widget.emailLogado,
-                              funcaoMostrarLista: ()=>setState(()=>listaInstrucaoPrincipal[inicio].mostrarLista
-                                  ?listaInstrucaoPrincipal[inicio].mostrarLista=false
-                                  :listaInstrucaoPrincipal[inicio].mostrarLista=true),
+                              funcaoMostrarLista: (){
+                                if(listaInstrucaoPrincipal[inicio].controller.text.isNotEmpty && listaInstrucaoPrincipal[inicio].listaMeio.isEmpty){
+                                  adicionarListaMeio(inicio,false,'','${inicio+1}.1.0',[],'',[],'',false,true,true);
+                                }
+
+                                setState(()=>listaInstrucaoPrincipal[inicio].mostrarListaInicio
+                                    ?listaInstrucaoPrincipal[inicio].mostrarListaInicio=false
+                                    :listaInstrucaoPrincipal[inicio].mostrarListaInicio=true);
+
+                              },
                               funcaoItemLista: ()async{
                                 if(listaInstrucaoPrincipal[inicio].controller.text.isNotEmpty && listaInstrucaoPrincipal[inicio].controller.text !=''){
                                   if(listaInstrucaoPrincipal[inicio].idFire!=''){
@@ -611,7 +624,7 @@ class _HomeTelaState extends State<HomeTela> {
                                     FirebaseFirestore.instance.collection('documentos').doc(listaInstrucaoPrincipal[inicio].idFire).update({
                                           'titulo':listaInstrucaoPrincipal[inicio].controller.text
                                         }).then((value){
-                                      adicionarListaMeio(inicio,false,'','${inicio+1}.1.0',[],'',[],'',false,true);
+                                      adicionarListaMeio(inicio,false,'','${inicio+1}.1.0',[],'',[],'',false,true,true);
                                       setState(() {});
                                     });
                                   }else{
@@ -666,23 +679,31 @@ class _HomeTelaState extends State<HomeTela> {
                                     children: [
                                       ItemInstrucao(
                                         indexInicio: inicio,
-                                        indexMeio: listaInstrucaoPrincipal[inicio].listaMeio.length==0?0:meio,
-                                        indexFim: 0,
+                                        indexMeio: listaInstrucaoPrincipal[inicio].listaMeio.length==0?-1:meio,
+                                        indexFim: -1,
                                         acesso_adm: acesso_adm,
                                         controller: listaInstrucaoPrincipal[inicio].listaMeio[meio].controller,
                                         ativarBotaoAdicionarItemLista: listaInstrucaoPrincipal[inicio].listaMeio[meio].ativarBotaoAdicionarItemLista,
-                                        largura: listaInstrucaoPrincipal[inicio].listaMeio[meio].largura,
+                                        largura: listaInstrucaoPrincipal[inicio].listaMeio[meio].larguraMeio,
                                         escrever: listaInstrucaoPrincipal[inicio].listaMeio[meio].escrever,
                                         idFirebase: listaInstrucaoPrincipal[inicio].listaMeio[meio].idFire,
                                         idDocumento: listaInstrucaoPrincipal[inicio].listaMeio[meio].idDoc,
                                         listaIdEsp: listaInstrucaoPrincipal[inicio].listaMeio[meio].listaIdEsp,
                                         nomeProcesso: listaInstrucaoPrincipal[inicio].listaMeio[meio].nomeProcesso,
                                         listaVersao: listaInstrucaoPrincipal[inicio].listaMeio[meio].listaVersao,
-                                        mostrarLista: listaInstrucaoPrincipal[inicio].listaMeio[meio].mostrarLista,
+                                        mostrarLista: listaInstrucaoPrincipal[inicio].listaMeio[meio].mostrarListaMeio,
                                         emailLogado: widget.emailLogado,
-                                        funcaoMostrarLista: ()=>setState(()=>listaInstrucaoPrincipal[inicio].listaMeio[meio].mostrarLista
-                                          ?listaInstrucaoPrincipal[inicio].listaMeio[meio].mostrarLista=false
-                                          :listaInstrucaoPrincipal[inicio].listaMeio[meio].mostrarLista=true),
+                                        funcaoMostrarLista: (){
+
+                                          if(listaInstrucaoPrincipal[inicio].listaMeio[meio].controller.text.isNotEmpty
+                                          && listaInstrucaoPrincipal[inicio].listaMeio[meio].listaFinal.isEmpty){
+                                            adicionarListaFim(inicio,meio,false,'','${inicio+1}.${meio+1}.1',[],'',[],'',false,true,true);
+                                          }
+
+                                          setState(()=>listaInstrucaoPrincipal[inicio].listaMeio[meio].mostrarListaMeio
+                                              ?listaInstrucaoPrincipal[inicio].listaMeio[meio].mostrarListaMeio=false
+                                              :listaInstrucaoPrincipal[inicio].listaMeio[meio].mostrarListaMeio=true);
+                                        },
                                         funcaoItemLista: ()async{
                                           if(listaInstrucaoPrincipal[inicio].listaMeio[meio].controller.text.isNotEmpty && listaInstrucaoPrincipal[inicio].listaMeio[meio].controller.text !=''){
                                             if(listaInstrucaoPrincipal[inicio].listaMeio[meio].idFire!=''){
@@ -691,7 +712,7 @@ class _HomeTelaState extends State<HomeTela> {
                                               FirebaseFirestore.instance.collection('documentos').doc(listaInstrucaoPrincipal[inicio].listaMeio[meio].idFire).update({
                                                 'titulo':listaInstrucaoPrincipal[inicio].listaMeio[meio].controller.text
                                               }).then((value){
-                                                adicionarListaFim(inicio,meio,false,'','${inicio+1}.${meio+1}.1',[],'',[],'',false,true);
+                                                adicionarListaFim(inicio,meio,false,'','${inicio+1}.${meio+1}.1',[],'',[],'',false,true,true);
                                               });
                                             }else{
                                               await salvarFirebase('documentos',listaInstrucaoPrincipal[inicio].listaMeio[meio].controller.text,
@@ -703,7 +724,35 @@ class _HomeTelaState extends State<HomeTela> {
                                             showSnackBar(context, 'Adicione um texto para avançar', Colors.red);
                                           }
                                         },
-                                        funcaoExcluir: (){},
+                                        funcaoExcluir: (){
+                                          setState(() {
+                                            showDialog(context: context,
+                                                builder: (context){
+                                                  return Center(
+                                                    child: AlertDialog(
+                                                      title: TextoPadrao(texto: 'Deseja excluír esse item?',cor: Cores.primaria,negrito: FontWeight.bold,),
+                                                      content: Container(
+                                                        height: 40,
+                                                        width: 350,
+                                                        child: TextoPadrao(
+                                                          texto: 'Após exclusão esse item não aparecerá novamente.',
+                                                          cor: Cores.cinzaTextoEscuro,
+                                                        ),
+                                                      ),
+                                                      actions: [
+                                                        TextButton(child: TextoPadrao(texto: 'Não',cor: Colors.green,negrito: FontWeight.bold,),onPressed: ()=>Navigator.pop(context),),
+                                                        TextButton(child: TextoPadrao(texto: 'Confimar Exclusão',cor: Colors.red,negrito: FontWeight.bold,),onPressed: (){
+                                                          FirebaseFirestore.instance.collection('documentos').doc(listaInstrucaoPrincipal[inicio].listaMeio[meio].idFire).delete().then((value){
+                                                            Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>HomeTela(emailLogado: widget.emailLogado)));
+                                                          });
+                                                        }),
+                                                      ],
+                                                    ),
+                                                  );
+                                                });
+                                            ///
+                                          });
+                                        },
                                       ),
                                       Container(
                                         // color: Colors.amber,
@@ -720,18 +769,18 @@ class _HomeTelaState extends State<HomeTela> {
                                                 acesso_adm: acesso_adm,
                                                 controller: listaInstrucaoPrincipal[inicio].listaMeio[meio].listaFinal[fim].controller,
                                                 ativarBotaoAdicionarItemLista: listaInstrucaoPrincipal[inicio].listaMeio[meio].listaFinal[fim].checkFinal,
-                                                largura: listaInstrucaoPrincipal[inicio].listaMeio[meio].listaFinal[fim].largura,
+                                                largura: listaInstrucaoPrincipal[inicio].listaMeio[meio].listaFinal[fim].larguraFinal,
                                                 escrever: listaInstrucaoPrincipal[inicio].listaMeio[meio].listaFinal[fim].escrever,
                                                 idFirebase: listaInstrucaoPrincipal[inicio].listaMeio[meio].listaFinal[fim].idFire,
                                                 idDocumento: listaInstrucaoPrincipal[inicio].listaMeio[meio].listaFinal[fim].idDoc,
                                                 listaIdEsp: listaInstrucaoPrincipal[inicio].listaMeio[meio].listaFinal[fim].listaIdEsp,
                                                 nomeProcesso: listaInstrucaoPrincipal[inicio].listaMeio[meio].listaFinal[fim].nomeProcesso,
                                                 listaVersao: listaInstrucaoPrincipal[inicio].listaMeio[meio].listaFinal[fim].listaVersao,
-                                                mostrarLista: listaInstrucaoPrincipal[inicio].listaMeio[meio].listaFinal[fim].mostrarLista,
+                                                mostrarLista: listaInstrucaoPrincipal[inicio].listaMeio[meio].listaFinal[fim].mostrarListaFinal,
                                                 emailLogado: widget.emailLogado,
-                                                funcaoMostrarLista: ()=>setState(()=>listaInstrucaoPrincipal[inicio].listaMeio[meio].listaFinal[fim].mostrarLista
-                                                    ?listaInstrucaoPrincipal[inicio].listaMeio[meio].listaFinal[fim].mostrarLista=false
-                                                    :listaInstrucaoPrincipal[inicio].listaMeio[meio].listaFinal[fim].mostrarLista=true),
+                                                funcaoMostrarLista: ()=>setState(()=>listaInstrucaoPrincipal[inicio].listaMeio[meio].listaFinal[fim].mostrarListaFinal
+                                                    ?listaInstrucaoPrincipal[inicio].listaMeio[meio].listaFinal[fim].mostrarListaFinal=false
+                                                    :listaInstrucaoPrincipal[inicio].listaMeio[meio].listaFinal[fim].mostrarListaFinal=true),
                                                 funcaoItemLista: ()async{
                                                   if(listaInstrucaoPrincipal[inicio].listaMeio[meio].listaFinal[fim].controller.text.isNotEmpty && listaInstrucaoPrincipal[inicio].listaMeio[meio].listaFinal[fim].controller.text !=''){
                                                     listaInstrucaoPrincipal[inicio].listaMeio[meio].listaFinal[fim].checkFinal = true;
@@ -745,7 +794,35 @@ class _HomeTelaState extends State<HomeTela> {
                                                     showSnackBar(context, 'Adicione um texto para avançar', Colors.red);
                                                   }
                                                 },
-                                                funcaoExcluir: (){},
+                                                funcaoExcluir: (){
+                                                  setState(() {
+                                                    showDialog(context: context,
+                                                        builder: (context){
+                                                          return Center(
+                                                            child: AlertDialog(
+                                                              title: TextoPadrao(texto: 'Deseja excluír esse item?',cor: Cores.primaria,negrito: FontWeight.bold,),
+                                                              content: Container(
+                                                                height: 40,
+                                                                width: 350,
+                                                                child: TextoPadrao(
+                                                                  texto: 'Após exclusão esse item não aparecerá novamente.',
+                                                                  cor: Cores.cinzaTextoEscuro,
+                                                                ),
+                                                              ),
+                                                              actions: [
+                                                                TextButton(child: TextoPadrao(texto: 'Não',cor: Colors.green,negrito: FontWeight.bold,),onPressed: ()=>Navigator.pop(context),),
+                                                                TextButton(child: TextoPadrao(texto: 'Confimar Exclusão',cor: Colors.red,negrito: FontWeight.bold,),onPressed: (){
+                                                                  FirebaseFirestore.instance.collection('documentos').doc(listaInstrucaoPrincipal[inicio].listaMeio[meio].listaFinal[fim].idFire).delete().then((value){
+                                                                    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>HomeTela(emailLogado: widget.emailLogado)));
+                                                                  });
+                                                                }),
+                                                              ],
+                                                            ),
+                                                          );
+                                                        });
+                                                    ///
+                                                  });
+                                                },
                                               );
                                             }
                                         ),

@@ -7,10 +7,10 @@ class ModeloInstrucaoLista_1_1_1{
   String nomeProcesso;
   List listaVersao;
   TextEditingController controller;
-  double largura;
+  double larguraFinal;
   bool checkFinal;
   bool escrever;
-  bool mostrarLista;
+  bool mostrarListaFinal;
 
   ModeloInstrucaoLista_1_1_1({
     required this.idFire,
@@ -20,8 +20,8 @@ class ModeloInstrucaoLista_1_1_1{
     required this.listaVersao,
     required this.controller,
     required this.checkFinal,
-    required this.largura,
+    required this.larguraFinal,
     required this.escrever,
-    required this.mostrarLista,
+    required this.mostrarListaFinal,
   });
 }

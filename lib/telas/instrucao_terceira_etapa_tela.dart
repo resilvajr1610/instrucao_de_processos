@@ -45,8 +45,9 @@ class _InstrucaoTerceiraEtapaTelaState extends State<InstrucaoTerceiraEtapaTela>
       listaEtapas = BadStateList(dadosEta, 'listaEtapa');
       setState((){});
     });
-    FirebaseFirestore.instance.collection('documentos').where('idEsp',isEqualTo: widget.idEtapa).get().then((dadosDocumento){
+    FirebaseFirestore.instance.collection('documentos').where('listaIdEsp',arrayContains: [widget.idEtapa]).get().then((dadosDocumento){
       idDoc = dadosDocumento.docs[0].id;
+      print('teste');
       print(dadosDocumento.docs[0].id);
     });
   }
@@ -173,7 +174,7 @@ class _InstrucaoTerceiraEtapaTelaState extends State<InstrucaoTerceiraEtapaTela>
                             height: VariavelEstatica.altura*0.38,
                             child: SingleChildScrollView(
                               child: listaEtapas.isEmpty?Container():Container(
-                                height: listaEtapas.length*250+80,
+                                height: listaEtapas.length*300+80,
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
@@ -310,13 +311,18 @@ class _InstrucaoTerceiraEtapaTelaState extends State<InstrucaoTerceiraEtapaTela>
                                           texto: 'Finalizar',
                                           largura: 150,
                                           margemVertical: 5,
-                                          onPressed: ()=>
+                                          onPressed: (){
+
+                                            print('idDoc');
+                                            print(idDoc);
+
                                             FirebaseFirestore.instance.collection('documentos').doc(idDoc).update({
                                               'situacao':'autorizado'
                                             }).then((value) =>
-                                            Navigator.pushAndRemoveUntil(context, MaterialPageRoute(
-                                              builder: (context)=>HomeTela(emailLogado: widget.emailLogado)),(route) => false,
-                                            )),
+                                                Navigator.pushAndRemoveUntil(context, MaterialPageRoute(
+                                                    builder: (context)=>HomeTela(emailLogado: widget.emailLogado)),(route) => false,
+                                                ));
+                                          }
                                         ),
                                         SizedBox(width: VariavelEstatica.largura*0.025,),
                                       ],

@@ -137,8 +137,8 @@ class _InstrucaoPrimeiraEtapaTelaState extends State<InstrucaoPrimeiraEtapaTela>
           'dataVersao':DateTime.now(),
         }).then((value){
           FirebaseFirestore.instance.collection('documentos').doc(widget.idFirebase).update({
-            'idEsp' : docRef.id,
-            'nomeProcesso':nomeProcesso.text.trim().toUpperCase(),
+            'listaIdEsp'  : FieldValue.arrayUnion([docRef.id]),
+            'listaVersao':FieldValue.arrayUnion([nomeProcesso.text.trim().toUpperCase() +' ${versao+1}']),
             'versao' : versao+1,
             'numeroFIP' : numFIP,
           }).then((value){

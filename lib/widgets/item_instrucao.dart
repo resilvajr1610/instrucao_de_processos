@@ -53,17 +53,18 @@ class ItemInstrucao extends StatelessWidget {
 
     String documentoReal='0.0.0';
 
-    if(indexInicio==0 && indexMeio ==0){
+    if(indexInicio==0 && indexMeio ==-1){
       documentoReal = '1.0.0';
-    }else if(indexInicio!=0 && indexMeio ==0){
+    }else if(indexInicio!=-1 && indexMeio ==-1){
       documentoReal = '${indexInicio+1}.0.0';
-    }else if(indexInicio!=0 && indexMeio !=0 && indexFim==0){
+    }else if(indexInicio!=-1 && indexMeio !=-1 && indexFim==-1){
       documentoReal = '${indexInicio+1}.${indexMeio+1}.0';
-    }else if(indexInicio!=0 && indexMeio !=0 && indexFim!=0){
+    }else if(indexInicio!=-1 && indexMeio !=-1 && indexFim!=-1){
       documentoReal = '${indexInicio+1}.${indexMeio+1}.${indexFim+1}';
     }
 
     return  Row(
+      mainAxisSize: MainAxisSize.min,
       children: [
         Column(
           crossAxisAlignment: CrossAxisAlignment.end,
@@ -73,8 +74,9 @@ class ItemInstrucao extends StatelessWidget {
               child: Card(
                 child: Container(
                     color: Cores.cinzaClaro,
+                  // color: Colors.red,
                     alignment: Alignment.centerRight,
-                    width: 700,
+                    width: largura*1.45,
                     height: 65,
                     padding: EdgeInsets.symmetric(horizontal: 20,vertical: 3.5),
                     child: Row(
@@ -82,12 +84,12 @@ class ItemInstrucao extends StatelessWidget {
                         TextoPadrao(texto: documentoReal,cor: Cores.cinzaTexto,),
                         !acesso_adm?Container():CaixaTexto(controller: controller, largura: largura,textoCaixa: 'Inserir',corCaixa: Cores.cinzaClaro,corBorda: Cores.cinzaClaro,mostrarTitulo: false,escrever: escrever,ativarCaixa: escrever,),
                         Spacer(),
-                        ativarBotaoAdicionarItemLista && listaIdEsp.isNotEmpty && nomeProcesso=='' && acesso_adm?BotaoPadraoNovaInstrucao(
+                        controller.text.isNotEmpty && nomeProcesso=='' && acesso_adm?BotaoPadraoNovaInstrucao(
                           texto: 'Criar Instrução',
                           onPressed: ()=>
                           controller.text.isNotEmpty?
                           Navigator.push(context, MaterialPageRoute(builder: (context)=>
-                              InstrucaoPrimeiraEtapaTela(idDocumento: idDocumento,idFirebase: idFirebase,emailLogado: emailLogado,idEsp: listaIdEsp[0],)))
+                              InstrucaoPrimeiraEtapaTela(idDocumento: idDocumento,idFirebase: idFirebase,emailLogado: emailLogado,idEsp: '',)))
                               :showSnackBar(context, 'Insira um texto para avançar', Colors.red),
                         ):Container(),
                         acesso_adm && controller.text.isEmpty?IconButton(
@@ -106,11 +108,11 @@ class ItemInstrucao extends StatelessWidget {
             ),
             Container(
               height: mostrarLista?listaIdEsp.length * 80:0,
-              width: largura*1.1,
+              width: largura,
               child: ListView.builder(
                 itemCount: listaIdEsp.length,
                 itemBuilder: (context,i){
-                  return listaIdEsp.isNotEmpty!='' && nomeProcesso!=''?Card(
+                  return listaIdEsp.isNotEmpty?Card(
                     child: mostrarLista?GestureDetector(
                       onTap: ()=> Navigator.push(context, MaterialPageRoute(builder: (context)=>InstrucaoUsuarioTela(emailLogado: emailLogado, idEsp: listaIdEsp[i]))),
                       child: Container(
@@ -145,10 +147,10 @@ class ItemInstrucao extends StatelessWidget {
             )
           ],
         ),
-        acesso_adm?IconButton(
+        acesso_adm &&idFirebase!=''?IconButton(
           onPressed: funcaoExcluir,
           icon: Icon(Icons.delete,color: Colors.red,)
-        ):Container()
+        ):Container(width: 40,)
       ],
     );
   }

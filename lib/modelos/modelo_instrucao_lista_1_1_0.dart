@@ -9,9 +9,9 @@ class ModeloInstrucaoLista_1_1_0{
   List listaVersao;
   TextEditingController controller;
   bool ativarBotaoAdicionarItemLista;
-  double largura;
+  double larguraMeio;
   bool escrever;
-  bool mostrarLista;
+  bool mostrarListaMeio;
   List<ModeloInstrucaoLista_1_1_1> listaFinal;
   double alturaListaFinal;
 
@@ -23,9 +23,9 @@ class ModeloInstrucaoLista_1_1_0{
     required this.listaVersao,
     required this.controller,
     required this.ativarBotaoAdicionarItemLista,
-    required this.largura,
+    required this.larguraMeio,
     required this.escrever,
-    required this.mostrarLista,
+    required this.mostrarListaMeio,
     required this.listaFinal,
     required this.alturaListaFinal,
   });
