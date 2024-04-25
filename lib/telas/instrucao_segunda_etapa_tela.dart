@@ -1,6 +1,8 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:instrucao_de_processos/modelos/bad_state_list.dart';
+import 'package:instrucao_de_processos/modelos/bad_state_string.dart';
 import 'package:instrucao_de_processos/modelos/modelo_etapa2.dart';
 import 'package:instrucao_de_processos/modelos/modelo_analise2.dart';
 import 'package:instrucao_de_processos/telas/instrucao_terceira_etapa_tela.dart';
@@ -99,7 +101,7 @@ class _InstrucaoSegundaEtapaTelaState extends State<InstrucaoSegundaEtapaTela> {
         .doc(widget.idEspAnterior)
         .get()
         .then((etapasDoc) {
-      List<dynamic> listaMapEtapa = etapasDoc['listaEtapa'];
+      List<dynamic> listaMapEtapa = BadStateList(etapasDoc,'listaEtapa');
 
       for (int i = 0; i < listaMapEtapa.length; i++) {
         List<dynamic> listaMapAnalise = listaMapEtapa[i]['listaAnalise'];
@@ -145,8 +147,8 @@ class _InstrucaoSegundaEtapaTelaState extends State<InstrucaoSegundaEtapaTela> {
       FirebaseFirestore.instance.collection('especificacao').doc(widget.idEspAtual).update({
         'totalEtapas' : tempoTotal
       });
-      observacoes.text = etapasDoc['observacoes'];
-      alteracao.text = etapasDoc['alteracao'];
+      observacoes.text = BadStateString(etapasDoc,'observacoes');
+      alteracao.text = BadStateString(etapasDoc,'alteracao');
       iniciarEtapa(false,0);
       setState(() {});
     });
@@ -156,7 +158,7 @@ class _InstrucaoSegundaEtapaTelaState extends State<InstrucaoSegundaEtapaTela> {
 
     double tempoTotal = 0;
 
-    if(observacoes.text.isNotEmpty && alteracao.text.isNotEmpty && listaEtapas[0].adicionaNovo!=0){
+    if(listaEtapas[0].adicionaNovo!=0){
 
       List <Map> listaMapEtapa = [];
 
@@ -541,7 +543,6 @@ class _InstrucaoSegundaEtapaTelaState extends State<InstrucaoSegundaEtapaTela> {
                                               if(!listaEtapas[i].listaAnalise[j].listaCompleta){
                                                 if(listaEtapas[i].listaAnalise[j].nomeAnalise.text.isNotEmpty
                                                     && listaEtapas[i].listaAnalise[j].tempoAnalise.text.isNotEmpty
-                                                    && listaEtapas[i].listaAnalise[j].pontoChave.text.isNotEmpty
                                                 ){
                                                   if(listaEtapas[i].listaAnalise[j].analiseAtiva){
                                                     listaEtapas[i].tempoTotalEtapaSegundos = int.parse(listaEtapas[i].listaAnalise[j].tempoAnalise.text.trim()) + listaEtapas[i].tempoTotalEtapaSegundos;

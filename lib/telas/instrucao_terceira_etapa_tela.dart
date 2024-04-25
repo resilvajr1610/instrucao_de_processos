@@ -45,10 +45,12 @@ class _InstrucaoTerceiraEtapaTelaState extends State<InstrucaoTerceiraEtapaTela>
       listaEtapas = BadStateList(dadosEta, 'listaEtapa');
       setState((){});
     });
-    FirebaseFirestore.instance.collection('documentos').where('listaIdEsp',arrayContains: [widget.idEtapa]).get().then((dadosDocumento){
+    print('widget.idEtapa');
+    print(widget.idEtapa);
+    FirebaseFirestore.instance.collection('documentos').where('listaIdEsp',arrayContainsAny: [widget.idEtapa]).get().then((dadosDocumento){
       idDoc = dadosDocumento.docs[0].id;
       print('teste');
-      print(dadosDocumento.docs[0].id);
+      print(dadosDocumento.docs.length);
     });
   }
   DateTime converterData(Timestamp timestamp) {

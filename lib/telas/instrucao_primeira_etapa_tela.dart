@@ -5,6 +5,7 @@ import 'package:instrucao_de_processos/modelos/bad_state_list.dart';
 import 'package:instrucao_de_processos/modelos/bad_state_string.dart';
 import 'package:instrucao_de_processos/telas/instrucao_segunda_etapa_tela.dart';
 import 'package:instrucao_de_processos/utilidades/variavel_estatica.dart';
+import 'package:instrucao_de_processos/widgets/botao_padrao.dart';
 import 'package:instrucao_de_processos/widgets/nivel_etapa2.dart';
 import 'package:instrucao_de_processos/widgets/snackBars.dart';
 import 'package:instrucao_de_processos/widgets/texto_padrao.dart';
@@ -21,12 +22,14 @@ class InstrucaoPrimeiraEtapaTela extends StatefulWidget {
   String idDocumento;
   String idEsp;
   String emailLogado;
+  String nomeProcedimento;
 
   InstrucaoPrimeiraEtapaTela({
     required this.idFirebase,
     required this.idDocumento,
     required this.idEsp,
     required this.emailLogado,
+    required this.nomeProcedimento,
   });
 
   @override
@@ -35,7 +38,7 @@ class InstrucaoPrimeiraEtapaTela extends StatefulWidget {
 
 class _InstrucaoPrimeiraEtapaTelaState extends State<InstrucaoPrimeiraEtapaTela> {
 
-  bool carregando = false;
+  bool carregando = true;
   TextEditingController nomeProcesso = TextEditingController();
   TextEditingController maquina = TextEditingController();
   TextEditingController epi = TextEditingController();
@@ -79,10 +82,11 @@ class _InstrucaoPrimeiraEtapaTelaState extends State<InstrucaoPrimeiraEtapaTela>
   DateTime dataVersao = DateTime.now();
 
   buscarDadosProcesso()async{
+    nomeProcesso.text = widget.nomeProcedimento;
     if(widget.idEsp == ''){
       FirebaseFirestore.instance.collection('especificacao').get().then((dadosEspecificacao){
           numFIP = dadosEspecificacao.docs.length+1;
-          versao = dadosEspecificacao.docs.length;
+          carregando=false;
           setState(() {});
       });
     }else{
@@ -101,6 +105,7 @@ class _InstrucaoPrimeiraEtapaTelaState extends State<InstrucaoPrimeiraEtapaTela>
         tempoEtapas.text = BadStateInt(dados, 'totalEtapas')!=0?'${BadStateInt(dados, 'totalEtapas')} min':'Cálculo automático após finalização das etapas';
         dataCriacao = dados['dataCriacao'].toDate();
         dataVersao = dados['dataVersao'].toDate();
+        carregando=false;
         setState(() {});
       });
     }
@@ -321,7 +326,6 @@ class _InstrucaoPrimeiraEtapaTelaState extends State<InstrucaoPrimeiraEtapaTela>
 
   @override
   void initState() {
-    super.initState();
     buscarDadosUsuario();
   }
 
@@ -334,7 +338,18 @@ class _InstrucaoPrimeiraEtapaTelaState extends State<InstrucaoPrimeiraEtapaTela>
         return  Scaffold(
           backgroundColor: Cores.cinzaClaro,
           appBar: carregando?null:AppBarPadrao(mostrarUsuarios: false,emailLogado: widget.emailLogado),
-          body: Container(
+          body: carregando
+              ?Center(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    CircularProgressIndicator(),
+                    TextoPadrao(texto: 'Carregando'),
+                    BotaoPadrao(texto: 'Voltar', onTap: ()=>Navigator.of(context).pop())
+                  ],
+                ),
+              )
+              :Container(
             height: VariavelEstatica.altura,
             width: VariavelEstatica.largura,
             child: ListView(
@@ -359,7 +374,7 @@ class _InstrucaoPrimeiraEtapaTelaState extends State<InstrucaoPrimeiraEtapaTela>
                             SizedBox(width: 100,),
                             TextoPadrao(texto: 'N° FIP',cor: Cores.primaria,negrito: FontWeight.bold,tamanhoFonte: 16,),
                             SizedBox(width: 10,),
-                            TextoPadrao(texto: numFIP.toString(),cor: Cores.cinzaTextoEscuro,negrito: FontWeight.bold,tamanhoFonte: 16,),
+                            TextoPadrao(texto: widget.idDocumento,cor: Cores.cinzaTextoEscuro,negrito: FontWeight.bold,tamanhoFonte: 16,),
                             SizedBox(width: 40,),
                             TextoPadrao(texto: 'Data de criação',cor: Cores.primaria,tamanhoFonte: 14,),
                             SizedBox(width: 10,),

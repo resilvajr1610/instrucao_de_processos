@@ -84,12 +84,12 @@ class ItemInstrucao extends StatelessWidget {
                         TextoPadrao(texto: documentoReal,cor: Cores.cinzaTexto,),
                         !acesso_adm?Container():CaixaTexto(controller: controller, largura: largura,textoCaixa: 'Inserir',corCaixa: Cores.cinzaClaro,corBorda: Cores.cinzaClaro,mostrarTitulo: false,escrever: escrever,ativarCaixa: escrever,),
                         Spacer(),
-                        controller.text.isNotEmpty && nomeProcesso=='' && acesso_adm?BotaoPadraoNovaInstrucao(
+                        controller.text.isNotEmpty && listaVersao.length==0 && acesso_adm?BotaoPadraoNovaInstrucao(
                           texto: 'Criar Instrução',
                           onPressed: ()=>
                           controller.text.isNotEmpty?
                           Navigator.push(context, MaterialPageRoute(builder: (context)=>
-                              InstrucaoPrimeiraEtapaTela(idDocumento: idDocumento,idFirebase: idFirebase,emailLogado: emailLogado,idEsp: '',)))
+                              InstrucaoPrimeiraEtapaTela(idDocumento: idDocumento,idFirebase: idFirebase,emailLogado: emailLogado,idEsp: '',nomeProcedimento: nomeProcesso,)))
                               :showSnackBar(context, 'Insira um texto para avançar', Colors.red),
                         ):Container(),
                         acesso_adm && controller.text.isEmpty?IconButton(
@@ -112,7 +112,7 @@ class ItemInstrucao extends StatelessWidget {
               child: ListView.builder(
                 itemCount: listaIdEsp.length,
                 itemBuilder: (context,i){
-                  return listaIdEsp.isNotEmpty?Card(
+                  return listaIdEsp.isNotEmpty && listaVersao.length>i?Card(
                     child: mostrarLista?GestureDetector(
                       onTap: ()=> Navigator.push(context, MaterialPageRoute(builder: (context)=>InstrucaoUsuarioTela(emailLogado: emailLogado, idEsp: listaIdEsp[i]))),
                       child: Container(
@@ -134,7 +134,7 @@ class ItemInstrucao extends StatelessWidget {
                             ),
                             acesso_adm?IconButton(
                                 onPressed: ()=>Navigator.push(context, MaterialPageRoute(builder: (context)=>
-                                    InstrucaoPrimeiraEtapaTela(idDocumento: idDocumento,idFirebase: idFirebase,emailLogado: emailLogado,idEsp: listaIdEsp[i],))),
+                                    InstrucaoPrimeiraEtapaTela(idDocumento: idDocumento,idFirebase: idFirebase,emailLogado: emailLogado,idEsp: listaIdEsp[i],nomeProcedimento: nomeProcesso,))),
                                 icon: Icon(Icons.edit,color: Cores.primaria,)
                             ):Container()
                           ],

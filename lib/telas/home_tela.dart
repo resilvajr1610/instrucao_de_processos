@@ -5,12 +5,16 @@ import 'package:instrucao_de_processos/modelos/modelo_instrucao_lista_1_0_0.dart
 import 'package:instrucao_de_processos/modelos/modelo_instrucao_lista_1_1_0.dart';
 import 'package:instrucao_de_processos/modelos/modelo_instrucao_lista_1_1_1.dart';
 import 'package:instrucao_de_processos/modelos/modelo_pesquisa.dart';
+import 'package:instrucao_de_processos/telas/login_tela.dart';
 import 'package:instrucao_de_processos/utilidades/cores.dart';
 import 'package:instrucao_de_processos/utilidades/variavel_estatica.dart';
 import 'package:instrucao_de_processos/widgets/appbar_padrao.dart';
+import 'package:instrucao_de_processos/widgets/botao_padrao.dart';
 import 'package:instrucao_de_processos/widgets/item_instrucao.dart';
 import 'package:instrucao_de_processos/widgets/snackBars.dart';
+import '../servicos/shared_preferences_servicos.dart';
 import '../widgets/texto_padrao.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'instrucao_usuario_tela.dart';
 
@@ -46,6 +50,8 @@ class _HomeTelaState extends State<HomeTela> {
   List<ModeloPesquisa> listaRetornoPesquisa = [];
 
   final ScrollController scrollPesquisa = ScrollController();
+
+  bool exibirPesquisa = false;
 
   adicionarListaInicio(String idDoc,String idFire,List listaIdEsp,String nomeProcesso,List listaVersao, String titulo,bool ativarBotaoAdicionarItemLista, bool escrever, bool mostrarLista ){
 
@@ -419,14 +425,15 @@ class _HomeTelaState extends State<HomeTela> {
     });
   }
 
-  Future<String> salvarFirebase(String colecao, String titulo, String idDocumento, String nivel) async {
+  Future<String> salvarFirebase(String colecao, String titulo, String idDocumento, String nivel,String nomeProcesso) async {
     DocumentReference docRef = FirebaseFirestore.instance.collection(colecao).doc();
     await docRef.set({
       'idFire': docRef.id,
       'listaIdEsp' : [],
       'idDoc'     : idDocumento,
       'titulo'    : titulo,
-      'posicao'   : nivel
+      'posicao'   : nivel,
+      'nomeProcesso': nomeProcesso
     });
     return docRef.id;
   }
@@ -456,13 +463,14 @@ class _HomeTelaState extends State<HomeTela> {
         listaRetornoPesquisa.clear();
         listaRetornoPesquisa.addAll(listaFerramentaFiltro);
       });
-      return;
     } else {
       setState(() {
         listaRetornoPesquisa.clear();
         listaRetornoPesquisa.addAll(listaCompletaPesquisa);
       });
     }
+    print('exibirPesquisa');
+    print(exibirPesquisa);
   }
 
   @override
@@ -485,7 +493,9 @@ class _HomeTelaState extends State<HomeTela> {
             mainAxisSize: MainAxisSize.min,
             children: [
               CircularProgressIndicator(color: Cores.primaria,),
-              TextoPadrao(texto: 'Buscando informações, aguarde ...',cor: Colors.black,)
+              TextoPadrao(texto: 'Buscando informações, aguarde ...',cor: Colors.black,),
+              BotaoPadrao(texto: 'Sair', onTap: ()=>FirebaseAuth.instance.signOut().then((value) =>
+                  PrefService().removerConta().then((value) => Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>LoginTela())))))
             ],
           ),
         ):Card(
@@ -515,7 +525,11 @@ class _HomeTelaState extends State<HomeTela> {
                               onChanged: (texto){
                                 if(texto.length>1){
                                   pesquisarDoc(texto);
+                                  exibirPesquisa = true;
+                                }else{
+                                  exibirPesquisa = false;
                                 }
+                                setState(() {});
                               },
                               controller: pesquisa,
                               cursorColor: Cores.primaria,
@@ -555,11 +569,11 @@ class _HomeTelaState extends State<HomeTela> {
                     ),
                   ),
                   SizedBox(height: 33,),
-                  pesquisa.text.isNotEmpty?
+                  exibirPesquisa?
                       Container(
                         width: 1000,
                         height: 500,
-                        child: Scrollbar(
+                        child: listaRetornoPesquisa.isEmpty?Center(child: TextoPadrao(texto: 'Nenhum documento para esta pesquisa',cor: Cores.primaria,)):Scrollbar(
                           controller: scrollPesquisa,
                           thumbVisibility: true,
                           trackVisibility: true,
@@ -622,13 +636,19 @@ class _HomeTelaState extends State<HomeTela> {
                                   if(listaInstrucaoPrincipal[inicio].idFire!=''){
                                     listaInstrucaoPrincipal[inicio].ativarBotaoAdicionarItemLista = true;
                                     FirebaseFirestore.instance.collection('documentos').doc(listaInstrucaoPrincipal[inicio].idFire).update({
-                                          'titulo':listaInstrucaoPrincipal[inicio].controller.text
+                                          'titulo':listaInstrucaoPrincipal[inicio].controller.text,
                                         }).then((value){
                                       adicionarListaMeio(inicio,false,'','${inicio+1}.1.0',[],'',[],'',false,true,true);
                                       setState(() {});
                                     });
                                   }else{
-                                    salvarFirebase('documentos',listaInstrucaoPrincipal[inicio].controller.text,listaInstrucaoPrincipal[inicio].idDoc,'inicio').then((value){
+                                    salvarFirebase(
+                                        'documentos',
+                                        listaInstrucaoPrincipal[inicio].controller.text,
+                                        listaInstrucaoPrincipal[inicio].idDoc,
+                                        'inicio',
+                                        listaInstrucaoPrincipal[inicio].controller.text
+                                    ).then((value){
                                       Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>HomeTela(emailLogado: widget.emailLogado)));
                                     });
                                   }
@@ -716,7 +736,7 @@ class _HomeTelaState extends State<HomeTela> {
                                               });
                                             }else{
                                               await salvarFirebase('documentos',listaInstrucaoPrincipal[inicio].listaMeio[meio].controller.text,
-                                                  listaInstrucaoPrincipal[inicio].listaMeio[meio].idDoc,'meio').then((value){
+                                                  listaInstrucaoPrincipal[inicio].listaMeio[meio].idDoc,'meio',listaInstrucaoPrincipal[inicio].listaMeio[meio].controller.text).then((value){
                                                 Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>HomeTela(emailLogado: widget.emailLogado)));
                                               });
                                             }
@@ -786,7 +806,8 @@ class _HomeTelaState extends State<HomeTela> {
                                                     listaInstrucaoPrincipal[inicio].listaMeio[meio].listaFinal[fim].checkFinal = true;
                                                     await salvarFirebase(
                                                         'documentos',listaInstrucaoPrincipal[inicio].listaMeio[meio].listaFinal[fim].controller.text,
-                                                        listaInstrucaoPrincipal[inicio].listaMeio[meio].listaFinal[fim].idDoc,'fim').then((value){
+                                                        listaInstrucaoPrincipal[inicio].listaMeio[meio].listaFinal[fim].idDoc,'fim',
+                                                          listaInstrucaoPrincipal[inicio].listaMeio[meio].listaFinal[fim].controller.text).then((value){
                                                       Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>HomeTela(emailLogado: widget.emailLogado)));
                                                     });
                                                     setState(() {});
