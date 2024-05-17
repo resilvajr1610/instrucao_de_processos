@@ -23,7 +23,7 @@ class ItemEtapa2 extends StatelessWidget {
 
     return Container(
         width: 1200,
-        height: modeloEtapa.aumentarAlturaContainer?300:modeloEtapa.adicionarChaveRazao?220:120,
+        height: modeloEtapa.aumentarAlturaContainer?400:modeloEtapa.adicionarChaveRazao?400:120,
         padding: EdgeInsets.all(20),
         margin: EdgeInsets.symmetric(vertical: 10,horizontal: 5),
         decoration: BoxDecoration(

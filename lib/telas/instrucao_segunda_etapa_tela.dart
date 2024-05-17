@@ -219,7 +219,7 @@ class _InstrucaoSegundaEtapaTelaState extends State<InstrucaoSegundaEtapaTela> {
 
     double tempoTotal = 0;
 
-    if(observacoes.text.isNotEmpty && alteracao.text.isNotEmpty && listaEtapas[0].adicionaNovo!=0){
+    if(listaEtapas[0].adicionaNovo!=0){
 
       List <Map> listaMapEtapa = [];
 
@@ -361,19 +361,40 @@ class _InstrucaoSegundaEtapaTelaState extends State<InstrucaoSegundaEtapaTela> {
         print(reference.getDownloadURL().toString());
         await uploadTaskSnapshot.then((downloadUrl)async{
           await downloadUrl.ref.getDownloadURL().then((url){
-            FirebaseFirestore.instance.collection('etapas').doc(widget.idEspAtual).update({
+            FirebaseFirestore.instance.collection('etapas').doc(widget.idEspAtual).set({
+              "idEsp": widget.idEspAtual,
               "fotos_etapa${posicaoEtapa}_analise${posicaoAnalise}": FieldValue.arrayUnion([url])
-            }).then((value){
+            },SetOptions(merge: true)).then((value){
               print('url : $url');
             });
           });
         });
       });
     }
-
     carregando = false;
     carregarWidget(posicaoEtapa,posicaoAnalise);
     setState(() {});
+  }
+
+  salvarVideo(String nomeArquivo,var arquivo,int posicaoEtapa, int posicaoAnalise)async{
+    String url='';
+    Uint8List arquivoSelecionado = await arquivo.readAsBytes();
+    FirebaseStorage storage = FirebaseStorage.instance;
+    Reference reference = storage.ref(nomeArquivo);
+    UploadTask uploadTaskSnapshot = reference.putData(arquivoSelecionado, SettableMetadata(contentType: '	video/mp4'));
+    final TaskSnapshot downloadUrl = await uploadTaskSnapshot;
+    url = (await downloadUrl.ref.getDownloadURL());
+    if(url!=''){
+      FirebaseFirestore.instance.collection('etapas').doc(widget.idEspAtual).set({
+        "idEsp": widget.idEspAtual,
+        "videos_etapa${posicaoEtapa}_analise${posicaoAnalise}": FieldValue.arrayUnion([url])
+      },SetOptions(merge: true)).then((value){
+        carregando = false;
+        Navigator.pop(context);
+        carregarWidget(posicaoEtapa,posicaoAnalise);
+      });
+      print('url dentro $url');
+    }
   }
 
   escolherVideo(int posicaoEtapa, int posicaoAnalise)async {
@@ -392,45 +413,34 @@ class _InstrucaoSegundaEtapaTelaState extends State<InstrucaoSegundaEtapaTela> {
         try {
           setState(() {
             Uint8List?uploadfile = result!.files.single.bytes;
-            // String filename = result.files.single.name;
-            // nomearquivo.text = result.files.single.name;
-            listaEtapas[posicaoEtapa].listaAnalise[posicaoAnalise].listaVideos.add(uploadfile!);
-            print('videos');
-            print(listaEtapas[posicaoEtapa].listaAnalise[posicaoAnalise].listaVideos.length);
-            if (listaEtapas[posicaoEtapa].listaAnalise[posicaoAnalise].listaVideos.isNotEmpty) {
-              var arquivo = XFile.fromData(uploadfile);
-              String fileName = arquivo.path.split('/').last;
-              String nomearquivo = "Processo/${listaEtapas[posicaoEtapa].nomeProcesso}/Etapa/${listaEtapas[posicaoEtapa].nomeEtapa.text}/Analise/"
-                  "${listaEtapas[posicaoEtapa].listaAnalise[posicaoAnalise].nomeAnalise.text}/Videos/${DateTime.now()}.mp4";
-              carregando = true;
-              Navigator.pop(context);
-              salvarVideo(nomearquivo, arquivo,posicaoEtapa,posicaoAnalise);
+            int tamanhoBytes = uploadfile!.length;
+            double tamnhoArquivoMB = tamanhoBytes / (1024 * 1024);
+
+            print(tamnhoArquivoMB);
+            double maxTamnhoMB = 100.0;
+
+            if(tamnhoArquivoMB > maxTamnhoMB){
+              showSnackBar(context, 'Tamanho máximo permitido é de 100 MB por vídeo', Colors.red);
+            }else{
+              // String filename = result.files.single.name;
+              // nomearquivo.text = result.files.single.name;
+              listaEtapas[posicaoEtapa].listaAnalise[posicaoAnalise].listaVideos.add(uploadfile!);
+              print('videos');
+              print(listaEtapas[posicaoEtapa].listaAnalise[posicaoAnalise].listaVideos.length);
+              if (listaEtapas[posicaoEtapa].listaAnalise[posicaoAnalise].listaVideos.isNotEmpty) {
+                var arquivo = XFile.fromData(uploadfile);
+                String nomearquivo = "Processo/${listaEtapas[posicaoEtapa].nomeProcesso}/Etapa/${listaEtapas[posicaoEtapa].nomeEtapa.text}/Analise/"
+                    "${listaEtapas[posicaoEtapa].listaAnalise[posicaoAnalise].nomeAnalise.text}/Videos/${DateTime.now()}.mp4";
+                carregando = true;
+                Navigator.pop(context);
+                salvarVideo(nomearquivo, arquivo,posicaoEtapa,posicaoAnalise);
+              }
             }
           });
         } catch (e) {
           print(e);
         }
       }
-    }
-  }
-
-  salvarVideo(String nomeArquivo,var arquivo,int posicaoEtapa, int posicaoAnalise)async{
-    String url='';
-    Uint8List arquivoSelecionado = await arquivo.readAsBytes();
-    FirebaseStorage storage = FirebaseStorage.instance;
-    Reference reference = storage.ref(nomeArquivo);
-    UploadTask uploadTaskSnapshot = reference.putData(arquivoSelecionado, SettableMetadata(contentType: '	video/mp4'));
-    final TaskSnapshot downloadUrl = await uploadTaskSnapshot;
-    url = (await downloadUrl.ref.getDownloadURL());
-    if(url!=''){
-      FirebaseFirestore.instance.collection('etapas').doc(widget.idEspAtual).update({
-        "videos_etapa${posicaoEtapa}_analise${posicaoAnalise}": FieldValue.arrayUnion([url])
-      }).then((value){
-        carregando = false;
-        Navigator.pop(context);
-        carregarWidget(posicaoEtapa,posicaoAnalise);
-      });
-      print('url dentro $url');
     }
   }
   
@@ -509,14 +519,12 @@ class _InstrucaoSegundaEtapaTelaState extends State<InstrucaoSegundaEtapaTela> {
                                   if(listaEtapas[i].nomeEtapa.text.isNotEmpty){
                                     listaEtapas[i].adicionarChaveRazao = listaEtapas[i].adicionarChaveRazao?false:true;
                                     if(listaEtapas[i].adicionarChaveRazao){
-                                      alturaMostrarIcones = alturaMostrarIcones + 60;
-
+                                      alturaMostrarIcones = alturaMostrarIcones + 120;
                                     }else{
                                       if(listaEtapas[i].listaAnalise.length!=1){
-                                        alturaMostrarIcones = alturaMostrarIcones - 60;
+                                        alturaMostrarIcones = alturaMostrarIcones - 120;
                                       }
                                     }
-
                                     if(!listaEtapas[i].ativarCaixaEtapa){
                                       listaEtapas[i].ativarCaixaEtapa = true;
                                       listaEtapas[i].listaAnalise[0].analiseAtiva = true;
@@ -527,17 +535,17 @@ class _InstrucaoSegundaEtapaTelaState extends State<InstrucaoSegundaEtapaTela> {
                                   }
                                 },
                               listViewAnalise: Container(
-                                height: listaEtapas[i].listaAnalise.length*60+alturaMostrarIcones,
+                                height: listaEtapas[i].listaAnalise.length*160+alturaMostrarIcones,
                                 child: ListView.builder(
                                     itemCount: listaEtapas[i].listaAnalise.length,
                                     itemBuilder: (context, j){
                                       return Container(
-                                        height: 60,
+                                        height: 120,
                                         child: ItemAnalise2(
                                             modeloAnalise: listaEtapas[i].listaAnalise[j],
                                             botaoMostrarListaImagem:  ()=>setState((){
                                               listaEtapas[i].listaAnalise[j].mostrarListaImagens=true;
-                                              alturaMostrarIcones = 100;
+                                              alturaMostrarIcones = 200;
                                             }),
                                             botaoSalvarNovaAnalise: (){
                                               if(!listaEtapas[i].listaAnalise[j].listaCompleta){
@@ -590,7 +598,6 @@ class _InstrucaoSegundaEtapaTelaState extends State<InstrucaoSegundaEtapaTela> {
                                                 if(listaEtapas[i].listaAnalise.length!=1){
                                                   alturaMostrarIcones = alturaMostrarIcones-60;
                                                 }
-
                                                 setState(() {});
                                               }
                                             },
@@ -602,7 +609,7 @@ class _InstrucaoSegundaEtapaTelaState extends State<InstrucaoSegundaEtapaTela> {
                                                     listaEtapas[i].listaAnalise[j].imagemSelecionada = VariavelEstatica.listaImagens[k];
                                                     listaEtapas[i].listaAnalise[j].mostrarListaImagens=false;
                                                     listaEtapas[i].aumentarAlturaContainer = false;
-                                                    alturaMostrarIcones = 0;
+                                                    alturaMostrarIcones = 100;
                                                     setState(() {});
                                                   },
                                                   child: Container(

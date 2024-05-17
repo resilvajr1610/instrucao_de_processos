@@ -435,10 +435,8 @@ class _InstrucaoPrimeiraEtapaTelaState extends State<InstrucaoPrimeiraEtapaTela>
                                             itemBuilder: (context,i){
 
                                               if(indiceTagEpi==i){
-                                                larguraTagEpi = (listaTagDocEpi[i].toString().length*4)+larguraTagEpi+60;
+                                                larguraTagEpi = (listaTagDocEpi[i].toString().length*5)+larguraTagEpi+60;
                                                 indiceTagEpi = i+1;
-                                                // print('indice $indiceTagEpi');
-                                                // print(larguraTagEpi);
                                               }
 
                                               WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -450,8 +448,7 @@ class _InstrucaoPrimeiraEtapaTelaState extends State<InstrucaoPrimeiraEtapaTela>
                                                 child: Center(
                                                     child: GestureDetector(
                                                       onTap: (){
-                                                        larguraTagEpi = larguraTagEpi-60-(listaTagDocEpi[i].toString().length*4);
-                                                        // print(larguraTagEpi);
+                                                        larguraTagEpi = larguraTagEpi-60-(listaTagDocEpi[i].toString().length*5);
                                                         listaTagDocEpi.removeAt(i);
                                                         indiceTagEpi = indiceTagEpi-1;
                                                         setState(() {});
@@ -554,10 +551,8 @@ class _InstrucaoPrimeiraEtapaTelaState extends State<InstrucaoPrimeiraEtapaTela>
                                         itemBuilder: (context,i){
 
                                           if(indiceTagFerramenta==i){
-                                            larguraTagFerramenta = (listaTagDocFerramenta[i].toString().length*2)+larguraTagFerramenta+60;
+                                            larguraTagFerramenta = (listaTagDocFerramenta[i].toString().length*5)+larguraTagFerramenta+60;
                                             indiceTagFerramenta = i+1;
-                                            // print('indice $indiceTagFerramenta');
-                                            // print(larguraTagFerramenta);
                                           }
 
                                           WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -569,7 +564,7 @@ class _InstrucaoPrimeiraEtapaTelaState extends State<InstrucaoPrimeiraEtapaTela>
                                             child: Center(
                                                 child: GestureDetector(
                                                   onTap: (){
-                                                    larguraTagFerramenta = larguraTagFerramenta-60-listaTagDocFerramenta[i].toString().length;
+                                                    larguraTagFerramenta = larguraTagFerramenta-60-listaTagDocFerramenta[i].toString().length*5;
                                                     listaTagDocFerramenta.removeAt(i);
                                                     indiceTagFerramenta = indiceTagFerramenta-1;
                                                     setState(() {});
@@ -672,10 +667,8 @@ class _InstrucaoPrimeiraEtapaTelaState extends State<InstrucaoPrimeiraEtapaTela>
                                             itemBuilder: (context,i){
 
                                               if(indiceTagMaterial==i){
-                                                larguraTagMaterial = (listaTagDocMaterial[i].toString().length*4)+larguraTagMaterial+60;
+                                                larguraTagMaterial = (listaTagDocMaterial[i].toString().length*5)+larguraTagMaterial+60;
                                                 indiceTagMaterial = i+1;
-                                                // print('indice $indiceTagMaterial');
-                                                // print(larguraTagMaterial);
                                               }
 
                                               WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -687,8 +680,7 @@ class _InstrucaoPrimeiraEtapaTelaState extends State<InstrucaoPrimeiraEtapaTela>
                                                 child: Center(
                                                     child: GestureDetector(
                                                       onTap: (){
-                                                        larguraTagMaterial = larguraTagMaterial-60-(listaTagDocMaterial[i].toString().length*4);
-                                                        // print(larguraTagMaterial);
+                                                        larguraTagMaterial = larguraTagMaterial-60-(listaTagDocMaterial[i].toString().length*5);
                                                         listaTagDocMaterial.removeAt(i);
                                                         indiceTagMaterial = indiceTagMaterial-1;
                                                         setState(() {});

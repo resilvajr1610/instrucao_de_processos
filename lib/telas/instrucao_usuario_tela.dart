@@ -88,7 +88,7 @@ class _InstrucaoUsuarioTelaState extends State<InstrucaoUsuarioTela> {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     TextoPadrao(
-                      texto:'Descreva anamolia encontrada.',
+                      texto:'Descreva anomalia encontrada.',
                       cor: Cores.cinzaTextoEscuro,
                       maxLines: 5,
                     ),
@@ -196,126 +196,126 @@ class _InstrucaoUsuarioTelaState extends State<InstrucaoUsuarioTela> {
     return Scaffold(
       backgroundColor: Cores.cinzaClaro,
       appBar: AppBarPadrao(mostrarUsuarios: false, emailLogado: widget.emailLogado),
-      body: Container(
-        height: VariavelEstatica.altura,
-        width: VariavelEstatica.largura,
+      body: SingleChildScrollView(
         child: Container(
-          width: VariavelEstatica.largura * 0.8,
-          height: VariavelEstatica.altura * 0.7,
-          margin: EdgeInsets.all(20),
-          padding: EdgeInsets.all(36),
-          alignment: Alignment.topLeft,
-          decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.all(Radius.circular(15))
-          ),
+          height: VariavelEstatica.altura*0.9,
+          width: VariavelEstatica.largura,
           child: Container(
-            width: VariavelEstatica.largura * 0.95,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  children: [
-                    Container(
-                        width: VariavelEstatica.largura * 0.45,
-                        child: TextoPadrao(texto: 'Instrução de Processos',cor: Cores.primaria,negrito: FontWeight.bold,tamanhoFonte: 20,)
-                    ),
-                    Container(
-                      width: VariavelEstatica.largura * 0.45,
-                      child: Row(
-                        children: [
-                          TextoPadrao(texto: 'Data de criação',cor: Cores.primaria,tamanhoFonte: 14,),
-                          SizedBox(width: 10,),
-                          TextoPadrao(texto: dadosEspecificacao==null?'00/00/0000':VariavelEstatica.mascaraData.format(dadosEspecificacao!['dataCriacao'].toDate()),cor: Cores.cinzaTextoEscuro,tamanhoFonte: 14,),
-                          SizedBox(width: 40,),
-                          TextoPadrao(texto: 'Visto',cor: Cores.primaria,tamanhoFonte: 14,),
-                          SizedBox(width: 10,),
-                          Container(
-                              width: VariavelEstatica.largura * 0.1,
-                              child: TextoPadrao(texto: BadStateString(dadosEspecificacao, 'visto'),cor: Cores.cinzaTextoEscuro,tamanhoFonte: 14,)
-                          ),
-                          SizedBox(width: 40,),
-                          TextoPadrao(texto: 'Versão',cor: Cores.primaria,tamanhoFonte: 14,),
-                          SizedBox(width: 10,),
-                          TextoPadrao(texto: BadStateInt(dadosEspecificacao, 'versao').toString(),cor: Cores.cinzaTextoEscuro,tamanhoFonte: 14,),
-                          SizedBox(width: 20,),
-                          TextoPadrao(texto: 'Data',cor: Cores.primaria,tamanhoFonte: 14,),
-                          SizedBox(width: 10,),
-                          TextoPadrao(texto: dadosEspecificacao==null?'00/00/0000':VariavelEstatica.mascaraData.format(dadosEspecificacao!['dataVersao'].toDate()),cor: Cores.cinzaTextoEscuro,tamanhoFonte: 14,),
-                        ],
-                      ),
-                    )
-                  ],
-                ),
-                Padding(
-                  padding: EdgeInsets.symmetric(vertical: 10),
-                  child: Row(
-                    crossAxisAlignment:CrossAxisAlignment.center ,
+            width: VariavelEstatica.largura * 0.8,
+            height: VariavelEstatica.altura * 0.65,
+            margin: EdgeInsets.all(20),
+            padding: EdgeInsets.all(36),
+            alignment: Alignment.topLeft,
+            decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.all(Radius.circular(15))
+            ),
+            child: Container(
+              width: VariavelEstatica.largura * 0.95,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
                     children: [
-                      TextoPadrao(texto: 'N° FIP',cor: Cores.primaria,negrito: FontWeight.bold,tamanhoFonte: 16,),
-                      SizedBox(width: 10,),
-                      TextoPadrao(texto: BadStateInt(dadosEspecificacao, 'numeroFIP').toString(),cor: Cores.cinzaTextoEscuro,negrito: FontWeight.bold,tamanhoFonte: 16,),
-                      SizedBox(width: 40,),
-                      TextoPadrao(texto: 'Nome de Processos',cor: Cores.primaria,negrito: FontWeight.bold,tamanhoFonte: 16,),
-                      SizedBox(width: 10,),
-                      TextoPadrao(texto: BadStateString(dadosEspecificacao, 'nome'),cor: Cores.cinzaTextoEscuro,negrito: FontWeight.bold,tamanhoFonte: 16,),
+                      Container(
+                          width: VariavelEstatica.largura * 0.45,
+                          child: TextoPadrao(texto: 'Instrução de Processos',cor: Cores.primaria,negrito: FontWeight.bold,tamanhoFonte: 20,)
+                      ),
+                      Container(
+                        width: VariavelEstatica.largura * 0.45,
+                        child: Row(
+                          children: [
+                            TextoPadrao(texto: 'Data de criação',cor: Cores.primaria,tamanhoFonte: 14,),
+                            SizedBox(width: 10,),
+                            TextoPadrao(texto: dadosEspecificacao==null?'00/00/0000':VariavelEstatica.mascaraData.format(dadosEspecificacao!['dataCriacao'].toDate()),cor: Cores.cinzaTextoEscuro,tamanhoFonte: 14,),
+                            SizedBox(width: 40,),
+                            TextoPadrao(texto: 'Visto',cor: Cores.primaria,tamanhoFonte: 14,),
+                            SizedBox(width: 10,),
+                            Container(
+                                width: VariavelEstatica.largura * 0.1,
+                                child: TextoPadrao(texto: BadStateString(dadosEspecificacao, 'visto'),cor: Cores.cinzaTextoEscuro,tamanhoFonte: 14,)
+                            ),
+                            SizedBox(width: 40,),
+                            TextoPadrao(texto: 'Versão',cor: Cores.primaria,tamanhoFonte: 14,),
+                            SizedBox(width: 10,),
+                            TextoPadrao(texto: BadStateInt(dadosEspecificacao, 'versao').toString(),cor: Cores.cinzaTextoEscuro,tamanhoFonte: 14,),
+                            SizedBox(width: 20,),
+                            TextoPadrao(texto: 'Data',cor: Cores.primaria,tamanhoFonte: 14,),
+                            SizedBox(width: 10,),
+                            TextoPadrao(texto: dadosEspecificacao==null?'00/00/0000':VariavelEstatica.mascaraData.format(dadosEspecificacao!['dataVersao'].toDate()),cor: Cores.cinzaTextoEscuro,tamanhoFonte: 14,),
+                          ],
+                        ),
+                      )
                     ],
                   ),
-                ),
-                Divider(),
-                ItemEtapa3Titulo(
-                  dadosEspecificacao: dadosEspecificacao,
-                  item1: 'epi',
-                  item2: 'maquina',
-                  titulo1: 'EPI Necessário',
-                  titulo2: 'Máquina',
-                  dadoString1: false,
-                ),
-                ItemEtapaUmTitulo(dadosEspecificacao: dadosEspecificacao,item: 'ferramentas',titulo: 'Ferramentas utilizadas'),
-                Divider(),
-                ItemEtapa3Titulo(
-                  dadosEspecificacao: dadosEspecificacao,
-                  item1: 'materiaPrima',
-                  item2: 'licenca_qualificacoes',
-                  titulo1: 'Matéria-prima utilizada',
-                  titulo2: 'Tempo total das etapas',
-                  dadoString1: false,
-                ),
-                ItemEtapa3Titulo(
-                  dadosEspecificacao: dadosEspecificacao,
-                  item1: 'espeficicacao',
-                  item2: 'prazo',
-                  titulo1: 'Especificações',
-                  titulo2: 'Prazo de aprendizagem',
-                ),
-                ItemEtapa3Titulo(
-                  dadosEspecificacao: dadosEspecificacao,
-                  item1: 'esp_maquina',
-                  item2: 'licenca_qualificacoes',
-                  titulo1: 'Especificações máquina',
-                  titulo2: 'Licenças ou qualificações',
-                ),
-                Divider(),
-                Container(
-                  height: VariavelEstatica.altura*0.52,
-                  child: SingleChildScrollView(
+                  Padding(
+                    padding: EdgeInsets.symmetric(vertical: 10),
+                    child: Row(
+                      crossAxisAlignment:CrossAxisAlignment.center ,
+                      children: [
+                        TextoPadrao(texto: 'N° FIP',cor: Cores.primaria,negrito: FontWeight.bold,tamanhoFonte: 16,),
+                        SizedBox(width: 10,),
+                        TextoPadrao(texto: BadStateInt(dadosEspecificacao, 'numeroFIP').toString(),cor: Cores.cinzaTextoEscuro,negrito: FontWeight.bold,tamanhoFonte: 16,),
+                        SizedBox(width: 40,),
+                        TextoPadrao(texto: 'Nome de Processos',cor: Cores.primaria,negrito: FontWeight.bold,tamanhoFonte: 16,),
+                        SizedBox(width: 10,),
+                        TextoPadrao(texto: BadStateString(dadosEspecificacao, 'nome'),cor: Cores.cinzaTextoEscuro,negrito: FontWeight.bold,tamanhoFonte: 16,),
+                      ],
+                    ),
+                  ),
+                  Divider(),
+                  ItemEtapa3Titulo(
+                    dadosEspecificacao: dadosEspecificacao,
+                    item1: 'epi',
+                    item2: 'maquina',
+                    titulo1: 'EPI Necessário',
+                    titulo2: 'Máquina',
+                    dadoString1: false,
+                  ),
+                  ItemEtapaUmTitulo(dadosEspecificacao: dadosEspecificacao,item: 'ferramentas',titulo: 'Ferramentas utilizadas'),
+                  Divider(),
+                  ItemEtapa3Titulo(
+                    dadosEspecificacao: dadosEspecificacao,
+                    item1: 'materiaPrima',
+                    item2: 'licenca_qualificacoes',
+                    titulo1: 'Matéria-prima utilizada',
+                    titulo2: 'Tempo total das etapas',
+                    dadoString1: false,
+                  ),
+                  ItemEtapa3Titulo(
+                    dadosEspecificacao: dadosEspecificacao,
+                    item1: 'espeficicacao',
+                    item2: 'prazo',
+                    titulo1: 'Especificações',
+                    titulo2: 'Prazo de aprendizagem',
+                  ),
+                  ItemEtapa3Titulo(
+                    dadosEspecificacao: dadosEspecificacao,
+                    item1: 'esp_maquina',
+                    item2: 'licenca_qualificacoes',
+                    titulo1: 'Especificações máquina',
+                    titulo2: 'Licenças ou qualificações',
+                  ),
+                  Divider(),
+                  Container(
+                    height: VariavelEstatica.altura*0.52,
                     child: listaEtapas.isEmpty?Container():Container(
                       height: listaEtapas.length*250+80,
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Container(
-                            height: listaEtapas.length*200,
+                            height: listaEtapas.length*210,
                             width: VariavelEstatica.largura * 0.7,
                             child: ListView.builder(
+                                physics: NeverScrollableScrollPhysics(),
                                 itemCount: listaEtapas.length,
                                 itemBuilder: (context,i){
-
                                   List aux = listaEtapas[i]['listaAnalise'];
                                   List<ModeloAnalise3> listaAnalise = [];
                                   List fotos = [];
                                   List videos = [];
-
+        
                                   for(int j = 0; aux.length > j ; j++){
                                     for(int posicaoAnalise = 0; listaUrlFotosEtapas.length > posicaoAnalise ; posicaoAnalise++){
                                       if(listaUrlFotosEtapas[posicaoAnalise].posicaoEtapa==i && listaUrlFotosEtapas[posicaoAnalise].posicaoAnalise==j){
@@ -335,7 +335,7 @@ class _InstrucaoUsuarioTelaState extends State<InstrucaoUsuarioTela> {
                                         )
                                     );
                                   }
-
+        
                                   return ItemEtapa3(
                                     numeroEtapa: listaEtapas[i]['numeroEtapa'],
                                     nomeEtapa: listaEtapas[i]['nomeEtapa'],
@@ -351,8 +351,8 @@ class _InstrucaoUsuarioTelaState extends State<InstrucaoUsuarioTela> {
                       ),
                     ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         ),

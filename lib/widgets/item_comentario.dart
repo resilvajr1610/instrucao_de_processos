@@ -24,13 +24,13 @@ class ItemComentario extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Container(width: 150,child: TextoPadrao(texto:VariavelEstatica.mascaraDataHora.format(document!['data'].toDate()),cor: Cores.cinzaTextoEscuro,tamanhoFonte: 12,)),
+              Container(width: 150,child: TextoPadrao(texto:VariavelEstatica.mascaraDataHora.format(document!['data'].toDate()),cor: Cores.cinzaTextoEscuro,tamanhoFonte: 12,alinhamentoTexto: TextAlign.center)),
               Container(width: 100,child: TextoPadrao(texto: BadStateInt(document, 'fip').toString(),cor: Cores.cinzaTextoEscuro,tamanhoFonte: 12,alinhamentoTexto: TextAlign.center,)),
-              Container(width: 200,child: TextoPadrao(texto: BadStateString(document, 'processo'),cor: Cores.cinzaTextoEscuro,tamanhoFonte: 12,)),
+              Container(width: 200,child: TextoPadrao(texto: BadStateString(document, 'processo'),cor: Cores.cinzaTextoEscuro,tamanhoFonte: 12,alinhamentoTexto: TextAlign.center)),
               Container(width: 100,child: TextoPadrao(texto: BadStateInt(document, 'versao').toString(),cor: Cores.cinzaTextoEscuro,tamanhoFonte: 12,alinhamentoTexto: TextAlign.center)),
               Container(width: 150,child: TextoPadrao(texto: BadStateInt(document, 'numEtapa').toString(),cor: Cores.cinzaTextoEscuro,tamanhoFonte: 12,alinhamentoTexto: TextAlign.center)),
-              Container(width: 200,child:TextoPadrao(texto: BadStateString(document, 'descricaoEtapa'),cor: Cores.cinzaTextoEscuro,tamanhoFonte: 12,)),
-              Container(width: 300,child: TextoPadrao(texto: BadStateString(document,'comentario').toUpperCase(),cor: Cores.cinzaTextoEscuro,tamanhoFonte: 12,maxLines: 2,)),
+              Container(width: 250,child:TextoPadrao(texto: BadStateString(document, 'descricaoEtapa'),cor: Cores.cinzaTextoEscuro,tamanhoFonte: 12,alinhamentoTexto: TextAlign.center)),
+              Container(width: 350,child: TextoPadrao(texto: BadStateString(document,'comentario').toUpperCase(),cor: Cores.cinzaTextoEscuro,tamanhoFonte: 12,maxLines: 2,alinhamentoTexto: TextAlign.center)),
             ],
           ),
         ],

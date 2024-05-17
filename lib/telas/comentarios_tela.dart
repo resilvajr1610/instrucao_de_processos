@@ -36,13 +36,13 @@ class _ComentarioTelaState extends State<ComentarioTela> {
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Container(width: 150,child: TextoPadrao(texto: 'Data',cor: Cores.primaria,)),
+                Container(width: 150,child: TextoPadrao(texto: 'Data',cor: Cores.primaria,alinhamentoTexto: TextAlign.center,)),
                 Container(width: 100,child: TextoPadrao(texto: 'FIP',cor: Cores.primaria,alinhamentoTexto: TextAlign.center)),
-                Container(width: 200,child:TextoPadrao(texto: 'Nome Processo',cor: Cores.primaria)),
+                Container(width: 200,child:TextoPadrao(texto: 'Nome Processo',cor: Cores.primaria,alinhamentoTexto: TextAlign.center)),
                 Container(width: 100,child: TextoPadrao(texto: 'Versão',cor: Cores.primaria,alinhamentoTexto: TextAlign.center)),
                 Container(width: 150,child: TextoPadrao(texto: 'Número Etapa',cor: Cores.primaria,alinhamentoTexto: TextAlign.center)),
-                Container(width: 200,child: TextoPadrao(texto: 'Nome Etapa',cor: Cores.primaria)),
-                Container(width: 300,child: TextoPadrao(texto: 'Comentário',cor: Cores.primaria)),
+                Container(width: 250,child: TextoPadrao(texto: 'Nome Etapa',cor: Cores.primaria,alinhamentoTexto: TextAlign.center)),
+                Container(width: 350,child: TextoPadrao(texto: 'Comentário',cor: Cores.primaria,alinhamentoTexto: TextAlign.center)),
               ],
             ),
             Container(

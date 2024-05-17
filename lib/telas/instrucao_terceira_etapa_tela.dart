@@ -69,114 +69,115 @@ class _InstrucaoTerceiraEtapaTelaState extends State<InstrucaoTerceiraEtapaTela>
     return Scaffold(
         backgroundColor: Cores.cinzaClaro,
         appBar: carregando? null: AppBarPadrao(mostrarUsuarios: false, emailLogado: widget.emailLogado),
-        body: Container(
-            height: VariavelEstatica.altura,
-            width: VariavelEstatica.largura,
-            child: ListView(
-                children: [
-                  NivelEtapa(nivel: 3),
-                  Container(
-                    width: VariavelEstatica.largura * 0.8,
-                    height: VariavelEstatica.altura * 0.7,
-                    margin: EdgeInsets.all(20),
-                    padding: EdgeInsets.all(36),
-                    alignment: Alignment.topLeft,
-                    decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.all(Radius.circular(15))
-                    ),
-                    child: Container(
-                      width: VariavelEstatica.largura * 0.95,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Row(
-                            children: [
-                              Container(
-                                width: VariavelEstatica.largura * 0.45,
-                                child: TextoPadrao(texto: 'Instrução de Processos',cor: Cores.primaria,negrito: FontWeight.bold,tamanhoFonte: 20,)
-                              ),
-                              Container(
-                                width: VariavelEstatica.largura * 0.45,
-                                child: Row(
-                                  children: [
-                                    TextoPadrao(texto: 'Data de criação',cor: Cores.primaria,tamanhoFonte: 14,),
-                                    SizedBox(width: 10,),
-                                    TextoPadrao(texto: dadosEspecificacao==null?'00/00/0000':VariavelEstatica.mascaraData.format(dadosEspecificacao!['dataCriacao'].toDate()),cor: Cores.cinzaTextoEscuro,tamanhoFonte: 14,),
-                                    SizedBox(width: 40,),
-                                    TextoPadrao(texto: 'Visto',cor: Cores.primaria,tamanhoFonte: 14,),
-                                    SizedBox(width: 10,),
-                                    Container(
-                                      width: VariavelEstatica.largura * 0.1,
-                                      child: TextoPadrao(texto: BadStateString(dadosEspecificacao, 'visto'),cor: Cores.cinzaTextoEscuro,tamanhoFonte: 14,)
-                                    ),
-                                    SizedBox(width: 40,),
-                                    TextoPadrao(texto: 'Versão',cor: Cores.primaria,tamanhoFonte: 14,),
-                                    SizedBox(width: 10,),
-                                    TextoPadrao(texto: BadStateInt(dadosEspecificacao, 'versao').toString(),cor: Cores.cinzaTextoEscuro,tamanhoFonte: 14,),
-                                    SizedBox(width: 20,),
-                                    TextoPadrao(texto: 'Data',cor: Cores.primaria,tamanhoFonte: 14,),
-                                    SizedBox(width: 10,),
-                                    TextoPadrao(texto: VariavelEstatica.mascaraData.format(DateTime.now()),cor: Cores.cinzaTextoEscuro,tamanhoFonte: 14,),
-                                  ],
-                                ),
-                              )
-                            ],
-                          ),
-                          Padding(
-                            padding: EdgeInsets.symmetric(vertical: 10),
-                            child: Row(
-                              crossAxisAlignment:CrossAxisAlignment.center ,
+        body: SingleChildScrollView(
+          child: Container(
+              height: VariavelEstatica.altura+(listaEtapas.length+100),
+              width: VariavelEstatica.largura,
+              child: ListView(
+                physics: NeverScrollableScrollPhysics(),
+                  children: [
+                    NivelEtapa(nivel: 3),
+                    Container(
+                      width: VariavelEstatica.largura * 0.8,
+                      height: VariavelEstatica.altura * 0.85+(listaEtapas.length+150),
+                      margin: EdgeInsets.all(20),
+                      padding: EdgeInsets.all(36),
+                      alignment: Alignment.topLeft,
+                      decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.all(Radius.circular(15))
+                      ),
+                      child: Container(
+                        width: VariavelEstatica.largura * 0.95,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
                               children: [
-                                TextoPadrao(texto: 'N° FIP',cor: Cores.primaria,negrito: FontWeight.bold,tamanhoFonte: 16,),
-                                SizedBox(width: 10,),
-                                TextoPadrao(texto: BadStateInt(dadosEspecificacao, 'numeroFIP').toString(),cor: Cores.cinzaTextoEscuro,negrito: FontWeight.bold,tamanhoFonte: 16,),
-                                SizedBox(width: 40,),
-                                TextoPadrao(texto: 'Nome de Processos',cor: Cores.primaria,negrito: FontWeight.bold,tamanhoFonte: 16,),
-                                SizedBox(width: 10,),
-                                TextoPadrao(texto: BadStateString(dadosEspecificacao, 'nome'),cor: Cores.cinzaTextoEscuro,negrito: FontWeight.bold,tamanhoFonte: 16,),
+                                Container(
+                                  width: VariavelEstatica.largura * 0.45,
+                                  child: TextoPadrao(texto: 'Instrução de Processos',cor: Cores.primaria,negrito: FontWeight.bold,tamanhoFonte: 20,)
+                                ),
+                                Container(
+                                  width: VariavelEstatica.largura * 0.45,
+                                  child: Row(
+                                    children: [
+                                      TextoPadrao(texto: 'Data de criação',cor: Cores.primaria,tamanhoFonte: 14,),
+                                      SizedBox(width: 10,),
+                                      TextoPadrao(texto: dadosEspecificacao==null?'00/00/0000':VariavelEstatica.mascaraData.format(dadosEspecificacao!['dataCriacao'].toDate()),cor: Cores.cinzaTextoEscuro,tamanhoFonte: 14,),
+                                      SizedBox(width: 40,),
+                                      TextoPadrao(texto: 'Visto',cor: Cores.primaria,tamanhoFonte: 14,),
+                                      SizedBox(width: 10,),
+                                      Container(
+                                        width: VariavelEstatica.largura * 0.1,
+                                        child: TextoPadrao(texto: BadStateString(dadosEspecificacao, 'visto'),cor: Cores.cinzaTextoEscuro,tamanhoFonte: 14,)
+                                      ),
+                                      SizedBox(width: 40,),
+                                      TextoPadrao(texto: 'Versão',cor: Cores.primaria,tamanhoFonte: 14,),
+                                      SizedBox(width: 10,),
+                                      TextoPadrao(texto: BadStateInt(dadosEspecificacao, 'versao').toString(),cor: Cores.cinzaTextoEscuro,tamanhoFonte: 14,),
+                                      SizedBox(width: 20,),
+                                      TextoPadrao(texto: 'Data',cor: Cores.primaria,tamanhoFonte: 14,),
+                                      SizedBox(width: 10,),
+                                      TextoPadrao(texto: VariavelEstatica.mascaraData.format(DateTime.now()),cor: Cores.cinzaTextoEscuro,tamanhoFonte: 14,),
+                                    ],
+                                  ),
+                                )
                               ],
                             ),
-                          ),
-                          Divider(),
-                          ItemEtapa3Titulo(
-                            dadosEspecificacao: dadosEspecificacao,
-                            item1: 'epi',
-                            item2: 'maquina',
-                            titulo1: 'EPI Necessário',
-                            titulo2: 'Máquina',
-                            dadoString1: false,
-                          ),
-                          ItemEtapaUmTitulo(dadosEspecificacao: dadosEspecificacao,item: 'ferramentas',titulo: 'Ferramentas utilizadas'),
-                          Divider(),
-                          ItemEtapa3Titulo(
-                            dadosEspecificacao: dadosEspecificacao,
-                            item1: 'materiaPrima',
-                            item2: 'licenca_qualificacoes',
-                            titulo1: 'Matéria-prima utilizada',
-                            titulo2: 'Tempo total das etapas',
-                            dadoString1: false,
-                          ),
-                          ItemEtapa3Titulo(
-                            dadosEspecificacao: dadosEspecificacao,
-                            item1: 'espeficicacao',
-                            item2: 'prazo',
-                            titulo1: 'Especificações',
-                            titulo2: 'Prazo de aprendizagem',
-                          ),
-                          ItemEtapa3Titulo(
+                            Padding(
+                              padding: EdgeInsets.symmetric(vertical: 10),
+                              child: Row(
+                                crossAxisAlignment:CrossAxisAlignment.center ,
+                                children: [
+                                  TextoPadrao(texto: 'N° FIP',cor: Cores.primaria,negrito: FontWeight.bold,tamanhoFonte: 16,),
+                                  SizedBox(width: 10,),
+                                  TextoPadrao(texto: BadStateInt(dadosEspecificacao, 'numeroFIP').toString(),cor: Cores.cinzaTextoEscuro,negrito: FontWeight.bold,tamanhoFonte: 16,),
+                                  SizedBox(width: 40,),
+                                  TextoPadrao(texto: 'Nome de Processos',cor: Cores.primaria,negrito: FontWeight.bold,tamanhoFonte: 16,),
+                                  SizedBox(width: 10,),
+                                  TextoPadrao(texto: BadStateString(dadosEspecificacao, 'nome'),cor: Cores.cinzaTextoEscuro,negrito: FontWeight.bold,tamanhoFonte: 16,),
+                                ],
+                              ),
+                            ),
+                            Divider(),
+                            ItemEtapa3Titulo(
                               dadosEspecificacao: dadosEspecificacao,
-                              item1: 'esp_maquina',
+                              item1: 'epi',
+                              item2: 'maquina',
+                              titulo1: 'EPI Necessário',
+                              titulo2: 'Máquina',
+                              dadoString1: false,
+                            ),
+                            ItemEtapaUmTitulo(dadosEspecificacao: dadosEspecificacao,item: 'ferramentas',titulo: 'Ferramentas utilizadas'),
+                            Divider(),
+                            ItemEtapa3Titulo(
+                              dadosEspecificacao: dadosEspecificacao,
+                              item1: 'materiaPrima',
                               item2: 'licenca_qualificacoes',
-                              titulo1: 'Especificações máquina',
-                              titulo2: 'Licenças ou qualificações',
-                          ),
-                          Divider(),
-                          Container(
-                            height: VariavelEstatica.altura*0.38,
-                            child: SingleChildScrollView(
+                              titulo1: 'Matéria-prima utilizada',
+                              titulo2: 'Tempo total das etapas',
+                              dadoString1: false,
+                            ),
+                            ItemEtapa3Titulo(
+                              dadosEspecificacao: dadosEspecificacao,
+                              item1: 'espeficicacao',
+                              item2: 'prazo',
+                              titulo1: 'Especificações',
+                              titulo2: 'Prazo de aprendizagem',
+                            ),
+                            ItemEtapa3Titulo(
+                                dadosEspecificacao: dadosEspecificacao,
+                                item1: 'esp_maquina',
+                                item2: 'licenca_qualificacoes',
+                                titulo1: 'Especificações máquina',
+                                titulo2: 'Licenças ou qualificações',
+                            ),
+                            Divider(),
+                            Container(
+                              height: VariavelEstatica.altura*0.5+(listaEtapas.length+150),
                               child: listaEtapas.isEmpty?Container():Container(
-                                height: listaEtapas.length*300+80,
+                                height: listaEtapas.length*200+60,
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
@@ -333,13 +334,13 @@ class _InstrucaoTerceiraEtapaTelaState extends State<InstrucaoTerceiraEtapaTela>
                                 ),
                               ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
-                    ),
-                  )
-                ]
-            )
+                    )
+                  ]
+              )
+          ),
         )
     );
   }

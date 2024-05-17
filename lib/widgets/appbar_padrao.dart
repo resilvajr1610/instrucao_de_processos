@@ -46,25 +46,39 @@ class AppBarPadrao extends StatelessWidget implements PreferredSizeWidget{
             Spacer(),
             mostrarComentarios?Padding(
               padding: const EdgeInsets.all(8.0),
-              child: IconButton(onPressed: ()=>Navigator.push(context, MaterialPageRoute(builder: (context)=>ComentarioTela(emailLogado: emailLogado,))), icon: Icon(Icons.report_problem,color: Colors.white,size: 35,)),
+              child: Tooltip(
+                message: 'Comentários',
+                child: IconButton(
+                    onPressed: ()=>Navigator.push(context, MaterialPageRoute(builder: (context)=>ComentarioTela(emailLogado: emailLogado,))),
+                    icon: Icon(Icons.report_problem,color: Colors.white,size: 35,)),
+              ),
             ):Container(),
-            mostrarUsuarios && mostrarComentarios?Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: IconButton(onPressed: ()=>Navigator.push(context, MaterialPageRoute(builder: (context)=>UsuariosTela(emailLogado: emailLogado,))), icon: Icon(Icons.person_add_alt_1,color: Colors.white,size: 35,)),
-            ):Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: IconButton(onPressed: ()=>Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>HomeTela(emailLogado: emailLogado,))), icon: Icon(Icons.home,color: Colors.white,size: 35,)),
+            mostrarUsuarios && mostrarComentarios?Tooltip(
+              message: 'Cadastrar novo usuário',
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: IconButton(onPressed: ()=>Navigator.push(context, MaterialPageRoute(builder: (context)=>UsuariosTela(emailLogado: emailLogado,))), icon: Icon(Icons.person_add_alt_1,color: Colors.white,size: 35,)),
+              ),
+            ):Tooltip(
+              message: 'Tela Inicial',
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: IconButton(onPressed: ()=>Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>HomeTela(emailLogado: emailLogado,))), icon: Icon(Icons.home,color: Colors.white,size: 35,)),
+              ),
             ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: IconButton(
-                  onPressed: ()=>
-                    PrefService().removerConta().then((value)=>
-                      FirebaseAuth.instance.signOut().then((value) =>
-                          Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>LoginTela()))
-                      )
-                    ),
-                  icon: Icon(Icons.logout,color: Colors.white,size: 35,)),
+            Tooltip(
+              message: 'Sair',
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: IconButton(
+                    onPressed: ()=>
+                      PrefService().removerConta().then((value)=>
+                        FirebaseAuth.instance.signOut().then((value) =>
+                            Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>LoginTela()))
+                        )
+                      ),
+                    icon: Icon(Icons.logout,color: Colors.white,size: 35,)),
+              ),
             ),
           ],
         ),
