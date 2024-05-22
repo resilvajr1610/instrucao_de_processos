@@ -440,7 +440,8 @@ class _HomeTelaState extends State<HomeTela> {
 
   carregarFuncao()async{
     FirebaseFirestore.instance.collection('usuarios').where('email',isEqualTo: widget.emailLogado).get().then((dadosUsuario){
-      if(dadosUsuario.docs[0]['tipo_acesso']=='ADM'){
+      print(dadosUsuario.docs.length);
+      if(BadStateString(dadosUsuario.docs[0],'tipo_acesso')=='ADM'){
         acesso_adm = true;
       }
       carregarDadosInicio();

@@ -154,9 +154,9 @@ class _InstrucaoTerceiraEtapaTelaState extends State<InstrucaoTerceiraEtapaTela>
                             ItemEtapa3Titulo(
                               dadosEspecificacao: dadosEspecificacao,
                               item1: 'materiaPrima',
-                              item2: 'licenca_qualificacoes',
+                              item2: 'tempoTotal',
                               titulo1: 'Matéria-prima utilizada',
-                              titulo2: 'Tempo total das etapas',
+                              titulo2: 'Tempo total das etapas ( min ) ',
                               dadoString1: false,
                             ),
                             ItemEtapa3Titulo(
@@ -218,7 +218,7 @@ class _InstrucaoTerceiraEtapaTelaState extends State<InstrucaoTerceiraEtapaTela>
                                     TextoPadrao(texto: 'Observações Gerais/ O que é proibido e porque?',cor: Cores.primaria,negrito: FontWeight.bold,tamanhoFonte: 16,),
                                     TextoPadrao(texto: BadStateString(dadosEtapas, 'observacoes'),cor: Cores.cinzaTextoEscuro,tamanhoFonte: 16,),
                                     Container(
-                                        width: 670,
+                                        width: VariavelEstatica.largura * 0.7,
                                         padding: EdgeInsets.all(10),
                                         margin: EdgeInsets.symmetric(vertical: 5,horizontal: 5),
                                         decoration: BoxDecoration(
@@ -233,7 +233,7 @@ class _InstrucaoTerceiraEtapaTelaState extends State<InstrucaoTerceiraEtapaTela>
                                           Column(
                                             children: [
                                               Container(
-                                                width: 650,
+                                                width: VariavelEstatica.largura * 0.7,
                                                 child: Row(
                                                   mainAxisSize: MainAxisSize.min,
                                                   children: [
@@ -247,19 +247,19 @@ class _InstrucaoTerceiraEtapaTelaState extends State<InstrucaoTerceiraEtapaTela>
                                                     ),
                                                     SizedBox(width: 10,),
                                                     Container(
-                                                        width: 200,
+                                                        width: 300,
                                                         child: TextoPadrao(texto:'Resp. Alteração',cor: Cores.primaria,tamanhoFonte: 14,)
                                                     ),
                                                     SizedBox(width: 10,),
                                                     Container(
-                                                        width: 250,
+                                                        width: 350,
                                                         child: TextoPadrao(texto:'Razão',cor: Cores.primaria,tamanhoFonte: 14,)
                                                     ),
                                                   ],
                                                 ),
                                               ),
                                               Container(
-                                                width: 650,
+                                                width: VariavelEstatica.largura * 0.7,
                                                 child: Row(
                                                   mainAxisSize: MainAxisSize.min,
                                                   children: [
@@ -283,12 +283,12 @@ class _InstrucaoTerceiraEtapaTelaState extends State<InstrucaoTerceiraEtapaTela>
                                                     ),
                                                     SizedBox(width: 10,),
                                                     Container(
-                                                      width: 200,
+                                                      width: 300,
                                                       child: TextoPadrao(texto:BadStateString(dadosEspecificacao, 'visto'),cor: Cores.cinzaTextoEscuro,tamanhoFonte: 14,)
                                                     ),
                                                     SizedBox(width: 10,),
                                                     Container(
-                                                      width: 250,
+                                                      width: 350,
                                                       child: TextoPadrao(texto:BadStateString(dadosEtapas, 'alteracao'),cor: Cores.cinzaTextoEscuro,tamanhoFonte: 14,)
                                                     ),
                                                   ],

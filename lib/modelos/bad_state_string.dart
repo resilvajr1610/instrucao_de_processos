@@ -6,7 +6,7 @@ String BadStateString(item, type) {
   try {
     if (item != null) {
       dynamic data = item.get(FieldPath([type])) ?? '';
-      text = data;
+      text = data.toString();
     } else {
       text = '';
     }

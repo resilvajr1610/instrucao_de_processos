@@ -35,12 +35,16 @@ class ItemEtapa3Titulo extends StatelessWidget {
             children: [
               TextoPadrao(texto: titulo1,cor: Cores.primaria,tamanhoFonte: 14,),
               SizedBox(width: 10,),
-              TextoPadrao(
-                texto: dadoString1
-                  ?BadStateString(dadosEspecificacao, item1)
-                  :BadStateList(dadosEspecificacao, item1).toString().replaceAll('[', '').replaceAll(']', ''),
-                cor: Cores.cinzaTextoEscuro,
-                tamanhoFonte: 14,
+              Container(
+                width: VariavelEstatica.largura*0.35,
+                child: TextoPadrao(
+                  texto: dadoString1
+                    ?BadStateString(dadosEspecificacao, item1)
+                    :BadStateList(dadosEspecificacao, item1).toString().replaceAll('[', '').replaceAll(']', ''),
+                  cor: Cores.cinzaTextoEscuro,
+                  maxLines: 2,
+                  tamanhoFonte: 12,
+                ),
               ),
             ],
           ),
@@ -56,7 +60,8 @@ class ItemEtapa3Titulo extends StatelessWidget {
                     ?BadStateString(dadosEspecificacao, item2)
                     :BadStateList(dadosEspecificacao, item2).toString().replaceAll('[', '').replaceAll(']', ''),
                 cor: Cores.cinzaTextoEscuro,
-                tamanhoFonte: 14,
+                maxLines: 2,
+                tamanhoFonte: 12,
               ),
             ],
           ),

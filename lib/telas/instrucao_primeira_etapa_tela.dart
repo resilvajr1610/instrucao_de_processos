@@ -62,14 +62,6 @@ class _InstrucaoPrimeiraEtapaTelaState extends State<InstrucaoPrimeiraEtapaTela>
   List listaTagDocFerramenta = [];
   List listaTagDocMaterial = [];
 
-  double larguraTagEpi = 0;
-  double larguraTagFerramenta = 0;
-  double larguraTagMaterial = 0;
-
-  int indiceTagEpi = 0;
-  int indiceTagFerramenta = 0;
-  int indiceTagMaterial = 0;
-
   var dadosUsuarioFire;
   int numFIP = 0;
   int versao = 0;
@@ -424,53 +416,10 @@ class _InstrucaoPrimeiraEtapaTelaState extends State<InstrucaoPrimeiraEtapaTela>
                                       borderRadius: BorderRadius.all(Radius.circular(3))
                                   ),
                                   child: Row(
+                                    mainAxisSize: MainAxisSize.min,
                                     children: [
                                       Container(
-                                        width: larguraTagEpi,
-                                        height: 50,
-                                        alignment: Alignment.centerLeft,
-                                        child: ListView.builder(
-                                            scrollDirection: Axis.horizontal,
-                                            itemCount: listaTagDocEpi.length,
-                                            itemBuilder: (context,i){
-
-                                              if(indiceTagEpi==i){
-                                                larguraTagEpi = (listaTagDocEpi[i].toString().length*5)+larguraTagEpi+60;
-                                                indiceTagEpi = i+1;
-                                              }
-
-                                              WidgetsBinding.instance.addPostFrameCallback((_) {
-                                                setState(() {});
-                                              });
-
-                                              return Padding(
-                                                padding: const EdgeInsets.only(left: 2.0),
-                                                child: Center(
-                                                    child: GestureDetector(
-                                                      onTap: (){
-                                                        larguraTagEpi = larguraTagEpi-60-(listaTagDocEpi[i].toString().length*5);
-                                                        listaTagDocEpi.removeAt(i);
-                                                        indiceTagEpi = indiceTagEpi-1;
-                                                        setState(() {});
-                                                      },
-                                                      child: Card(
-                                                          child: Container(
-                                                              padding: EdgeInsets.all(5),
-                                                              child: Row(
-                                                                children: [
-                                                                  TextoPadrao(texto: listaTagDocEpi[i],cor: Cores.cinzaTextoEscuro,tamanhoFonte: 10,alinhamentoTexto: TextAlign.center,),
-                                                                  Icon(Icons.close,color: Colors.red,size: 10,)
-                                                                ],
-                                                              )
-                                                          )
-                                                      ),
-                                                    )
-                                                ),
-                                              );
-                                            }
-                                        ),
-                                      ),
-                                      Container(
+                                        color: Cores.cardEsp,
                                         padding: EdgeInsets.only(left: 10),
                                         height: 50,
                                         width: 250,
@@ -497,6 +446,50 @@ class _InstrucaoPrimeiraEtapaTelaState extends State<InstrucaoPrimeiraEtapaTela>
                                           },
                                         ),
                                       ),
+                                      Spacer(),
+                                      Container(
+                                        width: VariavelEstatica.largura*0.3,
+                                        height: 50,
+                                        alignment: Alignment.centerLeft,
+                                        child: GridView.builder(
+                                            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 4,mainAxisExtent: 20),
+                                            itemCount: listaTagDocEpi.length,
+                                            itemBuilder: (context,i){
+
+                                              WidgetsBinding.instance.addPostFrameCallback((_) {
+                                                setState(() {});
+                                              });
+
+                                              return Card(
+                                                child: Container(
+                                                  height: 20,
+                                                  padding: const EdgeInsets.symmetric(vertical: 1,horizontal: 1),
+                                                  child: GestureDetector(
+                                                    onTap: (){
+                                                      listaTagDocEpi.removeAt(i);
+                                                      setState(() {});
+                                                    },
+                                                    child: Container(
+                                                        height: 20,
+                                                        child: Row(
+                                                          mainAxisSize: MainAxisSize.min,
+                                                          children: [
+                                                            Container(
+                                                              height: 15,
+                                                              width: VariavelEstatica.largura*0.06,
+                                                              child: TextoPadrao(texto: listaTagDocEpi[i],cor: Cores.cinzaTextoEscuro,tamanhoFonte: 10,alinhamentoTexto: TextAlign.center,)
+                                                            ),
+                                                            Icon(Icons.close,color: Colors.red,size: 10,)
+                                                          ],
+                                                        )
+                                                    ),
+                                                  ),
+                                                ),
+                                              );
+                                            }
+                                        ),
+                                      ),
+                                      Spacer(),
                                     ],
                                   ),
                                 ),
@@ -542,51 +535,7 @@ class _InstrucaoPrimeiraEtapaTelaState extends State<InstrucaoPrimeiraEtapaTela>
                               child: Row(
                                 children: [
                                   Container(
-                                    width: larguraTagFerramenta,
-                                    height: 50,
-                                    alignment: Alignment.centerLeft,
-                                    child: ListView.builder(
-                                        scrollDirection: Axis.horizontal,
-                                        itemCount: listaTagDocFerramenta.length,
-                                        itemBuilder: (context,i){
-
-                                          if(indiceTagFerramenta==i){
-                                            larguraTagFerramenta = (listaTagDocFerramenta[i].toString().length*5)+larguraTagFerramenta+60;
-                                            indiceTagFerramenta = i+1;
-                                          }
-
-                                          WidgetsBinding.instance.addPostFrameCallback((_) {
-                                            setState(() {});
-                                          });
-
-                                          return Padding(
-                                            padding: const EdgeInsets.only(left: 2.0),
-                                            child: Center(
-                                                child: GestureDetector(
-                                                  onTap: (){
-                                                    larguraTagFerramenta = larguraTagFerramenta-60-listaTagDocFerramenta[i].toString().length*5;
-                                                    listaTagDocFerramenta.removeAt(i);
-                                                    indiceTagFerramenta = indiceTagFerramenta-1;
-                                                    setState(() {});
-                                                  },
-                                                  child: Card(
-                                                      child: Container(
-                                                          padding: EdgeInsets.all(5),
-                                                          child: Row(
-                                                            children: [
-                                                              TextoPadrao(texto: listaTagDocFerramenta[i],cor: Cores.cinzaTextoEscuro,tamanhoFonte: 10,alinhamentoTexto: TextAlign.center,),
-                                                              Icon(Icons.close,color: Colors.red,size: 10,)
-                                                            ],
-                                                          )
-                                                      )
-                                                  ),
-                                                )
-                                            ),
-                                          );
-                                        }
-                                    ),
-                                  ),
-                                  Container(
+                                    color: Cores.cardEsp,
                                     height: 50,
                                     width: 250,
                                     padding: EdgeInsets.only(left: 10),
@@ -613,6 +562,44 @@ class _InstrucaoPrimeiraEtapaTelaState extends State<InstrucaoPrimeiraEtapaTela>
                                       },
                                     ),
                                   ),
+                                  Spacer(),
+                                  Container(
+                                    width: VariavelEstatica.largura*0.76,
+                                    height: 50,
+                                    alignment: Alignment.centerLeft,
+                                    child: GridView.builder(
+                                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 9,mainAxisExtent: 20),
+                                        itemCount: listaTagDocFerramenta.length,
+                                        itemBuilder: (context,i){
+                                          WidgetsBinding.instance.addPostFrameCallback((_) {
+                                            setState(() {});
+                                          });
+
+                                          return GestureDetector(
+                                            onTap: (){
+                                              listaTagDocFerramenta.removeAt(i);
+                                              setState(() {});
+                                            },
+                                            child: Card(
+                                                child: Container(
+                                                    height: 20,
+                                                    child: Row(
+                                                      children: [
+                                                        Container(
+                                                          width: VariavelEstatica.largura*0.065,
+                                                          height: 15,
+                                                          child: TextoPadrao(texto: listaTagDocFerramenta[i],cor: Cores.cinzaTextoEscuro,tamanhoFonte: 10,alinhamentoTexto: TextAlign.center,)
+                                                        ),
+                                                        Icon(Icons.close,color: Colors.red,size: 10,)
+                                                      ],
+                                                    )
+                                                )
+                                            ),
+                                          );
+                                        }
+                                    ),
+                                  ),
+                                  Spacer()
                                 ],
                               ),
                             ),
@@ -658,51 +645,7 @@ class _InstrucaoPrimeiraEtapaTelaState extends State<InstrucaoPrimeiraEtapaTela>
                                   child: Row(
                                     children: [
                                       Container(
-                                        width: larguraTagMaterial,
-                                        height: 50,
-                                        alignment: Alignment.centerLeft,
-                                        child: ListView.builder(
-                                            scrollDirection: Axis.horizontal,
-                                            itemCount: listaTagDocMaterial.length,
-                                            itemBuilder: (context,i){
-
-                                              if(indiceTagMaterial==i){
-                                                larguraTagMaterial = (listaTagDocMaterial[i].toString().length*5)+larguraTagMaterial+60;
-                                                indiceTagMaterial = i+1;
-                                              }
-
-                                              WidgetsBinding.instance.addPostFrameCallback((_) {
-                                                setState(() {});
-                                              });
-
-                                              return Padding(
-                                                padding: const EdgeInsets.only(left: 2.0),
-                                                child: Center(
-                                                    child: GestureDetector(
-                                                      onTap: (){
-                                                        larguraTagMaterial = larguraTagMaterial-60-(listaTagDocMaterial[i].toString().length*5);
-                                                        listaTagDocMaterial.removeAt(i);
-                                                        indiceTagMaterial = indiceTagMaterial-1;
-                                                        setState(() {});
-                                                      },
-                                                      child: Card(
-                                                          child: Container(
-                                                              padding: EdgeInsets.all(5),
-                                                              child: Row(
-                                                                children: [
-                                                                  TextoPadrao(texto: listaTagDocMaterial[i],cor: Cores.cinzaTextoEscuro,tamanhoFonte: 10,alinhamentoTexto: TextAlign.center,),
-                                                                  Icon(Icons.close,color: Colors.red,size: 10,)
-                                                                ],
-                                                              )
-                                                          )
-                                                      ),
-                                                    )
-                                                ),
-                                              );
-                                            }
-                                        ),
-                                      ),
-                                      Container(
+                                        color: Cores.cardEsp,
                                         padding: EdgeInsets.only(left: 10),
                                         height: 50,
                                         width: 250,
@@ -729,6 +672,47 @@ class _InstrucaoPrimeiraEtapaTelaState extends State<InstrucaoPrimeiraEtapaTela>
                                           },
                                         ),
                                       ),
+                                      Spacer(),
+                                      Container(
+                                        width: VariavelEstatica.largura*0.3,
+                                        height: 50,
+                                        alignment: Alignment.centerLeft,
+                                        child: GridView.builder(
+                                            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 4,mainAxisExtent: 20),
+                                            itemCount: listaTagDocMaterial.length,
+                                            itemBuilder: (context,i){
+
+                                              WidgetsBinding.instance.addPostFrameCallback((_) {
+                                                setState(() {});
+                                              });
+
+                                              return Center(
+                                                  child: GestureDetector(
+                                                    onTap: (){
+                                                      listaTagDocMaterial.removeAt(i);
+                                                      setState(() {});
+                                                    },
+                                                    child: Card(
+                                                        child: Container(
+                                                            height: 20,
+                                                            child: Row(
+                                                              children: [
+                                                                Container(
+                                                                  height: 15,
+                                                                  width: VariavelEstatica.largura*0.06,
+                                                                  child: TextoPadrao(texto: listaTagDocMaterial[i],cor: Cores.cinzaTextoEscuro,tamanhoFonte: 10,alinhamentoTexto: TextAlign.center,)
+                                                                ),
+                                                                Icon(Icons.close,color: Colors.red,size: 10,)
+                                                              ],
+                                                            )
+                                                        )
+                                                    ),
+                                                  )
+                                              );
+                                            }
+                                        ),
+                                      ),
+                                      Spacer(),
                                     ],
                                   ),
                                 ),

@@ -21,7 +21,11 @@ class ItemEtapaUmTitulo extends StatelessWidget {
       children: [
         TextoPadrao(texto: titulo,cor: Cores.primaria,tamanhoFonte: 14,),
         SizedBox(width: 10,),
-        TextoPadrao(texto: BadStateList(dadosEspecificacao, item).toString().replaceAll('[', '').replaceAll(']', ''),cor: Cores.cinzaTextoEscuro,tamanhoFonte: 14,),
+        TextoPadrao(
+          texto: BadStateList(dadosEspecificacao, item).toString().replaceAll('[', '').replaceAll(']', ''),
+          cor: Cores.cinzaTextoEscuro,
+          tamanhoFonte: 12,
+          maxLines: 2,),
       ],
     );
   }

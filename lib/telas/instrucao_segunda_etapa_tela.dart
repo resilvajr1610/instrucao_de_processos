@@ -149,7 +149,9 @@ class _InstrucaoSegundaEtapaTelaState extends State<InstrucaoSegundaEtapaTela> {
       });
       observacoes.text = BadStateString(etapasDoc,'observacoes');
       alteracao.text = BadStateString(etapasDoc,'alteracao');
-      iniciarEtapa(false,0);
+      if(listaEtapas.length!=0){
+        iniciarEtapa(false,0);
+      }
       setState(() {});
     });
   }
@@ -390,8 +392,8 @@ class _InstrucaoSegundaEtapaTelaState extends State<InstrucaoSegundaEtapaTela> {
         "videos_etapa${posicaoEtapa}_analise${posicaoAnalise}": FieldValue.arrayUnion([url])
       },SetOptions(merge: true)).then((value){
         carregando = false;
-        Navigator.pop(context);
         carregarWidget(posicaoEtapa,posicaoAnalise);
+        setState(() {});
       });
       print('url dentro $url');
     }
