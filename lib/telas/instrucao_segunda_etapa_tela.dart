@@ -587,7 +587,7 @@ class _InstrucaoSegundaEtapaTelaState extends State<InstrucaoSegundaEtapaTela> {
                                                     setState(()=>listaEtapas[i].listaAnalise[j].analiseAtiva=listaEtapas[i].listaAnalise[j].analiseAtiva?false:true);
                                                   }
                                                 }else{
-                                                  setState(()=>listaEtapas[i].listaAnalise[j].analiseAtiva=false);
+                                                  // setState(()=>listaEtapas[i].listaAnalise[j].analiseAtiva=false);
                                                   showSnackBar(context, 'preencha todas as informações para avançar', Colors.red);
                                                 }
                                               }else{
