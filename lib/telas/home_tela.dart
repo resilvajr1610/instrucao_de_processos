@@ -657,7 +657,7 @@ class _HomeTelaState extends State<HomeTela> {
                                   showSnackBar(context, 'Adicione um texto para avançar', Colors.red);
                                 }
                               },
-                              funcaoExcluir: (){
+                              funcaoExcluirGeral: (){
                                 setState(() {
                                   showDialog(context: context,
                                       builder: (context){
@@ -745,7 +745,7 @@ class _HomeTelaState extends State<HomeTela> {
                                             showSnackBar(context, 'Adicione um texto para avançar', Colors.red);
                                           }
                                         },
-                                        funcaoExcluir: (){
+                                        funcaoExcluirGeral: (){
                                           setState(() {
                                             showDialog(context: context,
                                                 builder: (context){
@@ -816,7 +816,7 @@ class _HomeTelaState extends State<HomeTela> {
                                                     showSnackBar(context, 'Adicione um texto para avançar', Colors.red);
                                                   }
                                                 },
-                                                funcaoExcluir: (){
+                                                funcaoExcluirGeral: (){
                                                   setState(() {
                                                     showDialog(context: context,
                                                         builder: (context){

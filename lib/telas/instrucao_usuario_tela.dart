@@ -198,7 +198,7 @@ class _InstrucaoUsuarioTelaState extends State<InstrucaoUsuarioTela> {
       appBar: AppBarPadrao(mostrarUsuarios: false, emailLogado: widget.emailLogado),
       body: SingleChildScrollView(
         child: Container(
-          height: VariavelEstatica.altura*0.9,
+          height: VariavelEstatica.altura*0.9+(listaEtapas.length*250),
           width: VariavelEstatica.largura,
           child: Container(
             width: VariavelEstatica.largura * 0.8,
@@ -298,14 +298,14 @@ class _InstrucaoUsuarioTelaState extends State<InstrucaoUsuarioTela> {
                   ),
                   Divider(),
                   Container(
-                    height: VariavelEstatica.altura*0.52,
+                    height: listaEtapas.length*300,
                     child: listaEtapas.isEmpty?Container():Container(
                       height: listaEtapas.length*250+80,
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Container(
-                            height: listaEtapas.length*210,
+                            height: listaEtapas.length*300,
                             width: VariavelEstatica.largura * 0.7,
                             child: ListView.builder(
                                 physics: NeverScrollableScrollPhysics(),

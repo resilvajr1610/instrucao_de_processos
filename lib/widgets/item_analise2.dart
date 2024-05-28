@@ -12,13 +12,15 @@ class ItemAnalise2 extends StatelessWidget {
   var botaoMostrarListaImagem;
   Widget listViewImagens;
   var funcaoFotoVideo;
+  var funcaoAlterar;
 
   ItemAnalise2({
     required this.modeloAnalise,
     required this.botaoSalvarNovaAnalise,
     required this.listViewImagens,
     required this.botaoMostrarListaImagem,
-    required this.funcaoFotoVideo
+    required this.funcaoFotoVideo,
+    required this.funcaoAlterar
   });
 
   @override
@@ -118,7 +120,14 @@ class ItemAnalise2 extends StatelessWidget {
             icon: !modeloAnalise.listaCompleta?Icon(Icons.add_box,color: Cores.primaria,):Icon(Icons.clear,color: Colors.red,),
             onPressed: botaoSalvarNovaAnalise,
           ),
-        )
+        ),
+        Padding(
+          padding: EdgeInsets.symmetric(vertical: 8.0),
+          child: IconButton(
+            icon: Icon(Icons.edit,color: Colors.orange,),
+            onPressed: funcaoAlterar,
+          ),
+        ),
       ],
     );
   }

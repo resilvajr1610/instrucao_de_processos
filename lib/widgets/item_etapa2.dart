@@ -54,7 +54,7 @@ class ItemEtapa2 extends StatelessWidget {
                   controller: modeloEtapa.nomeEtapa,
                   largura: 400,
                   corCaixa: Cores.cinzaClaro,
-                  ativarCaixa: !modeloEtapa.ativarCaixaEtapa && modeloEtapa.nomeEtapa.text.isEmpty,
+                  ativarCaixa: true,
                 ),
                 SizedBox(width: 20,),
                 TextoPadrao(texto:'Tempo total da etapa',cor: Cores.primaria,tamanhoFonte: 14,),

@@ -3,9 +3,11 @@ import 'package:instrucao_de_processos/telas/instrucao_primeira_etapa_tela.dart'
 import 'package:instrucao_de_processos/telas/instrucao_usuario_tela.dart';
 import 'package:instrucao_de_processos/widgets/snackBars.dart';
 import 'package:instrucao_de_processos/widgets/texto_padrao.dart';
+import '../telas/home_tela.dart';
 import '../utilidades/cores.dart';
 import 'botao_padrao_nova_instrucao.dart';
 import 'caixa_texto.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class ItemInstrucao extends StatelessWidget {
   String idFirebase;
@@ -22,7 +24,7 @@ class ItemInstrucao extends StatelessWidget {
   bool acesso_adm;
   bool mostrarLista;
   var funcaoMostrarLista;
-  var funcaoExcluir;
+  var funcaoExcluirGeral;
   int indexInicio;
   int indexMeio;
   int indexFim;
@@ -42,7 +44,7 @@ class ItemInstrucao extends StatelessWidget {
     required this.acesso_adm,
     required this.mostrarLista,
     required this.funcaoMostrarLista,
-    required this.funcaoExcluir,
+    required this.funcaoExcluirGeral,
     required this.indexInicio,
     required this.indexMeio,
     required this.indexFim,
@@ -65,6 +67,7 @@ class ItemInstrucao extends StatelessWidget {
 
     return  Row(
       mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Column(
           crossAxisAlignment: CrossAxisAlignment.end,
@@ -126,7 +129,7 @@ class ItemInstrucao extends StatelessWidget {
                           mainAxisAlignment: MainAxisAlignment.end,
                           children: [
                             Container(
-                              width: !acesso_adm?largura*0.9:largura*0.8,
+                              width: !acesso_adm?largura*0.9:largura*0.75,
                               child: TextoPadrao(
                                 texto: listaVersao[i],
                                 cor: Cores.primaria,
@@ -136,7 +139,38 @@ class ItemInstrucao extends StatelessWidget {
                                 onPressed: ()=>Navigator.push(context, MaterialPageRoute(builder: (context)=>
                                     InstrucaoPrimeiraEtapaTela(idDocumento: idDocumento,idFirebase: idFirebase,emailLogado: emailLogado,idEsp: listaIdEsp[i],nomeProcedimento: nomeProcesso,))),
                                 icon: Icon(Icons.edit,color: Cores.primaria,)
-                            ):Container()
+                            ):Container(),
+                            acesso_adm?IconButton(onPressed: (){
+                              showDialog(context: context,
+                                  builder: (context){
+                                    return Center(
+                                      child: AlertDialog(
+                                        title: TextoPadrao(texto: 'Deseja excluír esse item?',cor: Cores.primaria,negrito: FontWeight.bold,),
+                                        content: Container(
+                                          height: 40,
+                                          width: 350,
+                                          child: TextoPadrao(
+                                            texto: 'Após exclusão esse item não aparecerá novamente.',
+                                            cor: Cores.cinzaTextoEscuro,
+                                          ),
+                                        ),
+                                        actions: [
+                                          TextButton(child: TextoPadrao(texto: 'Não',cor: Colors.green,negrito: FontWeight.bold,),onPressed: ()=>Navigator.pop(context),),
+                                          TextButton(child: TextoPadrao(texto: 'Confimar Exclusão',cor: Colors.red,negrito: FontWeight.bold,),onPressed: (){
+                                            FirebaseFirestore.instance.collection('documentos').doc(idFirebase).update({
+                                              'listaIdEsp': FieldValue.arrayRemove([listaIdEsp[i]]),
+                                              'listaVersao' : FieldValue.arrayRemove([listaVersao[i]]),
+                                            }).then((value){
+                                              FirebaseFirestore.instance.collection('especificacao').doc(listaIdEsp[i]).delete().then((value){
+                                                Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>HomeTela(emailLogado: emailLogado)));
+                                              });
+                                            });
+                                          }),
+                                        ],
+                                      ),
+                                    );
+                                  });
+                            }, icon: Icon(Icons.delete,size: 20,color: Colors.red,)):Container()
                           ],
                         ),
                       ),
@@ -147,9 +181,12 @@ class ItemInstrucao extends StatelessWidget {
             )
           ],
         ),
-        acesso_adm &&idFirebase!=''?IconButton(
-          onPressed: funcaoExcluir,
-          icon: Icon(Icons.delete,color: Colors.red,)
+        acesso_adm &&idFirebase!=''?Padding(
+          padding: const EdgeInsets.symmetric(vertical: 20.0),
+          child: IconButton(
+            onPressed: funcaoExcluirGeral,
+            icon: Icon(Icons.delete,color: Colors.red,)
+          ),
         ):Container(width: 40,)
       ],
     );

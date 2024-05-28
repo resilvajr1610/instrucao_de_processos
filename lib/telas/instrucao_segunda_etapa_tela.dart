@@ -558,10 +558,7 @@ class _InstrucaoSegundaEtapaTelaState extends State<InstrucaoSegundaEtapaTela> {
                                                     listaEtapas[i].tempoTotalEtapaSegundos = int.parse(listaEtapas[i].listaAnalise[j].tempoAnalise.text.trim()) + listaEtapas[i].tempoTotalEtapaSegundos;
                                                     listaEtapas[i].listaAnalise[j].listaCompleta = true;
 
-                                                    print('verifica adicionar ${listaEtapas[i].adicionaNovo}');
                                                       if(listaEtapas[i].adicionaNovo==0){
-                                                        print('novo adicionado ${i}');
-                                                        print(listaEtapas[i].adicionaNovo);
                                                         iniciarEtapa(false, i);
                                                       }
 
@@ -626,6 +623,7 @@ class _InstrucaoSegundaEtapaTelaState extends State<InstrucaoSegundaEtapaTela> {
                                             funcaoFotoVideo: (){
                                               carregarWidget(i,j);
                                             },
+                                           funcaoAlterar: ()=> setState(()=>listaEtapas[i].listaAnalise[j].analiseAtiva=listaEtapas[i].listaAnalise[j].analiseAtiva?false:true),
                                         ),
                                       );
                                     }

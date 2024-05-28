@@ -182,7 +182,7 @@ class _InstrucaoTerceiraEtapaTelaState extends State<InstrucaoTerceiraEtapaTela>
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Container(
-                                      height: listaEtapas.length*200,
+                                      height: listaEtapas.length*150,
                                       width: VariavelEstatica.largura * 0.7,
                                       child: ListView.builder(
                                           itemCount: listaEtapas.length,
