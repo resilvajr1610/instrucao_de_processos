@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:instrucao_de_processos/utilidades/variavel_estatica.dart';
 import 'package:instrucao_de_processos/widgets/texto_padrao.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
@@ -8,7 +9,7 @@ class ItemUsuario extends StatelessWidget {
   DocumentSnapshot document;
 
   ItemUsuario({
-    required this.document
+    required this.document,
   });
 
   @override
@@ -19,7 +20,7 @@ class ItemUsuario extends StatelessWidget {
         children: [
           Container(width: 300,child: TextoPadrao(texto: document['nome'],cor: Cores.cinzaTextoEscuro,tamanhoFonte: 12,)),
           Container(width: 200,child: TextoPadrao(texto: document['funcao'],cor: Cores.cinzaTextoEscuro,tamanhoFonte: 12,)),
-          Container(width: 200,child:TextoPadrao(texto: document['email'],cor: Cores.cinzaTextoEscuro,tamanhoFonte: 12,)),
+          Container(width: 300,child:TextoPadrao(texto: document['email'],cor: Cores.cinzaTextoEscuro,tamanhoFonte: 12,)),
           Container(width: 200,child: TextoPadrao(texto: document['tipo_acesso'],cor: Cores.cinzaTextoEscuro,tamanhoFonte: 12,)),
         ],
       ),

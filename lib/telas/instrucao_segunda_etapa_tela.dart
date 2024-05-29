@@ -113,7 +113,7 @@ class _InstrucaoSegundaEtapaTelaState extends State<InstrucaoSegundaEtapaTela> {
                   analiseAtiva: true,
                   etapaAtiva: true,
                   imagemSelecionada: listaMapAnalise[j]['imagemSelecionada'],
-                  numeroAnalise: listaMapAnalise[j]['numeroAnalise'],
+                  numeroAnalise: int.parse('${j+1}0'),
                   nomeAnalise: TextEditingController(text: listaMapAnalise[j]['nomeAnalise']),
                   tempoAnalise: TextEditingController(text: listaMapAnalise[j]['tempoAnalise']),
                   pontoChave: TextEditingController(text: listaMapAnalise[j]['pontoChave']),
@@ -566,7 +566,7 @@ class _InstrucaoSegundaEtapaTelaState extends State<InstrucaoSegundaEtapaTela> {
                                                         ModeloAnalise2(
                                                             etapaAtiva: true,
                                                             imagemSelecionada: '',
-                                                            numeroAnalise: listaEtapas[i].listaAnalise[j].numeroAnalise+10,
+                                                            numeroAnalise: int.parse('${j+1}0'),
                                                             nomeAnalise: TextEditingController(),
                                                             tempoAnalise: TextEditingController(),
                                                             pontoChave: TextEditingController(),

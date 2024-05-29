@@ -27,7 +27,7 @@ class ItemEtapa3 extends StatelessWidget {
   Widget build(BuildContext context) {
 
     return Container(
-      width: VariavelEstatica.largura * 0.3,
+      width: VariavelEstatica.largura * 0.9,
       padding: EdgeInsets.all(10),
       margin: EdgeInsets.symmetric(vertical: 5,horizontal: 5),
       decoration: BoxDecoration(
@@ -84,11 +84,11 @@ class ItemEtapa3 extends StatelessWidget {
             ),
           ),
           Container(
-              width:1000,
+              width:VariavelEstatica.largura*0.9,
               child: Divider()
           ),
           Container(
-            width: 1000,
+            width:VariavelEstatica.largura*0.9,
             child: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
@@ -121,187 +121,190 @@ class ItemEtapa3 extends StatelessWidget {
           ),
           //criar list
           Container(
-            width: 1050,
+            width: VariavelEstatica.largura*0.9,
             height: listaAnalise.length*50,
             child: ListView.builder(
               itemCount: listaAnalise.length,
               itemBuilder: (context,i){
-                return Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Container(
-                      alignment: Alignment.center,
-                      width: 90,
-                      height: 50,
-                      child: listaAnalise[i].imagemSelecionada==''?TextoPadrao(texto: '-',cor: Cores.cinzaTextoEscuro,):Image.asset(listaAnalise[i].imagemSelecionada),
-                      margin: EdgeInsets.only(right: 20),
-                    ),
-                    Container(
-                      height: 50,
-                      alignment: Alignment.center,
-                      width: 50,
-                      child: TextoPadrao(texto:listaAnalise[i].numeroAnalise.toString(),cor: Cores.primaria,tamanhoFonte: 14,alinhamentoTexto: TextAlign.center,),
-                      margin: EdgeInsets.only(right: 10),
-                    ),
-                    SizedBox(width: 10,),
-                    Container(
-                      height: 50,
-                      width: 90,
-                      child: IconButton(
-                        icon: Icon(Icons.photo,color: Cores.cinzaTexto,),
-                        onPressed: (){
-                            showDialog(context: context,
-                                builder: (context){
-                                  return Center(
-                                    child: AlertDialog(
-                                      title: TextoPadrao(texto: 'Mídias',cor: Cores.primaria,negrito: FontWeight.bold,),
-                                      content: Container(
-                                        height: 650,
-                                        width: 1000,
-                                        child: Column(
-                                          children: [
-                                            listaAnalise[i].urlFotos.length==0?Container(
-                                              height: 300,
-                                              width: 500,
-                                              child: Center(
-                                                child: TextoPadrao(texto: 'Sem Fotos',cor: Cores.primaria,),
-                                              ),
-                                            ):Container(
-                                              height: 300,
-                                              width: 500,
-                                              padding: EdgeInsets.symmetric(horizontal: 5),
-                                              child: ListView.builder(
-                                                scrollDirection: Axis.horizontal,
-                                                itemCount: listaAnalise[i].urlFotos.length,
-                                                itemBuilder: (context, j) {
-                                                  return FutureBuilder(
-                                                    future: precacheImage(NetworkImage(listaAnalise[i].urlFotos[j]), context),
-                                                    builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
-                                                      if (snapshot.connectionState == ConnectionState.waiting) {
-                                                        return Center(child: CircularProgressIndicator());
-                                                      } else if (snapshot.hasError) {
-                                                        return Center(child: Text('Erro ao carregar imagem'));
-                                                      } else {
-                                                        return Image.network(listaAnalise[i].urlFotos[j]);
-                                                      }
-                                                    },
-                                                  );
-                                                },
-                                              ),
-                                            ),
-                                            listaAnalise[i].urlVideos.length==0?Container(
-                                              height: 300,
-                                              width: 500,
-                                              child: Center(
-                                                child: TextoPadrao(texto: 'Sem Videos',cor: Cores.primaria,),
-                                              ),
-                                            ):Container(
-                                              padding: EdgeInsets.symmetric(horizontal: 5),
-                                              alignment: Alignment.center,
-                                              height: 300,
-                                              width: 500,
-                                              child: ListView.builder(
-                                                scrollDirection: Axis.horizontal,
-                                                itemCount: listaAnalise[i].urlVideos.length,
-                                                itemBuilder: (context, j) {
-
-                                                  VideoPlayerController? controller;
-                                                  Future<void>? iniciarVideo;
-                                                  controller = VideoPlayerController.networkUrl(Uri.parse(listaAnalise[i].urlVideos[j]));
-                                                  controller.setLooping(true);
-                                                  controller.setVolume(1.0);
-                                                  iniciarVideo = controller!.initialize();
-
-                                                  return FutureBuilder(
-                                                    future: iniciarVideo,
-                                                    builder: (context,snapshot){
-                                                      if(snapshot.connectionState == ConnectionState.done){
-                                                        return Container(
-                                                          height: 300,
-                                                          alignment: Alignment.center,
-                                                          child: Column(
-                                                            mainAxisSize: MainAxisSize.min,
-                                                            children: [
-                                                              Container(
-                                                                alignment: Alignment.center,
-                                                                height: 250,
-                                                                width: 400,
-                                                                child: AspectRatio(
-                                                                  aspectRatio: controller!.value.aspectRatio,
-                                                                  child: VideoPlayer(controller),
-                                                                ),
-                                                              ),
-                                                              Container(
-                                                                child: IconButton(
-                                                                  style: IconButton.styleFrom(backgroundColor: Cores.primaria),
-                                                                  icon: Icon(controller.value.isPlaying? Icons.pause:Icons.play_arrow,color: Colors.white),
-                                                                  onPressed: (){
-                                                                    if(controller!.value.isPlaying){
-                                                                      controller!.pause();
-                                                                    }else{
-                                                                      controller.play();
-                                                                    }
-                                                                    // setState(() {});
-                                                                  },
-                                                                ),
-                                                              ),
-                                                              Container(
-                                                                  width: 400,
-                                                                  child: VideoProgressIndicator(controller, allowScrubbing: true,)
-                                                              )
-                                                            ],
-                                                          ),
-                                                        );
-                                                      }else{
-                                                        return Container(
-                                                            width: 400,
-                                                            height: 350,
-                                                            child: Center(child: CircularProgressIndicator(),)
-                                                        );
-                                                      }
-                                                    },
-                                                  );
-                                                },
-                                              ),
-                                            )
-                                          ],
-                                        )
-                                      ),
-                                      actions: [
-                                        TextButton(child: TextoPadrao(texto: 'Voltar',cor: Colors.red,negrito: FontWeight.bold,),onPressed: ()=>Navigator.pop(context),),
-                                      ],
-                                    ),
-                                  );
-                                }
-                            );
-                        },
+                return Container(
+                  width: VariavelEstatica.largura*0.8,
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Container(
+                        alignment: Alignment.center,
+                        width: 90,
+                        height: 50,
+                        child: listaAnalise[i].imagemSelecionada==''?TextoPadrao(texto: '-',cor: Cores.cinzaTextoEscuro,):Image.asset(listaAnalise[i].imagemSelecionada),
+                        margin: EdgeInsets.only(right: 20),
                       ),
-                      margin: EdgeInsets.only(right: 20),
-                    ),
-                    Container(
+                      Container(
                         height: 50,
-                        alignment: Alignment.centerLeft,
-                        width: 400,
-                        child: TextoPadrao(texto:listaAnalise[i].nomeAnalise,cor: Cores.cinzaTextoEscuro,tamanhoFonte: 14,)
-                    ),
-                    SizedBox(width: 10,),
-                    Container(
-                      height: 50,
-                      alignment: Alignment.center,
-                      width: 120,
-                      child: TextoPadrao(texto:listaAnalise[i].tempo,cor: Cores.cinzaTextoEscuro,tamanhoFonte: 14,alinhamentoTexto: TextAlign.center,),
-                      margin: EdgeInsets.only(right: 10),
-                    ),
-                    SizedBox(width: 10,),
-                    Container(
+                        alignment: Alignment.center,
+                        width: 50,
+                        child: TextoPadrao(texto:'${i+1}0',cor: Cores.primaria,tamanhoFonte: 14,alinhamentoTexto: TextAlign.center,),
+                        margin: EdgeInsets.only(right: 10),
+                      ),
+                      SizedBox(width: 10,),
+                      Container(
                         height: 50,
-                        alignment: Alignment.centerLeft,
-                        width: 160,
-                        child: TextoPadrao(texto:listaAnalise[i].pontoChave,cor: Cores.cinzaTextoEscuro,tamanhoFonte: 14,)
-                    ),
-                    Spacer(),
-                    comentario?IconButton(onPressed: funcaoComentario, icon: Icon(Icons.report_problem,color: Cores.amarelo_icone_comentario,)):Container()
-                  ],
+                        width: 90,
+                        child: IconButton(
+                          icon: Icon(Icons.photo,color: Cores.cinzaTexto,),
+                          onPressed: (){
+                              showDialog(context: context,
+                                  builder: (context){
+                                    return Center(
+                                      child: AlertDialog(
+                                        title: TextoPadrao(texto: 'Mídias',cor: Cores.primaria,negrito: FontWeight.bold,),
+                                        content: Container(
+                                          height: 650,
+                                          width: 1000,
+                                          child: Column(
+                                            children: [
+                                              listaAnalise[i].urlFotos.length==0?Container(
+                                                height: 300,
+                                                width: 500,
+                                                child: Center(
+                                                  child: TextoPadrao(texto: 'Sem Fotos',cor: Cores.primaria,),
+                                                ),
+                                              ):Container(
+                                                height: 300,
+                                                width: 500,
+                                                padding: EdgeInsets.symmetric(horizontal: 5),
+                                                child: ListView.builder(
+                                                  scrollDirection: Axis.horizontal,
+                                                  itemCount: listaAnalise[i].urlFotos.length,
+                                                  itemBuilder: (context, j) {
+                                                    return FutureBuilder(
+                                                      future: precacheImage(NetworkImage(listaAnalise[i].urlFotos[j]), context),
+                                                      builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
+                                                        if (snapshot.connectionState == ConnectionState.waiting) {
+                                                          return Center(child: CircularProgressIndicator());
+                                                        } else if (snapshot.hasError) {
+                                                          return Center(child: Text('Erro ao carregar imagem'));
+                                                        } else {
+                                                          return Image.network(listaAnalise[i].urlFotos[j]);
+                                                        }
+                                                      },
+                                                    );
+                                                  },
+                                                ),
+                                              ),
+                                              listaAnalise[i].urlVideos.length==0?Container(
+                                                height: 300,
+                                                width: 500,
+                                                child: Center(
+                                                  child: TextoPadrao(texto: 'Sem Videos',cor: Cores.primaria,),
+                                                ),
+                                              ):Container(
+                                                padding: EdgeInsets.symmetric(horizontal: 5),
+                                                alignment: Alignment.center,
+                                                height: 300,
+                                                width: 500,
+                                                child: ListView.builder(
+                                                  scrollDirection: Axis.horizontal,
+                                                  itemCount: listaAnalise[i].urlVideos.length,
+                                                  itemBuilder: (context, j) {
+
+                                                    VideoPlayerController? controller;
+                                                    Future<void>? iniciarVideo;
+                                                    controller = VideoPlayerController.networkUrl(Uri.parse(listaAnalise[i].urlVideos[j]));
+                                                    controller.setLooping(true);
+                                                    controller.setVolume(1.0);
+                                                    iniciarVideo = controller!.initialize();
+
+                                                    return FutureBuilder(
+                                                      future: iniciarVideo,
+                                                      builder: (context,snapshot){
+                                                        if(snapshot.connectionState == ConnectionState.done){
+                                                          return Container(
+                                                            height: 300,
+                                                            alignment: Alignment.center,
+                                                            child: Column(
+                                                              mainAxisSize: MainAxisSize.min,
+                                                              children: [
+                                                                Container(
+                                                                  alignment: Alignment.center,
+                                                                  height: 250,
+                                                                  width: 400,
+                                                                  child: AspectRatio(
+                                                                    aspectRatio: controller!.value.aspectRatio,
+                                                                    child: VideoPlayer(controller),
+                                                                  ),
+                                                                ),
+                                                                Container(
+                                                                  child: IconButton(
+                                                                    style: IconButton.styleFrom(backgroundColor: Cores.primaria),
+                                                                    icon: Icon(controller.value.isPlaying? Icons.pause:Icons.play_arrow,color: Colors.white),
+                                                                    onPressed: (){
+                                                                      if(controller!.value.isPlaying){
+                                                                        controller!.pause();
+                                                                      }else{
+                                                                        controller.play();
+                                                                      }
+                                                                      // setState(() {});
+                                                                    },
+                                                                  ),
+                                                                ),
+                                                                Container(
+                                                                    width: 400,
+                                                                    child: VideoProgressIndicator(controller, allowScrubbing: true,)
+                                                                )
+                                                              ],
+                                                            ),
+                                                          );
+                                                        }else{
+                                                          return Container(
+                                                              width: 400,
+                                                              height: 350,
+                                                              child: Center(child: CircularProgressIndicator(),)
+                                                          );
+                                                        }
+                                                      },
+                                                    );
+                                                  },
+                                                ),
+                                              )
+                                            ],
+                                          )
+                                        ),
+                                        actions: [
+                                          TextButton(child: TextoPadrao(texto: 'Voltar',cor: Colors.red,negrito: FontWeight.bold,),onPressed: ()=>Navigator.pop(context),),
+                                        ],
+                                      ),
+                                    );
+                                  }
+                              );
+                          },
+                        ),
+                        margin: EdgeInsets.only(right: 20),
+                      ),
+                      Container(
+                          height: 50,
+                          alignment: Alignment.centerLeft,
+                          width: 400,
+                          child: TextoPadrao(texto:listaAnalise[i].nomeAnalise,cor: Cores.cinzaTextoEscuro,tamanhoFonte: 14,)
+                      ),
+                      SizedBox(width: 10,),
+                      Container(
+                        height: 50,
+                        alignment: Alignment.center,
+                        width: 120,
+                        child: TextoPadrao(texto:listaAnalise[i].tempo,cor: Cores.cinzaTextoEscuro,tamanhoFonte: 14,alinhamentoTexto: TextAlign.center,),
+                        margin: EdgeInsets.only(right: 10),
+                      ),
+                      SizedBox(width: 10,),
+                      Container(
+                          height: 50,
+                          alignment: Alignment.centerLeft,
+                          width: VariavelEstatica.largura*0.4,
+                          child: TextoPadrao(texto:listaAnalise[i].pontoChave,cor: Cores.cinzaTextoEscuro,tamanhoFonte: 14,maxLines: 3,)
+                      ),
+                      Spacer(),
+                      comentario?IconButton(onPressed: funcaoComentario, icon: Icon(Icons.report_problem,color: Cores.amarelo_icone_comentario,)):Container()
+                    ],
+                  ),
                 );
               },
             ),

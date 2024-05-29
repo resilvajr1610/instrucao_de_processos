@@ -75,9 +75,12 @@ class _LoginTelaState extends State<LoginTela> {
     PrefService().carregarConta().then((value){
       if(value[0]!=null){
         carregandoConta = false;
+        setState(() {});
         if(value[1]!='senha123'){
           Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => HomeTela(emailLogado: value[0],)));
         }else{
+          carregandoConta = false;
+          setState(() {});
           FirebaseAuth.instance.sendPasswordResetEmail(email: value[0]).then((res){
             showCupertinoDialog(context: context,
                 builder: (context){
@@ -179,7 +182,7 @@ class _LoginTelaState extends State<LoginTela> {
                 margin: EdgeInsets.symmetric(horizontal: VariavelEstatica.largura*0.075),
                 child: BotaoPadrao(
                   texto: 'Entrar',
-                  onTap: checkLogin,
+                  onTap: ()=>checkLogin(),
                   largura: VariavelEstatica.largura*0.2,
                 ),
               )

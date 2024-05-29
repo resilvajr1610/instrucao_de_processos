@@ -132,10 +132,14 @@ class _HomeTelaState extends State<HomeTela> {
                   )
               );
               if(docs.docs.length == i+1){
-                adicionarListaInicio('${i+2}.0.0','',[],'',[],'', false, true,true);
+                // adicionarListaInicio('${i+2}.0.0','',[],'',[],'', false, true,true);
+                alturaListaInicio = alturaListaInicio + alturaItens;
                 carregarDadosMeio();
                 setState(() {});
               }
+            }else{
+              carregando = false;
+              setState((){});
             }
           }
         }
@@ -270,22 +274,22 @@ class _HomeTelaState extends State<HomeTela> {
             if(docs.docs.length == i+1){
               alturaListaInicio = alturaListaInicio + alturaItens;
               listaInstrucaoPrincipal[inicio-1].alturaListaMeio = listaInstrucaoPrincipal[inicio-1].alturaListaMeio + alturaItens;
-              listaInstrucaoPrincipal[inicio-1].listaMeio.add(
-                  ModeloInstrucaoLista_1_1_0(
-                      idFire: '',
-                      listaIdEsp: [],
-                      nomeProcesso: '',
-                      listaVersao: [],
-                      idDoc: '$inicio.${meio+1}.0',
-                      controller: TextEditingController(text: 'add meio'),
-                      ativarBotaoAdicionarItemLista: false,
-                      larguraMeio: larguraMeioCaixaTexto,
-                      escrever: true,
-                      listaFinal: [],
-                      alturaListaFinal: 0,
-                      mostrarListaMeio: true
-                  )
-              );
+              // listaInstrucaoPrincipal[inicio-1].listaMeio.add(
+              //     ModeloInstrucaoLista_1_1_0(
+              //         idFire: '',
+              //         listaIdEsp: [],
+              //         nomeProcesso: '',
+              //         listaVersao: [],
+              //         idDoc: '$inicio.${meio+1}.0',
+              //         controller: TextEditingController(text: 'add meio'),
+              //         ativarBotaoAdicionarItemLista: false,
+              //         larguraMeio: larguraMeioCaixaTexto,
+              //         escrever: true,
+              //         listaFinal: [],
+              //         alturaListaFinal: 0,
+              //         mostrarListaMeio: true
+              //     )
+              // );
               setState(() {});
               carregarDadosFim();
             }
@@ -440,7 +444,6 @@ class _HomeTelaState extends State<HomeTela> {
 
   carregarFuncao()async{
     FirebaseFirestore.instance.collection('usuarios').where('email',isEqualTo: widget.emailLogado).get().then((dadosUsuario){
-      print(dadosUsuario.docs.length);
       if(BadStateString(dadosUsuario.docs[0],'tipo_acesso')=='ADM'){
         acesso_adm = true;
       }

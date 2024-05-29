@@ -178,8 +178,8 @@ class _InstrucaoTerceiraEtapaTelaState extends State<InstrucaoTerceiraEtapaTela>
                               height: VariavelEstatica.altura*0.5+(listaEtapas.length+150),
                               child: listaEtapas.isEmpty?Container():Container(
                                 height: listaEtapas.length*200+60,
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                child: ListView(
+                                  // crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Container(
                                       height: listaEtapas.length*150,
@@ -288,7 +288,7 @@ class _InstrucaoTerceiraEtapaTelaState extends State<InstrucaoTerceiraEtapaTela>
                                                     ),
                                                     SizedBox(width: 10,),
                                                     Container(
-                                                      width: 350,
+                                                      width: VariavelEstatica.largura*0.3,
                                                       child: TextoPadrao(texto:BadStateString(dadosEtapas, 'alteracao'),cor: Cores.cinzaTextoEscuro,tamanhoFonte: 14,)
                                                     ),
                                                   ],
@@ -316,6 +316,7 @@ class _InstrucaoTerceiraEtapaTelaState extends State<InstrucaoTerceiraEtapaTela>
                                           margemVertical: 5,
                                           onPressed: (){
 
+                                            print('autorizado');
                                             print('idDoc');
                                             print(idDoc);
 

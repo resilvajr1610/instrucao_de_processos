@@ -306,7 +306,7 @@ class _InstrucaoUsuarioTelaState extends State<InstrucaoUsuarioTela> {
                         children: [
                           Container(
                             height: listaEtapas.length*300,
-                            width: VariavelEstatica.largura * 0.7,
+                            width: VariavelEstatica.largura * 0.9,
                             child: ListView.builder(
                                 physics: NeverScrollableScrollPhysics(),
                                 itemCount: listaEtapas.length,

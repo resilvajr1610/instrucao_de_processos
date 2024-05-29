@@ -83,14 +83,14 @@ class _UsuariosTelaState extends State<UsuariosTela> {
       backgroundColor: Cores.cinzaClaro,
       appBar: AppBarPadrao(emailLogado: widget.emailLogado),
       body: Container(
-        width: 1074,
+        width: VariavelEstatica.largura*0.7,
         height: VariavelEstatica.altura,
         padding: EdgeInsets.symmetric(vertical: 25,horizontal: 60),
         child: ListView(
           children:[
             Card(
               child: Container(
-                width: 1074,
+                width: VariavelEstatica.largura*0.7,
                 height: 380,
                 padding: EdgeInsets.symmetric(horizontal: 20,vertical: 20),
                 child: Column(
@@ -176,6 +176,7 @@ class _UsuariosTelaState extends State<UsuariosTela> {
             ),
             Card(
               child: Container(
+                width: VariavelEstatica.largura*0.7,
                 padding: EdgeInsets.symmetric(horizontal: 20,vertical: 20),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -185,12 +186,12 @@ class _UsuariosTelaState extends State<UsuariosTela> {
                       children: [
                         Container(width: 300,child: TextoPadrao(texto: 'Nome',cor: Cores.primaria,)),
                         Container(width: 200,child: TextoPadrao(texto: 'Função',cor: Cores.primaria)),
-                        Container(width: 200,child:TextoPadrao(texto: 'E-mail',cor: Cores.primaria)),
+                        Container(width: 300,child:TextoPadrao(texto: 'E-mail',cor: Cores.primaria)),
                         Container(width: 200,child: TextoPadrao(texto: 'Tipo',cor: Cores.primaria)),
                       ],
                     ),
                     Container(
-                      width: 1074,
+                      width: VariavelEstatica.largura*0.7,
                       height: 380,
                       child: StreamBuilder<QuerySnapshot>(
                         stream: FirebaseFirestore.instance.collection('usuarios').snapshots(),
@@ -206,7 +207,9 @@ class _UsuariosTelaState extends State<UsuariosTela> {
                               return (snapshot.data!.docs.length >= 1)
                                   ? ListView(
                                 children: snapshot.data!.docs.map((DocumentSnapshot document) {
-                                  return ItemUsuario(document: document,);
+                                  return ItemUsuario(
+                                    document: document,
+                                  );
                                 }).toList(),
                               ): Center(child: Padding(
                                 padding: const EdgeInsets.all(8.0),
