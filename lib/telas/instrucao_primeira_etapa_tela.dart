@@ -63,7 +63,6 @@ class _InstrucaoPrimeiraEtapaTelaState extends State<InstrucaoPrimeiraEtapaTela>
   List listaTagDocMaterial = [];
 
   var dadosUsuarioFire;
-  int numFIP = 0;
   int versao = 0;
 
   final ScrollController scrollEPI = ScrollController();
@@ -77,13 +76,11 @@ class _InstrucaoPrimeiraEtapaTelaState extends State<InstrucaoPrimeiraEtapaTela>
     nomeProcesso.text = widget.nomeProcedimento;
     if(widget.idEsp == ''){
       FirebaseFirestore.instance.collection('especificacao').get().then((dadosEspecificacao){
-          numFIP = dadosEspecificacao.docs.length+1;
           carregando=false;
           setState(() {});
       });
     }else{
       FirebaseFirestore.instance.collection('especificacao').doc(widget.idEsp).get().then((dados){
-        numFIP = BadStateInt(dados, 'numeroFIP');
         versao = BadStateInt(dados, 'versao');
         nomeProcesso.text = BadStateString(dados, 'nome');
         listaTagDocEpi = BadStateList(dados, 'epi');
@@ -128,7 +125,7 @@ class _InstrucaoPrimeiraEtapaTelaState extends State<InstrucaoPrimeiraEtapaTela>
           'prazo' : prazo.text.trim().toUpperCase(),
           'visto': dadosUsuarioFire['nome'],
           'idCriador': dadosUsuarioFire['id'],
-          'numeroFIP' : numFIP,
+          'numeroFIP' : widget.idDocumento,
           'versao' : versao+1,
           'dataCriacao':DateTime.now(),
           'dataVersao':DateTime.now(),
@@ -137,14 +134,14 @@ class _InstrucaoPrimeiraEtapaTelaState extends State<InstrucaoPrimeiraEtapaTela>
             'listaIdEsp'  : FieldValue.arrayUnion([docRef.id]),
             'listaVersao':FieldValue.arrayUnion([nomeProcesso.text.trim().toUpperCase() +' ${versao+1}']),
             'versao' : versao+1,
-            'numeroFIP' : numFIP,
+            'numeroFIP' : widget.idDocumento,
           }).then((value){
             showSnackBar(context, 'Dados salvos com sucesso!', Colors.green);
             Navigator.push(context, MaterialPageRoute(builder: (context)=>
                 InstrucaoSegundaEtapaTela(
                   emailLogado: widget.emailLogado,
                   nomeProcesso: nomeProcesso.text,
-                  FIP: numFIP,
+                  FIP: widget.idDocumento,
                   idEspAtual: docRef.id,
                   etapaCriada: false,
                   idEspAnterior: '',
@@ -176,7 +173,7 @@ class _InstrucaoPrimeiraEtapaTelaState extends State<InstrucaoPrimeiraEtapaTela>
         'prazo' : prazo.text.trim().toUpperCase(),
         'visto': dadosUsuarioFire['nome'],
         'idCriador': dadosUsuarioFire['id'],
-        'numeroFIP' : numFIP,
+        'numeroFIP' : widget.idDocumento,
         'versao' : versao+1,
         'dataCriacao':dataCriacao,
         'dataVersao':DateTime.now(),
@@ -185,14 +182,14 @@ class _InstrucaoPrimeiraEtapaTelaState extends State<InstrucaoPrimeiraEtapaTela>
           'listaIdEsp'  : FieldValue.arrayUnion([docRef.id]),
           'nomeProcesso': nomeProcesso.text.trim().toUpperCase(),
           'listaVersao' : FieldValue.arrayUnion(['${nomeProcesso.text.trim().toUpperCase()} - versão ${versao+1}']),
-          'numeroFIP'   : numFIP,
+          'numeroFIP'   : widget.idDocumento,
         }).then((value){
           showSnackBar(context, 'Dados salvos com sucesso!', Colors.green);
           Navigator.push(context, MaterialPageRoute(builder: (context)=>
               InstrucaoSegundaEtapaTela(
                 emailLogado: widget.emailLogado,
                 nomeProcesso: nomeProcesso.text,
-                FIP: numFIP,
+                FIP: widget.idDocumento,
                 idEspAtual: docRef.id,
                 etapaCriada: true,
                 idEspAnterior: widget.idEsp,
@@ -420,16 +417,16 @@ class _InstrucaoPrimeiraEtapaTelaState extends State<InstrucaoPrimeiraEtapaTela>
                                     children: [
                                       Container(
                                         color: Cores.cardEsp,
-                                        padding: EdgeInsets.only(left: 10),
+                                        padding: EdgeInsets.only(left: 5),
                                         height: 50,
-                                        width: 250,
+                                        width: 200,
                                         child: TextField(
                                           controller: epi,
                                           onChanged: (value) {
                                             buscaEPI(value);
                                           },
                                           decoration: InputDecoration(
-                                            hintText: 'Informe epi necessário',
+                                            hintText: 'Informe epi',
                                             border: InputBorder.none,
                                           ),
                                           style: TextStyle(
@@ -537,7 +534,7 @@ class _InstrucaoPrimeiraEtapaTelaState extends State<InstrucaoPrimeiraEtapaTela>
                                   Container(
                                     color: Cores.cardEsp,
                                     height: 50,
-                                    width: 250,
+                                    width: 200,
                                     padding: EdgeInsets.only(left: 10),
                                     child: TextField(
                                       controller: ferramentas,
@@ -545,7 +542,7 @@ class _InstrucaoPrimeiraEtapaTelaState extends State<InstrucaoPrimeiraEtapaTela>
                                         buscaFerramenta(texto);
                                       },
                                       decoration: InputDecoration(
-                                        hintText: 'Informe ferramenta necessária',
+                                        hintText: 'Informe ferramentas',
                                         border: InputBorder.none,
                                       ),
                                       style: TextStyle(
@@ -648,14 +645,14 @@ class _InstrucaoPrimeiraEtapaTelaState extends State<InstrucaoPrimeiraEtapaTela>
                                         color: Cores.cardEsp,
                                         padding: EdgeInsets.only(left: 10),
                                         height: 50,
-                                        width: 250,
+                                        width: 200,
                                         child: TextField(
                                           controller: materiaPrima,
                                           onChanged: (value) {
                                             buscaMaterial(value);
                                           },
                                           decoration: InputDecoration(
-                                            hintText: 'Informe matéria-prima utilizada',
+                                            hintText: 'Informe matéria-prima ',
                                             border: InputBorder.none,
                                           ),
                                           style: TextStyle(

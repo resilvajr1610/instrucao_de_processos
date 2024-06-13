@@ -13,6 +13,7 @@ class ItemAnalise2 extends StatelessWidget {
   Widget listViewImagens;
   var funcaoFotoVideo;
   var funcaoAlterar;
+  int indice;
 
   ItemAnalise2({
     required this.modeloAnalise,
@@ -20,7 +21,8 @@ class ItemAnalise2 extends StatelessWidget {
     required this.listViewImagens,
     required this.botaoMostrarListaImagem,
     required this.funcaoFotoVideo,
-    required this.funcaoAlterar
+    required this.funcaoAlterar,
+    required this.indice
   });
 
   @override
@@ -69,7 +71,7 @@ class ItemAnalise2 extends StatelessWidget {
         Container(
             padding: EdgeInsets.symmetric(vertical: 12),
             width: 50,
-            child: TextoPadrao(texto:modeloAnalise.numeroAnalise.toString(),cor: Cores.primaria,tamanhoFonte: 14,alinhamentoTexto: TextAlign.center,)
+            child: TextoPadrao(texto:'${indice+1}0',cor: Cores.primaria,tamanhoFonte: 14,alinhamentoTexto: TextAlign.center,)
         ),
         Container(
           width: 100,

@@ -18,10 +18,12 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 class InstrucaoTerceiraEtapaTela extends StatefulWidget {
   String emailLogado;
   String idEtapa;
+  String FIP;
 
   InstrucaoTerceiraEtapaTela({
     required this.emailLogado,
     required this.idEtapa,
+    required this.FIP,
   });
 
   @override
@@ -71,7 +73,7 @@ class _InstrucaoTerceiraEtapaTelaState extends State<InstrucaoTerceiraEtapaTela>
         appBar: carregando? null: AppBarPadrao(mostrarUsuarios: false, emailLogado: widget.emailLogado),
         body: SingleChildScrollView(
           child: Container(
-              height: VariavelEstatica.altura+(listaEtapas.length+100),
+              height: VariavelEstatica.altura+(listaEtapas.length*360),
               width: VariavelEstatica.largura,
               child: ListView(
                 physics: NeverScrollableScrollPhysics(),
@@ -79,7 +81,7 @@ class _InstrucaoTerceiraEtapaTelaState extends State<InstrucaoTerceiraEtapaTela>
                     NivelEtapa(nivel: 3),
                     Container(
                       width: VariavelEstatica.largura * 0.8,
-                      height: VariavelEstatica.altura * 0.85+(listaEtapas.length+150),
+                      height: VariavelEstatica.altura +(listaEtapas.length*350),
                       margin: EdgeInsets.all(20),
                       padding: EdgeInsets.all(36),
                       alignment: Alignment.topLeft,
@@ -132,7 +134,7 @@ class _InstrucaoTerceiraEtapaTelaState extends State<InstrucaoTerceiraEtapaTela>
                                 children: [
                                   TextoPadrao(texto: 'N° FIP',cor: Cores.primaria,negrito: FontWeight.bold,tamanhoFonte: 16,),
                                   SizedBox(width: 10,),
-                                  TextoPadrao(texto: BadStateInt(dadosEspecificacao, 'numeroFIP').toString(),cor: Cores.cinzaTextoEscuro,negrito: FontWeight.bold,tamanhoFonte: 16,),
+                                  TextoPadrao(texto: widget.FIP,cor: Cores.cinzaTextoEscuro,negrito: FontWeight.bold,tamanhoFonte: 16,),
                                   SizedBox(width: 40,),
                                   TextoPadrao(texto: 'Nome de Processos',cor: Cores.primaria,negrito: FontWeight.bold,tamanhoFonte: 16,),
                                   SizedBox(width: 10,),
@@ -175,16 +177,18 @@ class _InstrucaoTerceiraEtapaTelaState extends State<InstrucaoTerceiraEtapaTela>
                             ),
                             Divider(),
                             Container(
-                              height: VariavelEstatica.altura*0.5+(listaEtapas.length+150),
+                              height: VariavelEstatica.altura*0.8+(listaEtapas.length*290),
                               child: listaEtapas.isEmpty?Container():Container(
-                                height: listaEtapas.length*200+60,
+                                height: VariavelEstatica.altura*0.8+(listaEtapas.length*290),
                                 child: ListView(
+                                  physics: NeverScrollableScrollPhysics(),
                                   // crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Container(
-                                      height: listaEtapas.length*150,
+                                      height: VariavelEstatica.altura*0.7+(listaEtapas.length*250),
                                       width: VariavelEstatica.largura * 0.7,
                                       child: ListView.builder(
+                                        physics: NeverScrollableScrollPhysics(),
                                           itemCount: listaEtapas.length,
                                           itemBuilder: (context,i){
 

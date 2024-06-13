@@ -83,9 +83,15 @@ class ItemInstrucao extends StatelessWidget {
                     height: 65,
                     padding: EdgeInsets.symmetric(horizontal: 20,vertical: 3.5),
                     child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        TextoPadrao(texto: documentoReal,cor: Cores.cinzaTexto,),
-                        !acesso_adm?TextoPadrao(texto:' '+ controller.text,cor: Cores.cinzaTexto,):CaixaTexto(controller: controller, largura: largura,textoCaixa: 'Inserir',corCaixa: Cores.cinzaClaro,corBorda: Cores.cinzaClaro,mostrarTitulo: false,escrever: escrever,ativarCaixa: escrever,),
+                        Container(
+                          padding: EdgeInsets.only(top: 3),
+                          alignment: Alignment.topCenter,
+                          height: 30,
+                          child: TextoPadrao(texto: documentoReal,cor: Cores.cinzaTexto,tamanhoFonte: 15,)
+                        ),
+                        !acesso_adm?TextoPadrao(texto:' '+ controller.text,cor: Cores.cinzaTexto,tamanhoFonte: 15,):CaixaTexto(controller: controller, largura: largura,textoCaixa: 'Inserir',corCaixa: Cores.cinzaClaro,corBorda: Cores.cinzaClaro,mostrarTitulo: false,escrever: escrever,ativarCaixa: escrever,),
                         Spacer(),
                         controller.text.isNotEmpty && listaVersao.length==0 && acesso_adm?BotaoPadraoNovaInstrucao(
                           texto: 'Criar Instrução',

@@ -5,7 +5,7 @@ import 'modelo_analise2.dart';
 class ModeloEtapa2{
   String idEsp;
   String nomeProcesso;
-  int numeroFIP;
+  String numeroFIP;
   int numeroEtapa;
   TextEditingController nomeEtapa;
   double tempoTotalEtapaSegundos;

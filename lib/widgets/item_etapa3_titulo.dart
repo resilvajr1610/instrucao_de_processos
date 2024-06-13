@@ -36,7 +36,7 @@ class ItemEtapa3Titulo extends StatelessWidget {
               TextoPadrao(texto: titulo1,cor: Cores.primaria,tamanhoFonte: 14,),
               SizedBox(width: 10,),
               Container(
-                width: VariavelEstatica.largura*0.35,
+                width: VariavelEstatica.largura*0.3,
                 child: TextoPadrao(
                   texto: dadoString1
                     ?BadStateString(dadosEspecificacao, item1)

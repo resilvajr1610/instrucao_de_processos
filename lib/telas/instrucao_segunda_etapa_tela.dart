@@ -25,7 +25,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 class InstrucaoSegundaEtapaTela extends StatefulWidget {
   String emailLogado;
   String nomeProcesso;
-  int FIP;
+  String FIP;
   String idEspAtual;
   String idEspAnterior;
   bool etapaCriada;
@@ -209,7 +209,7 @@ class _InstrucaoSegundaEtapaTelaState extends State<InstrucaoSegundaEtapaTela> {
           'tempoTotal': tempoTotal
         }).then((value){
           showSnackBar(context, 'Etapas foram salvas', Colors.green);
-          Navigator.of(context).push(MaterialPageRoute(builder: (context)=>InstrucaoTerceiraEtapaTela(emailLogado: widget.emailLogado,idEtapa: widget.idEspAtual,)));
+          Navigator.of(context).push(MaterialPageRoute(builder: (context)=>InstrucaoTerceiraEtapaTela(emailLogado: widget.emailLogado,idEtapa: widget.idEspAtual,FIP: widget.FIP,)));
         });
       });
     }else{
@@ -270,7 +270,7 @@ class _InstrucaoSegundaEtapaTelaState extends State<InstrucaoSegundaEtapaTela> {
           'tempoTotal': tempoTotal
         }).then((value){
           showSnackBar(context, 'Etapas foram salvas', Colors.green);
-          Navigator.of(context).push(MaterialPageRoute(builder: (context)=>InstrucaoTerceiraEtapaTela(emailLogado: widget.emailLogado,idEtapa: widget.idEspAtual,)));
+          Navigator.of(context).push(MaterialPageRoute(builder: (context)=>InstrucaoTerceiraEtapaTela(emailLogado: widget.emailLogado,idEtapa: widget.idEspAtual,FIP: widget.FIP)));
         });
       });
     }else{
@@ -502,7 +502,7 @@ class _InstrucaoSegundaEtapaTelaState extends State<InstrucaoSegundaEtapaTela> {
                         children: [
                           TextoPadrao(texto: 'N° FIP',cor: Cores.primaria,negrito: FontWeight.bold,tamanhoFonte: 16,),
                           SizedBox(width: 10,),
-                          TextoPadrao(texto: widget.FIP.toString(),cor: Cores.cinzaTextoEscuro,negrito: FontWeight.bold,tamanhoFonte: 16,),
+                          TextoPadrao(texto: widget.FIP,cor: Cores.cinzaTextoEscuro,negrito: FontWeight.bold,tamanhoFonte: 16,),
                           SizedBox(width: 40,),
                           TextoPadrao(texto: 'Nome de Processos',cor: Cores.primaria,negrito: FontWeight.bold,tamanhoFonte: 16,),
                           SizedBox(width: 10,),
@@ -544,6 +544,7 @@ class _InstrucaoSegundaEtapaTelaState extends State<InstrucaoSegundaEtapaTela> {
                                       return Container(
                                         height: 120,
                                         child: ItemAnalise2(
+                                            indice: j,
                                             modeloAnalise: listaEtapas[i].listaAnalise[j],
                                             botaoMostrarListaImagem:  ()=>setState((){
                                               listaEtapas[i].listaAnalise[j].mostrarListaImagens=true;
