@@ -643,6 +643,8 @@ class _InstrucaoSegundaEtapaTelaState extends State<InstrucaoSegundaEtapaTela> {
                       controller: observacoes,
                       largura: 950,
                       corCaixa: Cores.cinzaClaro,
+                      maximoLinhas: 3,
+                      textInputType: TextInputType.multiline,
                     ),
                     TextoPadrao(texto:'Motivo da alteração',cor: Cores.primaria,negrito: FontWeight.bold,tamanhoFonte: 14,),
                     CaixaTexto(
@@ -652,6 +654,8 @@ class _InstrucaoSegundaEtapaTelaState extends State<InstrucaoSegundaEtapaTela> {
                       controller: alteracao,
                       largura: 950,
                       corCaixa: Cores.cinzaClaro,
+                      textInputType: TextInputType.multiline,
+                      maximoLinhas: 3,
                     ),
                     SizedBox(height: VariavelEstatica.altura*0.1,),
                     Row(

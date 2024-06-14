@@ -61,7 +61,7 @@ class ItemEtapa3 extends StatelessWidget {
                       SizedBox(width: 10,),
                       Container(
                           width: VariavelEstatica.largura * 0.2,
-                          child: TextoPadrao(texto: nomeEtapa,cor: Cores.cinzaTextoEscuro,tamanhoFonte: 14,maxLines: 3,)
+                          child: TextoPadrao(texto: nomeEtapa,cor: Cores.cinzaTextoEscuro,tamanhoFonte: 14,maxLines: 5,)
                       ),
                     ],
                   ),
@@ -122,13 +122,15 @@ class ItemEtapa3 extends StatelessWidget {
           //criar list
           Container(
             width: VariavelEstatica.largura*0.9,
-            height: listaAnalise.length*50,
-            child: ListView.builder(
+            height: listaAnalise.length*70,
+            child: ListView.separated(
+              separatorBuilder: (context,i)=>Divider(),
               itemCount: listaAnalise.length,
               itemBuilder: (context,i){
                 return Container(
                   width: VariavelEstatica.largura*0.8,
                   child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       Container(
@@ -287,7 +289,7 @@ class ItemEtapa3 extends StatelessWidget {
                           height: 50,
                           alignment: Alignment.centerLeft,
                           width: 400,
-                          child: TextoPadrao(texto:listaAnalise[i].nomeAnalise,cor: Cores.cinzaTextoEscuro,tamanhoFonte: 14,)
+                          child: TextoPadrao(texto:listaAnalise[i].nomeAnalise,cor: Cores.cinzaTextoEscuro,tamanhoFonte: 12,maxLines: 5,)
                       ),
                       SizedBox(width: 10,),
                       Container(
@@ -301,8 +303,8 @@ class ItemEtapa3 extends StatelessWidget {
                       Container(
                           height: 50,
                           alignment: Alignment.centerLeft,
-                          width: VariavelEstatica.largura*0.35,
-                          child: TextoPadrao(texto:listaAnalise[i].pontoChave,cor: Cores.cinzaTextoEscuro,tamanhoFonte: 14,maxLines: 5,)
+                          width: comentario?VariavelEstatica.largura*0.3:VariavelEstatica.largura*0.35,
+                          child: TextoPadrao(texto:listaAnalise[i].pontoChave,cor: Cores.cinzaTextoEscuro,tamanhoFonte: 12,maxLines: 5,)
                       ),
                       Spacer(),
                       comentario?IconButton(onPressed: funcaoComentario, icon: Icon(Icons.report_problem,color: Cores.amarelo_icone_comentario,)):Container()

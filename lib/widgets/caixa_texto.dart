@@ -27,7 +27,7 @@ class CaixaTexto extends StatelessWidget {
     required this.controller,
     required this.largura,
     this.obscure = false,
-    this.tamanhoFonte = 14.0,
+    this.tamanhoFonte = 12.0,
     this.titulo = '',
     this.textoCaixa = '',
     this.textInputType = TextInputType.text,

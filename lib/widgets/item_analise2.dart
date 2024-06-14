@@ -90,6 +90,8 @@ class ItemAnalise2 extends StatelessWidget {
           largura: 400,
           corCaixa: Cores.cinzaClaro,
           ativarCaixa: modeloAnalise.analiseAtiva,
+          maximoLinhas: 3,
+          textInputType: TextInputType.multiline,
         ),
         SizedBox(width: 10,),
         CaixaTexto(
@@ -114,6 +116,8 @@ class ItemAnalise2 extends StatelessWidget {
           largura: 350,
           corCaixa: Cores.cinzaClaro,
           ativarCaixa: modeloAnalise.analiseAtiva,
+          textInputType: TextInputType.multiline,
+          maximoLinhas: 3,
         ),
         Spacer(),
         Padding(

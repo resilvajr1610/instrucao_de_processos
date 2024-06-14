@@ -18,21 +18,21 @@
   <link rel="manifest" href="manifest.json">
 </head>
 <script>
-    window.addEventListener('load', function(ev) {
-      // Download main.dart.js
-      _flutter.loader.loadEntrypoint({
-        entrypointUrl: "/main.dart.js", // <-- THIS LINE
-        serviceWorker: {
-          serviceWorkerVersion: serviceWorkerVersion,
-          serviceWorkerUrl: "/flutter_service_worker.js?v=", // <-- THIS LINE
-        },
-        onEntrypointLoaded: function(engineInitializer) {
-          engineInitializer.initializeEngine().then(function(appRunner) {
-            appRunner.runApp();
-          });
-        }
-      });
+  window.addEventListener('load', function(ev) {
+    // Download main.dart.js
+    _flutter.loader.load({
+      entrypointUrl: "/main.dart.js",
+      serviceWorker: {
+        serviceWorkerVersion: serviceWorkerVersion,
+        serviceWorkerUrl: "/flutter_service_worker.js?v=",
+      },
+      onEntrypointLoaded: function(engineInitializer) {
+        engineInitializer.initializeEngine().then(function(appRunner) {
+          appRunner.runApp();
+        });
+      }
     });
+  });
 </script>
 <script src="https://www.gstatic.com/firebasejs/9.9.1/firebase-app.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.9.1/firebase-firestore.js"></script>
@@ -44,29 +44,29 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/flutter_web_plugins/0.0.0+0c93516/js/flutter_web_plugins.js"></script>
 <body>
 <script>
-    const firebaseConfig = {
-      apiKey: "AIzaSyDMZEqs-YW1yQ9q2EzT6Mf6STnSnQ9Du1I",
-      authDomain: "instrucao-de-trabalho.firebaseapp.com",
-      databaseURL: "https://instrucao-de-trabalho.firebaseio.com",
-      projectId: "instrucao-de-trabalho",
-      storageBucket: "instrucao-de-trabalho.appspot.com",
-      messagingSenderId: "349119442488",
-      appId: "1:349119442488:web:61c64129c8e1e1d4f400cd",
-      measurementId: "G-BFCT2REF57"
-    };
+  const firebaseConfig = {
+    apiKey: "AIzaSyDMZEqs-YW1yQ9q2EzT6Mf6STnSnQ9Du1I",
+    authDomain: "instrucao-de-trabalho.firebaseapp.com",
+    databaseURL: "https://instrucao-de-trabalho.firebaseio.com",
+    projectId: "instrucao-de-trabalho",
+    storageBucket: "instrucao-de-trabalho.appspot.com",
+    messagingSenderId: "349119442488",
+    appId: "1:349119442488:web:61c64129c8e1e1d4f400cd",
+    measurementId: "G-BFCT2REF57"
+  };
 
-   firebase.initializeApp(firebaseConfig);
-  firebase.analytics(app);
+ firebase.initializeApp(firebaseConfig);
+firebase.analytics(app);
 </script>
 
-  <script type="text/javascript">
-    let useHtml = true;
-    if(useHtml) {
-      window.flutterWebRenderer = "html";
-    } else {
-      window.flutterWebRenderer = "canvaskit";
-    }
-  </script>
+<script type="text/javascript">
+  let useHtml = true;
+  if(useHtml) {
+    window.flutterWebRenderer = "html";
+  } else {
+    window.flutterWebRenderer = "canvaskit";
+  }
+</script>
 
 <!-- Main Dart entrypoint -->
 <script src="main.dart.js" type="application/javascript"></script>

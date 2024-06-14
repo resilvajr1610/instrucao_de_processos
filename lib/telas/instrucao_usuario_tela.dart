@@ -198,7 +198,7 @@ class _InstrucaoUsuarioTelaState extends State<InstrucaoUsuarioTela> {
       appBar: AppBarPadrao(mostrarUsuarios: false, emailLogado: widget.emailLogado),
       body: SingleChildScrollView(
         child: Container(
-          height: VariavelEstatica.altura*0.9+(listaEtapas.length*250),
+          height: VariavelEstatica.altura+(listaEtapas.length*320),
           width: VariavelEstatica.largura,
           child: Container(
             width: VariavelEstatica.largura * 0.8,
@@ -255,7 +255,7 @@ class _InstrucaoUsuarioTelaState extends State<InstrucaoUsuarioTela> {
                       children: [
                         TextoPadrao(texto: 'N° FIP',cor: Cores.primaria,negrito: FontWeight.bold,tamanhoFonte: 16,),
                         SizedBox(width: 10,),
-                        TextoPadrao(texto: BadStateInt(dadosEspecificacao, 'numeroFIP').toString(),cor: Cores.cinzaTextoEscuro,negrito: FontWeight.bold,tamanhoFonte: 16,),
+                        TextoPadrao(texto: BadStateString(dadosEspecificacao, 'numeroFIP').toString(),cor: Cores.cinzaTextoEscuro,negrito: FontWeight.bold,tamanhoFonte: 16,),
                         SizedBox(width: 40,),
                         TextoPadrao(texto: 'Nome de Processos',cor: Cores.primaria,negrito: FontWeight.bold,tamanhoFonte: 16,),
                         SizedBox(width: 10,),
@@ -298,7 +298,7 @@ class _InstrucaoUsuarioTelaState extends State<InstrucaoUsuarioTela> {
                   ),
                   Divider(),
                   Container(
-                    height: listaEtapas.length*300,
+                    height: listaEtapas.length*350,
                     child: listaEtapas.isEmpty?Container():Container(
                       height: listaEtapas.length*250+80,
                       child: Column(
