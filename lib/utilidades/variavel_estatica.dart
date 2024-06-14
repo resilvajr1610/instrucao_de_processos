@@ -5,8 +5,8 @@ class VariavelEstatica{
 
   static DateFormat mascaraDataHora = DateFormat('yyyy-MM-dd HH:mm');
   static DateFormat mascaraData = DateFormat('dd/MM/yyyy');
-  static double largura = 0.0;
-  static double altura = 0.0;
+  // static double largura = 0.0;
+  // static double altura = 0.0;
   static List listaImagens = [
     'assets/imagens/Biologico.png',
     'assets/imagens/Corrosivo.png',
@@ -19,8 +19,8 @@ class VariavelEstatica{
     'assets/imagens/Seguranca.png',
   ];
 
-  static void inicializarDimensoes(BuildContext context) {
-    largura = MediaQuery.of(context).size.width;
-    altura = MediaQuery.of(context).size.height;
-  }
+  // static void inicializarDimensoes(BuildContext context) {
+  //   largura = MediaQuery.of(context).size.width;
+  //   altura = MediaQuery.of(context).size.height;
+  // }
 }

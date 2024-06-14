@@ -16,6 +16,10 @@ class ItemComentario extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
+    double largura = MediaQuery.of(context).size.width;
+    double altura = MediaQuery.of(context).size.height;
+
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 5.0),
       child: Column(
@@ -24,13 +28,13 @@ class ItemComentario extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Container(width: VariavelEstatica.largura*0.1,child: TextoPadrao(texto:VariavelEstatica.mascaraDataHora.format(document!['data'].toDate()),cor: Cores.cinzaTextoEscuro,tamanhoFonte: 12)),
-              Container(width: VariavelEstatica.largura*0.08,child: TextoPadrao(texto: BadStateInt(document, 'fip').toString(),cor: Cores.cinzaTextoEscuro,tamanhoFonte: 12,alinhamentoTexto: TextAlign.center,)),
-              Container(width: VariavelEstatica.largura*0.15,child: TextoPadrao(texto: BadStateString(document, 'processo'),cor: Cores.cinzaTextoEscuro,tamanhoFonte: 12)),
-              Container(width: VariavelEstatica.largura*0.08,child: TextoPadrao(texto: BadStateInt(document, 'versao').toString(),cor: Cores.cinzaTextoEscuro,tamanhoFonte: 12,alinhamentoTexto: TextAlign.center)),
-              Container(width: VariavelEstatica.largura*0.1,child: TextoPadrao(texto: BadStateInt(document, 'numEtapa').toString(),cor: Cores.cinzaTextoEscuro,tamanhoFonte: 12,alinhamentoTexto: TextAlign.center)),
-              Container(width: VariavelEstatica.largura*0.15,child:TextoPadrao(texto: BadStateString(document, 'descricaoEtapa'),cor: Cores.cinzaTextoEscuro,tamanhoFonte: 12,maxLines: 3,)),
-              Container(width: VariavelEstatica.largura*0.2,child: TextoPadrao(texto: BadStateString(document,'comentario').toUpperCase(),cor: Cores.cinzaTextoEscuro,tamanhoFonte: 12,maxLines: 3)),
+              Container(width: largura*0.1,child: TextoPadrao(texto:VariavelEstatica.mascaraDataHora.format(document!['data'].toDate()),cor: Cores.cinzaTextoEscuro,tamanhoFonte: 12)),
+              Container(width: largura*0.08,child: TextoPadrao(texto: BadStateInt(document, 'fip').toString(),cor: Cores.cinzaTextoEscuro,tamanhoFonte: 12,alinhamentoTexto: TextAlign.center,)),
+              Container(width: largura*0.15,child: TextoPadrao(texto: BadStateString(document, 'processo'),cor: Cores.cinzaTextoEscuro,tamanhoFonte: 12)),
+              Container(width: largura*0.08,child: TextoPadrao(texto: BadStateInt(document, 'versao').toString(),cor: Cores.cinzaTextoEscuro,tamanhoFonte: 12,alinhamentoTexto: TextAlign.center)),
+              Container(width: largura*0.1,child: TextoPadrao(texto: BadStateInt(document, 'numEtapa').toString(),cor: Cores.cinzaTextoEscuro,tamanhoFonte: 12,alinhamentoTexto: TextAlign.center)),
+              Container(width: largura*0.15,child:TextoPadrao(texto: BadStateString(document, 'descricaoEtapa'),cor: Cores.cinzaTextoEscuro,tamanhoFonte: 12,maxLines: 3,)),
+              Container(width: largura*0.2,child: TextoPadrao(texto: BadStateString(document,'comentario').toUpperCase(),cor: Cores.cinzaTextoEscuro,tamanhoFonte: 12,maxLines: 3)),
             ],
           ),
         ],

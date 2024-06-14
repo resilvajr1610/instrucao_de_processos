@@ -321,9 +321,11 @@ class _InstrucaoPrimeiraEtapaTelaState extends State<InstrucaoPrimeiraEtapaTela>
   @override
   Widget build(BuildContext context) {
 
+    double largura = MediaQuery.of(context).size.width;
+    double altura = MediaQuery.of(context).size.height;
+    
     return LayoutBuilder(
       builder: (BuildContext context, BoxConstraints constraints){
-        VariavelEstatica.inicializarDimensoes(context);
         return  Scaffold(
           backgroundColor: Cores.cinzaClaro,
           appBar: carregando?null:AppBarPadrao(mostrarUsuarios: false,emailLogado: widget.emailLogado),
@@ -339,14 +341,14 @@ class _InstrucaoPrimeiraEtapaTelaState extends State<InstrucaoPrimeiraEtapaTela>
                 ),
               )
               :Container(
-            height: VariavelEstatica.altura,
-            width: VariavelEstatica.largura,
+            height: altura,
+            width: largura,
             child: ListView(
               children: [
                 NivelEtapa(nivel: 1),
                 Container(
-                  width: VariavelEstatica.largura*0.8,
-                  height: VariavelEstatica.altura*0.75,
+                  width: largura*0.8,
+                  height: altura*0.75,
                   margin: EdgeInsets.all(20),
                   padding: EdgeInsets.all(36),
                   alignment: Alignment.topLeft,
@@ -386,7 +388,7 @@ class _InstrucaoPrimeiraEtapaTelaState extends State<InstrucaoPrimeiraEtapaTela>
                           textoCaixa: 'Infome o nome do processo',
                           titulo: 'Nome do Processo',
                           controller: nomeProcesso,
-                          largura: VariavelEstatica.largura*0.3,
+                          largura: largura*0.3,
                           corCaixa: Cores.cinzaClaro,
                           ativarCaixa: widget.idEsp=='',
                         ),
@@ -397,7 +399,7 @@ class _InstrucaoPrimeiraEtapaTelaState extends State<InstrucaoPrimeiraEtapaTela>
                               textoCaixa: 'Informe a máquina',
                               titulo: 'Máquina',
                               controller: maquina,
-                              largura: VariavelEstatica.largura*0.45,
+                              largura: largura*0.45,
                               corCaixa: Cores.cinzaClaro,
                             ),
                             SizedBox(width: 30,),
@@ -407,7 +409,7 @@ class _InstrucaoPrimeiraEtapaTelaState extends State<InstrucaoPrimeiraEtapaTela>
                                 TituloPadrao(title:'EPI necessário'),
                                 Container(
                                   height: 50,
-                                  width: VariavelEstatica.largura*0.45,
+                                  width: largura*0.45,
                                   decoration: BoxDecoration(
                                       color: Cores.cinzaClaro,
                                       borderRadius: BorderRadius.all(Radius.circular(3))
@@ -445,7 +447,7 @@ class _InstrucaoPrimeiraEtapaTelaState extends State<InstrucaoPrimeiraEtapaTela>
                                       ),
                                       Spacer(),
                                       Container(
-                                        width: VariavelEstatica.largura*0.3,
+                                        width: largura*0.3,
                                         height: 50,
                                         alignment: Alignment.centerLeft,
                                         child: GridView.builder(
@@ -473,7 +475,7 @@ class _InstrucaoPrimeiraEtapaTelaState extends State<InstrucaoPrimeiraEtapaTela>
                                                           children: [
                                                             Container(
                                                               height: 15,
-                                                              width: VariavelEstatica.largura*0.06,
+                                                              width: largura*0.06,
                                                               child: TextoPadrao(texto: listaTagDocEpi[i],cor: Cores.cinzaTextoEscuro,tamanhoFonte: 10,alinhamentoTexto: TextAlign.center,)
                                                             ),
                                                             Icon(Icons.close,color: Colors.red,size: 10,)
@@ -492,7 +494,7 @@ class _InstrucaoPrimeiraEtapaTelaState extends State<InstrucaoPrimeiraEtapaTela>
                                 ),
                                 Container(
                                   height:epi.text.isNotEmpty? 200 :0,
-                                  width: VariavelEstatica.largura*0.45,
+                                  width: largura*0.45,
                                   child: Scrollbar(
                                     controller: scrollEPI,
                                     thumbVisibility: true,
@@ -524,7 +526,7 @@ class _InstrucaoPrimeiraEtapaTelaState extends State<InstrucaoPrimeiraEtapaTela>
                             TituloPadrao(title:'Ferramentas utilizadas'),
                             Container(
                               height: 53,
-                              width: VariavelEstatica.largura*0.9+30,
+                              width: largura*0.9+30,
                               decoration: BoxDecoration(
                                   color: Cores.cinzaClaro,
                                   borderRadius: BorderRadius.all(Radius.circular(3))
@@ -561,7 +563,7 @@ class _InstrucaoPrimeiraEtapaTelaState extends State<InstrucaoPrimeiraEtapaTela>
                                   ),
                                   Spacer(),
                                   Container(
-                                    width: VariavelEstatica.largura*0.76,
+                                    width: largura*0.76,
                                     height: 50,
                                     alignment: Alignment.centerLeft,
                                     child: GridView.builder(
@@ -583,7 +585,7 @@ class _InstrucaoPrimeiraEtapaTelaState extends State<InstrucaoPrimeiraEtapaTela>
                                                     child: Row(
                                                       children: [
                                                         Container(
-                                                          width: VariavelEstatica.largura*0.065,
+                                                          width: largura*0.065,
                                                           height: 15,
                                                           child: TextoPadrao(texto: listaTagDocFerramenta[i],cor: Cores.cinzaTextoEscuro,tamanhoFonte: 10,alinhamentoTexto: TextAlign.center,)
                                                         ),
@@ -602,7 +604,7 @@ class _InstrucaoPrimeiraEtapaTelaState extends State<InstrucaoPrimeiraEtapaTela>
                             ),
                             Container(
                               height:ferramentas.text.isNotEmpty? 200 :0,
-                              width: VariavelEstatica.largura*0.45,
+                              width: largura*0.45,
                               child: Scrollbar(
                                 controller: scrollFerramenta,
                                 thumbVisibility: true,
@@ -634,7 +636,7 @@ class _InstrucaoPrimeiraEtapaTelaState extends State<InstrucaoPrimeiraEtapaTela>
                                 TituloPadrao(title:'Matéria-prima utilizada'),
                                 Container(
                                   height: 50,
-                                  width: VariavelEstatica.largura*0.45,
+                                  width: largura*0.45,
                                   decoration: BoxDecoration(
                                       color: Cores.cinzaClaro,
                                       borderRadius: BorderRadius.all(Radius.circular(3))
@@ -671,7 +673,7 @@ class _InstrucaoPrimeiraEtapaTelaState extends State<InstrucaoPrimeiraEtapaTela>
                                       ),
                                       Spacer(),
                                       Container(
-                                        width: VariavelEstatica.largura*0.3,
+                                        width: largura*0.3,
                                         height: 50,
                                         alignment: Alignment.centerLeft,
                                         child: GridView.builder(
@@ -696,7 +698,7 @@ class _InstrucaoPrimeiraEtapaTelaState extends State<InstrucaoPrimeiraEtapaTela>
                                                               children: [
                                                                 Container(
                                                                   height: 15,
-                                                                  width: VariavelEstatica.largura*0.06,
+                                                                  width: largura*0.06,
                                                                   child: TextoPadrao(texto: listaTagDocMaterial[i],cor: Cores.cinzaTextoEscuro,tamanhoFonte: 10,alinhamentoTexto: TextAlign.center,)
                                                                 ),
                                                                 Icon(Icons.close,color: Colors.red,size: 10,)
@@ -715,7 +717,7 @@ class _InstrucaoPrimeiraEtapaTelaState extends State<InstrucaoPrimeiraEtapaTela>
                                 ),
                                 Container(
                                   height:materiaPrima.text.isNotEmpty? 200 :0,
-                                  width: VariavelEstatica.largura*0.45,
+                                  width: largura*0.45,
                                   child: Scrollbar(
                                     controller: scrollMaterial,
                                     thumbVisibility: true,
@@ -743,7 +745,7 @@ class _InstrucaoPrimeiraEtapaTelaState extends State<InstrucaoPrimeiraEtapaTela>
                             CaixaTexto(
                               titulo: 'Tempo total das Etapas',
                               controller: tempoEtapas,
-                              largura: VariavelEstatica.largura*0.25,
+                              largura: largura*0.25,
                               corCaixa: Cores.cinzaClaro,
                               ativarCaixa: false,
                             ),
@@ -754,14 +756,14 @@ class _InstrucaoPrimeiraEtapaTelaState extends State<InstrucaoPrimeiraEtapaTela>
                             CaixaTexto(
                               titulo: 'Específicações do Processo',
                               controller: espeficicacao,
-                              largura: VariavelEstatica.largura*0.45,
+                              largura: largura*0.45,
                               corCaixa: Cores.cinzaClaro,
                             ),
                             SizedBox(width: 30,),
                             CaixaTexto(
                               titulo: 'Prazo de Aprendizagem',
                               controller: prazo,
-                              largura: VariavelEstatica.largura*0.25,
+                              largura: largura*0.25,
                               corCaixa: Cores.cinzaClaro,
                             ),
                           ],
@@ -771,19 +773,19 @@ class _InstrucaoPrimeiraEtapaTelaState extends State<InstrucaoPrimeiraEtapaTela>
                             CaixaTexto(
                               titulo: 'Específicações máquina',
                               controller: esp_maquina,
-                              largura: VariavelEstatica.largura*0.45,
+                              largura: largura*0.45,
                               corCaixa: Cores.cinzaClaro,
                             ),
                             SizedBox(width: 30,),
                             CaixaTexto(
                               titulo: 'Licenças ou qualificações',
                               controller: licenca_qualificacoes,
-                              largura: VariavelEstatica.largura*0.45,
+                              largura: largura*0.45,
                               corCaixa: Cores.cinzaClaro,
                             ),
                           ],
                         ),
-                        SizedBox(height: VariavelEstatica.altura*0.1,),
+                        SizedBox(height: altura*0.1,),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.end,
                           children: [
@@ -801,7 +803,7 @@ class _InstrucaoPrimeiraEtapaTelaState extends State<InstrucaoPrimeiraEtapaTela>
                               margemVertical: 5,
                               onPressed: ()=>widget.idEsp==''?salvarNovaInstrucao():editarInstrucao(),
                             ),
-                            SizedBox(width: VariavelEstatica.largura*0.025,),
+                            SizedBox(width: largura*0.025,),
                           ],
                         )
                       ]

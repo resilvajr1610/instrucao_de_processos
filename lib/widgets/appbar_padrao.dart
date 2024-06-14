@@ -22,11 +22,15 @@ class AppBarPadrao extends StatelessWidget implements PreferredSizeWidget{
 
   @override
   Widget build(BuildContext context) {
+
+    double largura = MediaQuery.of(context).size.width;
+    double altura = MediaQuery.of(context).size.height;
+
     return PreferredSize(
       preferredSize: Size.fromHeight(100),
       child: Container(
         height: 100,
-        width: VariavelEstatica.largura,
+        width: largura,
         padding: EdgeInsets.all(0),
         margin: EdgeInsets.all(0),
         decoration: BoxDecoration(

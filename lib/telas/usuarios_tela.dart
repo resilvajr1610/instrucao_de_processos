@@ -79,18 +79,21 @@ class _UsuariosTelaState extends State<UsuariosTela> {
   @override
   Widget build(BuildContext context) {
 
+    double largura = MediaQuery.of(context).size.width;
+    double altura = MediaQuery.of(context).size.height;
+    
     return Scaffold(
       backgroundColor: Cores.cinzaClaro,
       appBar: AppBarPadrao(emailLogado: widget.emailLogado),
       body: Container(
-        width: VariavelEstatica.largura*0.7,
-        height: VariavelEstatica.altura,
+        width: largura*0.7,
+        height: altura,
         padding: EdgeInsets.symmetric(vertical: 25,horizontal: 60),
         child: ListView(
           children:[
             Card(
               child: Container(
-                width: VariavelEstatica.largura*0.7,
+                width: largura*0.7,
                 height: 380,
                 padding: EdgeInsets.symmetric(horizontal: 20,vertical: 20),
                 child: Column(
@@ -176,7 +179,7 @@ class _UsuariosTelaState extends State<UsuariosTela> {
             ),
             Card(
               child: Container(
-                width: VariavelEstatica.largura*0.7,
+                width: largura*0.7,
                 padding: EdgeInsets.symmetric(horizontal: 20,vertical: 20),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -191,7 +194,7 @@ class _UsuariosTelaState extends State<UsuariosTela> {
                       ],
                     ),
                     Container(
-                      width: VariavelEstatica.largura*0.7,
+                      width: largura*0.7,
                       height: 380,
                       child: StreamBuilder<QuerySnapshot>(
                         stream: FirebaseFirestore.instance.collection('usuarios').snapshots(),

@@ -26,8 +26,11 @@ class ItemEtapa3 extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
+    double largura = MediaQuery.of(context).size.width;
+    double altura = MediaQuery.of(context).size.height;
+    
     return Container(
-      width: VariavelEstatica.largura * 0.9,
+      width: largura * 0.9,
       padding: EdgeInsets.all(10),
       margin: EdgeInsets.symmetric(vertical: 5,horizontal: 5),
       decoration: BoxDecoration(
@@ -48,33 +51,33 @@ class ItemEtapa3 extends StatelessWidget {
         children: [
           TextoPadrao(texto: 'Etapa $numeroEtapa',cor: Cores.primaria,negrito: FontWeight.bold,tamanhoFonte: 16,),
           Container(
-            width: VariavelEstatica.largura>1500?VariavelEstatica.largura * 0.7:VariavelEstatica.largura * 0.15,
+            width: largura>1200?largura * 0.7:largura * 0.15,
             child: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
                 Container(
-                  width: VariavelEstatica.largura>1500?VariavelEstatica.largura * 0.44:VariavelEstatica.largura * 0.15,
+                  width: largura>1200?largura * 0.44:largura * 0.15,
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       TextoPadrao(texto: 'Nome da Etapa',cor: Cores.primaria,tamanhoFonte: 14,),
                       SizedBox(width: 10,),
                       Container(
-                          width: VariavelEstatica.largura * 0.2,
+                          width: largura * 0.2,
                           child: TextoPadrao(texto: nomeEtapa,cor: Cores.cinzaTextoEscuro,tamanhoFonte: 14,maxLines: 5,)
                       ),
                     ],
                   ),
                 ),
                 Container(
-                  width: VariavelEstatica.largura>1500?VariavelEstatica.largura * 0.2:VariavelEstatica.largura * 0.15,
+                  width: largura>1200?largura * 0.2:largura * 0.15,
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       TextoPadrao(texto: 'Tempo total da etapa',cor: Cores.primaria,tamanhoFonte: 14,),
                       SizedBox(width: 10,),
                       Container(
-                          width: VariavelEstatica.largura * 0.1,
+                          width: largura * 0.1,
                           child: TextoPadrao(texto: '$tempoTotalEtapa min',cor: Cores.cinzaTextoEscuro,tamanhoFonte: 14,)
                       ),
                     ],
@@ -84,11 +87,11 @@ class ItemEtapa3 extends StatelessWidget {
             ),
           ),
           Container(
-              width:VariavelEstatica.largura*0.9,
+              width:largura*0.9,
               child: Divider()
           ),
           Container(
-            width:VariavelEstatica.largura*0.9,
+            width:largura*0.9,
             child: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
@@ -121,14 +124,14 @@ class ItemEtapa3 extends StatelessWidget {
           ),
           //criar list
           Container(
-            width: VariavelEstatica.largura*0.9,
+            width: largura*0.9,
             height: listaAnalise.length*70,
             child: ListView.separated(
               separatorBuilder: (context,i)=>Divider(),
               itemCount: listaAnalise.length,
               itemBuilder: (context,i){
                 return Container(
-                  width: VariavelEstatica.largura*0.8,
+                  width: largura*0.8,
                   child: Row(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     mainAxisSize: MainAxisSize.min,
@@ -303,7 +306,7 @@ class ItemEtapa3 extends StatelessWidget {
                       Container(
                           height: 50,
                           alignment: Alignment.centerLeft,
-                          width: comentario?VariavelEstatica.largura*0.3:VariavelEstatica.largura*0.35,
+                          width: comentario?largura*0.3:largura*0.35,
                           child: TextoPadrao(texto:listaAnalise[i].pontoChave,cor: Cores.cinzaTextoEscuro,tamanhoFonte: 12,maxLines: 5,)
                       ),
                       Spacer(),

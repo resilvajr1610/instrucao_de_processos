@@ -25,29 +25,33 @@ class _ComentarioTelaState extends State<ComentarioTela> {
 
   @override
   Widget build(BuildContext context) {
+    
+    double largura = MediaQuery.of(context).size.width;
+    double altura = MediaQuery.of(context).size.height;
+    
     return Scaffold(
       appBar: AppBarPadrao(emailLogado: widget.emailLogado),
       body: Container(
         padding: EdgeInsets.all(20),
-        height: VariavelEstatica.altura,
-        width: VariavelEstatica.largura,
+        height: altura,
+        width: largura,
         child: Column(
           children: [
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Container(width: VariavelEstatica.largura*0.1,child: TextoPadrao(texto: 'Data',cor: Cores.primaria,)),
-                Container(width: VariavelEstatica.largura*0.08,child: TextoPadrao(texto: 'FIP',cor: Cores.primaria,alinhamentoTexto: TextAlign.center)),
-                Container(width: VariavelEstatica.largura*0.15,child:TextoPadrao(texto: 'Nome Processo',cor: Cores.primaria)),
-                Container(width: VariavelEstatica.largura*0.08,child: TextoPadrao(texto: 'Versão',cor: Cores.primaria,alinhamentoTexto: TextAlign.center)),
-                Container(width: VariavelEstatica.largura*0.1,child: TextoPadrao(texto: 'Número Etapa',cor: Cores.primaria,alinhamentoTexto: TextAlign.center)),
-                Container(width: VariavelEstatica.largura*0.15,child: TextoPadrao(texto: 'Nome Etapa',cor: Cores.primaria)),
-                Container(width: VariavelEstatica.largura*0.2,child: TextoPadrao(texto: 'Comentário',cor: Cores.primaria)),
+                Container(width: largura*0.1,child: TextoPadrao(texto: 'Data',cor: Cores.primaria,)),
+                Container(width: largura*0.08,child: TextoPadrao(texto: 'FIP',cor: Cores.primaria,alinhamentoTexto: TextAlign.center)),
+                Container(width: largura*0.15,child:TextoPadrao(texto: 'Nome Processo',cor: Cores.primaria)),
+                Container(width: largura*0.08,child: TextoPadrao(texto: 'Versão',cor: Cores.primaria,alinhamentoTexto: TextAlign.center)),
+                Container(width: largura*0.1,child: TextoPadrao(texto: 'Número Etapa',cor: Cores.primaria,alinhamentoTexto: TextAlign.center)),
+                Container(width: largura*0.15,child: TextoPadrao(texto: 'Nome Etapa',cor: Cores.primaria)),
+                Container(width: largura*0.2,child: TextoPadrao(texto: 'Comentário',cor: Cores.primaria)),
               ],
             ),
             Container(
-              width: VariavelEstatica.largura*0.9,
-              height: VariavelEstatica.altura*0.8,
+              width: largura*0.9,
+              height: altura*0.8,
               child: StreamBuilder<QuerySnapshot>(
                   stream: FirebaseFirestore.instance.collection('comentarios').snapshots(),
                   builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {

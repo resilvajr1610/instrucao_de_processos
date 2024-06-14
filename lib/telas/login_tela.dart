@@ -20,11 +20,11 @@ class LoginTela extends StatefulWidget {
 
 class _LoginTelaState extends State<LoginTela> {
 
-  var email = TextEditingController(text: 'teste123@gmail.com');
-  var senha = TextEditingController(text: 'senha123');
-
-  // var email = TextEditingController();
-  // var senha = TextEditingController();
+  // var email = TextEditingController(text: 'teste123@gmail.com');
+  // var senha = TextEditingController(text: 'senha123');
+  //
+  var email = TextEditingController();
+  var senha = TextEditingController();
 
   bool obscure = true;
   bool carregandoConta = true;
@@ -119,12 +119,13 @@ class _LoginTelaState extends State<LoginTela> {
   @override
   Widget build(BuildContext context) {
 
-    VariavelEstatica.inicializarDimensoes(context);
+    double largura = MediaQuery.of(context).size.width;
+    double altura = MediaQuery.of(context).size.height;
 
     return Scaffold(
       body: carregandoConta?Container():Container(
-        width: VariavelEstatica.largura,
-        height: VariavelEstatica.altura,
+        width: largura,
+        height: altura,
         alignment: Alignment.bottomCenter,
         decoration: BoxDecoration(
           gradient: LinearGradient(
@@ -134,8 +135,8 @@ class _LoginTelaState extends State<LoginTela> {
           ),
         ),
         child: Container(
-          width: VariavelEstatica.largura*0.35,
-          height: VariavelEstatica.altura*0.8,
+          width: largura*0.35,
+          height: altura*0.8,
           decoration: BoxDecoration(
               color: Cores.cinzaClaro,
               borderRadius: BorderRadius.only(
@@ -147,7 +148,7 @@ class _LoginTelaState extends State<LoginTela> {
 
             children: [
               Container(
-                margin: EdgeInsets.only(top: VariavelEstatica.altura*0.07,bottom: VariavelEstatica.altura*0.08),
+                margin: EdgeInsets.only(top: altura*0.07,bottom: altura*0.08),
                 child: Text(
                   'Instrução\nde\nProcessos',
                   textAlign: TextAlign.center,
@@ -164,7 +165,7 @@ class _LoginTelaState extends State<LoginTela> {
                 child: CaixaTexto(
                   titulo: 'E-mail',
                   controller: email,
-                  largura: VariavelEstatica.largura*0.2
+                  largura: largura*0.2
                 ),
               ),
               Container(
@@ -172,18 +173,18 @@ class _LoginTelaState extends State<LoginTela> {
                 child: CaixaTexto(
                   titulo: 'Senha',
                   controller: senha,
-                  largura: VariavelEstatica.largura*0.2,
+                  largura: largura*0.2,
                   obscure: obscure,
                   mostrarOlho: true,
                   onPressedSenha: ()=>setState(()=>obscure?obscure=false:obscure=true),
                 ),
               ),
               Container(
-                margin: EdgeInsets.symmetric(horizontal: VariavelEstatica.largura*0.075),
+                margin: EdgeInsets.symmetric(horizontal: largura*0.075),
                 child: BotaoPadrao(
                   texto: 'Entrar',
                   onTap: ()=>checkLogin(),
-                  largura: VariavelEstatica.largura*0.2,
+                  largura: largura*0.2,
                 ),
               )
             ],

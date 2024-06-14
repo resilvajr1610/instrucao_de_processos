@@ -459,18 +459,21 @@ class _InstrucaoSegundaEtapaTelaState extends State<InstrucaoSegundaEtapaTela> {
   @override
   Widget build(BuildContext context) {
 
+    double largura = MediaQuery.of(context).size.width;
+    double altura = MediaQuery.of(context).size.height;
+    
     return Scaffold(
       backgroundColor: Cores.cinzaClaro,
       appBar: carregando ? null: AppBarPadrao(mostrarUsuarios: false, emailLogado: widget.emailLogado),
       body: Container(
-        height: VariavelEstatica.altura,
-        width: VariavelEstatica.largura,
+        height: altura,
+        width: largura,
         child: ListView(
           children: [
             NivelEtapa(nivel: 2),
             carregando?Container(
-              width: VariavelEstatica.largura,
-              height: VariavelEstatica.altura*0.8,
+              width: largura,
+              height: altura*0.8,
               child: Center(
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
@@ -481,8 +484,8 @@ class _InstrucaoSegundaEtapaTelaState extends State<InstrucaoSegundaEtapaTela> {
                 ),
               ),
             ):Container(
-              width: VariavelEstatica.largura*0.8,
-              height: VariavelEstatica.altura*0.75,
+              width: largura*0.8,
+              height: altura*0.75,
               margin: EdgeInsets.all(20),
               padding: EdgeInsets.all(36),
               alignment: Alignment.topLeft,
@@ -657,7 +660,7 @@ class _InstrucaoSegundaEtapaTelaState extends State<InstrucaoSegundaEtapaTela> {
                       textInputType: TextInputType.multiline,
                       maximoLinhas: 3,
                     ),
-                    SizedBox(height: VariavelEstatica.altura*0.1,),
+                    SizedBox(height: altura*0.1,),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: [
@@ -675,7 +678,7 @@ class _InstrucaoSegundaEtapaTelaState extends State<InstrucaoSegundaEtapaTela> {
                           margemVertical: 5,
                           onPressed: ()=>widget.etapaCriada?editarEtapa():salvarEtapa(),
                         ),
-                        SizedBox(width: VariavelEstatica.largura*0.025,),
+                        SizedBox(width: largura*0.025,),
                       ],
                     )
                   ],

@@ -27,16 +27,20 @@ class ItemEtapa3Titulo extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
+    double largura = MediaQuery.of(context).size.width;
+    double altura = MediaQuery.of(context).size.height;
+    
     return Row(
       children: [
         Container(
-          width: VariavelEstatica.largura>1500?VariavelEstatica.largura * 0.45:VariavelEstatica.largura * 0.15,
+          width: largura>1200?largura * 0.45:largura * 0.15,
           child: Row(
             children: [
               TextoPadrao(texto: titulo1,cor: Cores.primaria,tamanhoFonte: 14,),
               SizedBox(width: 10,),
               Container(
-                width: VariavelEstatica.largura*0.3,
+                width: largura*0.3,
                 child: TextoPadrao(
                   texto: dadoString1
                     ?BadStateString(dadosEspecificacao, item1)
@@ -50,7 +54,7 @@ class ItemEtapa3Titulo extends StatelessWidget {
           ),
         ),
         Container(
-          width: VariavelEstatica.largura>1500?VariavelEstatica.largura * 0.45:VariavelEstatica.largura * 0.15,
+          width: largura>1200?largura * 0.45:largura * 0.15,
           child: Row(
             children: [
               TextoPadrao(texto: titulo2,cor: Cores.primaria,tamanhoFonte: 14,),

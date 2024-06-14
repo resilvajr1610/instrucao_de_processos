@@ -485,12 +485,16 @@ class _HomeTelaState extends State<HomeTela> {
 
   @override
   Widget build(BuildContext context) {
+
+    double largura = MediaQuery.of(context).size.width;
+    double altura = MediaQuery.of(context).size.height;
+
     return Scaffold(
       backgroundColor: Cores.cinzaClaro,
       appBar: carregando?null:AppBarPadrao(mostrarUsuarios: true,emailLogado: widget.emailLogado,mostrarComentarios: acesso_adm),
       body: Container(
-        width: VariavelEstatica.largura,
-        height: VariavelEstatica.altura,
+        width: largura,
+        height: altura,
         padding: EdgeInsets.symmetric(vertical: 32,horizontal: 60),
         child: carregando?Center(
           child: Column(

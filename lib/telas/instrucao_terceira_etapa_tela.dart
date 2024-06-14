@@ -68,18 +68,21 @@ class _InstrucaoTerceiraEtapaTelaState extends State<InstrucaoTerceiraEtapaTela>
   @override
   Widget build(BuildContext context) {
 
+    double largura = MediaQuery.of(context).size.width;
+    double altura = MediaQuery.of(context).size.height;
+    
     return Scaffold(
         backgroundColor: Cores.cinzaClaro,
         appBar: carregando? null: AppBarPadrao(mostrarUsuarios: false, emailLogado: widget.emailLogado),
         body: Container(
-            height: VariavelEstatica.altura*1.1+(listaEtapas.length*360),
-            width: VariavelEstatica.largura,
+            height: altura*1.1+(listaEtapas.length*360),
+            width: largura,
             child: ListView(
                 children: [
                   NivelEtapa(nivel: 3),
                   Container(
-                    width: VariavelEstatica.largura * 0.8,
-                    height: VariavelEstatica.altura*1.2 +(listaEtapas.length*350),
+                    width: largura * 0.8,
+                    height: altura*1.2 +(listaEtapas.length*350),
                     margin: EdgeInsets.all(20),
                     padding: EdgeInsets.all(36),
                     alignment: Alignment.topLeft,
@@ -88,18 +91,18 @@ class _InstrucaoTerceiraEtapaTelaState extends State<InstrucaoTerceiraEtapaTela>
                         borderRadius: BorderRadius.all(Radius.circular(15))
                     ),
                     child: Container(
-                      width: VariavelEstatica.largura * 0.95,
+                      width: largura * 0.95,
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Row(
                             children: [
                               Container(
-                                width: VariavelEstatica.largura * 0.45,
+                                width: largura * 0.45,
                                 child: TextoPadrao(texto: 'Instrução de Processos',cor: Cores.primaria,negrito: FontWeight.bold,tamanhoFonte: 20,)
                               ),
                               Container(
-                                width: VariavelEstatica.largura * 0.45,
+                                width: largura * 0.45,
                                 child: Row(
                                   children: [
                                     TextoPadrao(texto: 'Data de criação',cor: Cores.primaria,tamanhoFonte: 14,),
@@ -109,7 +112,7 @@ class _InstrucaoTerceiraEtapaTelaState extends State<InstrucaoTerceiraEtapaTela>
                                     TextoPadrao(texto: 'Visto',cor: Cores.primaria,tamanhoFonte: 14,),
                                     SizedBox(width: 10,),
                                     Container(
-                                      width: VariavelEstatica.largura * 0.1,
+                                      width: largura * 0.1,
                                       child: TextoPadrao(texto: BadStateString(dadosEspecificacao, 'visto'),cor: Cores.cinzaTextoEscuro,tamanhoFonte: 14,)
                                     ),
                                     SizedBox(width: 40,),
@@ -175,16 +178,16 @@ class _InstrucaoTerceiraEtapaTelaState extends State<InstrucaoTerceiraEtapaTela>
                           ),
                           Divider(),
                           Container(
-                            height: VariavelEstatica.altura*0.9+(listaEtapas.length*290),
+                            height: altura*0.9+(listaEtapas.length*290),
                             child: listaEtapas.isEmpty?Container():Container(
-                              height: VariavelEstatica.altura*0.9+(listaEtapas.length*290),
+                              height: altura*0.9+(listaEtapas.length*290),
                               child: ListView(
                                 physics: NeverScrollableScrollPhysics(),
                                 // crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Container(
-                                    height: VariavelEstatica.altura*0.7+(listaEtapas.length*250),
-                                    width: VariavelEstatica.largura * 0.7,
+                                    height: altura*0.7+(listaEtapas.length*250),
+                                    width: largura * 0.7,
                                     child: ListView.builder(
                                       // physics: NeverScrollableScrollPhysics(),
                                         itemCount: listaEtapas.length,
@@ -220,7 +223,7 @@ class _InstrucaoTerceiraEtapaTelaState extends State<InstrucaoTerceiraEtapaTela>
                                   TextoPadrao(texto: 'Observações Gerais/ O que é proibido e porque?',cor: Cores.primaria,negrito: FontWeight.bold,tamanhoFonte: 14,),
                                   TextoPadrao(texto: BadStateString(dadosEtapas, 'observacoes'),cor: Cores.cinzaTextoEscuro,tamanhoFonte: 12,maxLines: 5,),
                                   Container(
-                                      width: VariavelEstatica.largura * 0.7,
+                                      width: largura * 0.7,
                                       padding: EdgeInsets.all(10),
                                       margin: EdgeInsets.symmetric(vertical: 5,horizontal: 5),
                                       decoration: BoxDecoration(
@@ -235,7 +238,7 @@ class _InstrucaoTerceiraEtapaTelaState extends State<InstrucaoTerceiraEtapaTela>
                                         Column(
                                           children: [
                                             Container(
-                                              width: VariavelEstatica.largura * 0.7,
+                                              width: largura * 0.7,
                                               child: Row(
                                                 mainAxisSize: MainAxisSize.min,
                                                 children: [
@@ -261,7 +264,7 @@ class _InstrucaoTerceiraEtapaTelaState extends State<InstrucaoTerceiraEtapaTela>
                                               ),
                                             ),
                                             Container(
-                                              width: VariavelEstatica.largura * 0.7,
+                                              width: largura * 0.7,
                                               child: Row(
                                                 mainAxisSize: MainAxisSize.min,
                                                 children: [
@@ -290,7 +293,7 @@ class _InstrucaoTerceiraEtapaTelaState extends State<InstrucaoTerceiraEtapaTela>
                                                   ),
                                                   SizedBox(width: 10,),
                                                   Container(
-                                                    width: VariavelEstatica.largura*0.3,
+                                                    width: largura*0.3,
                                                     child: TextoPadrao(texto:BadStateString(dadosEtapas, 'alteracao'),cor: Cores.cinzaTextoEscuro,tamanhoFonte: 14,)
                                                   ),
                                                 ],
@@ -330,7 +333,7 @@ class _InstrucaoTerceiraEtapaTelaState extends State<InstrucaoTerceiraEtapaTela>
                                               ));
                                         }
                                       ),
-                                      SizedBox(width: VariavelEstatica.largura*0.025,),
+                                      SizedBox(width: largura*0.025,),
                                     ],
                                   )
                                 ],

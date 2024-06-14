@@ -10,9 +10,13 @@ class NivelEtapa extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
+    double largura = MediaQuery.of(context).size.width;
+    double altura = MediaQuery.of(context).size.height;
+    
     return  Container(
       color: Colors.white,
-      width: VariavelEstatica.largura,
+      width: largura,
       height: 85,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
