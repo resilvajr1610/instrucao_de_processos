@@ -200,163 +200,161 @@ class _InstrucaoUsuarioTelaState extends State<InstrucaoUsuarioTela> {
     return Scaffold(
       backgroundColor: Cores.cinzaClaro,
       appBar: AppBarPadrao(mostrarUsuarios: false, emailLogado: widget.emailLogado),
-      body: SingleChildScrollView(
+      body: Container(
+        height: altura*1.2 +(listaEtapas.length*360),
+        width: largura,
         child: Container(
-          height: altura+(listaEtapas.length*320),
-          width: largura,
+          width: largura * 0.8,
+          height: altura*1.2 +(listaEtapas.length*350),
+          margin: EdgeInsets.all(20),
+          padding: EdgeInsets.all(36),
+          alignment: Alignment.topLeft,
+          decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.all(Radius.circular(15))
+          ),
           child: Container(
-            width: largura * 0.8,
-            height: altura * 0.65,
-            margin: EdgeInsets.all(20),
-            padding: EdgeInsets.all(36),
-            alignment: Alignment.topLeft,
-            decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.all(Radius.circular(15))
-            ),
-            child: Container(
-              width: largura * 0.95,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    children: [
-                      Container(
-                          width: largura * 0.45,
-                          child: TextoPadrao(texto: 'Instrução de Processos',cor: Cores.primaria,negrito: FontWeight.bold,tamanhoFonte: 20,)
-                      ),
-                      Container(
+            width: largura * 0.95,
+            child: ListView(
+              // crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    Container(
                         width: largura * 0.45,
-                        child: Row(
-                          children: [
-                            TextoPadrao(texto: 'Data de criação',cor: Cores.primaria,tamanhoFonte: 14,),
-                            SizedBox(width: 10,),
-                            TextoPadrao(texto: dadosEspecificacao==null?'00/00/0000':VariavelEstatica.mascaraData.format(dadosEspecificacao!['dataCriacao'].toDate()),cor: Cores.cinzaTextoEscuro,tamanhoFonte: 14,),
-                            SizedBox(width: 40,),
-                            TextoPadrao(texto: 'Visto',cor: Cores.primaria,tamanhoFonte: 14,),
-                            SizedBox(width: 10,),
-                            Container(
-                                width: largura * 0.1,
-                                child: TextoPadrao(texto: BadStateString(dadosEspecificacao, 'visto'),cor: Cores.cinzaTextoEscuro,tamanhoFonte: 14,)
-                            ),
-                            SizedBox(width: 40,),
-                            TextoPadrao(texto: 'Versão',cor: Cores.primaria,tamanhoFonte: 14,),
-                            SizedBox(width: 10,),
-                            TextoPadrao(texto: BadStateInt(dadosEspecificacao, 'versao').toString(),cor: Cores.cinzaTextoEscuro,tamanhoFonte: 14,),
-                            SizedBox(width: 20,),
-                            TextoPadrao(texto: 'Data',cor: Cores.primaria,tamanhoFonte: 14,),
-                            SizedBox(width: 10,),
-                            TextoPadrao(texto: dadosEspecificacao==null?'00/00/0000':VariavelEstatica.mascaraData.format(dadosEspecificacao!['dataVersao'].toDate()),cor: Cores.cinzaTextoEscuro,tamanhoFonte: 14,),
-                          ],
-                        ),
-                      )
+                        child: TextoPadrao(texto: 'Instrução de Processos',cor: Cores.primaria,negrito: FontWeight.bold,tamanhoFonte: 20,)
+                    ),
+                    Container(
+                      width: largura * 0.45,
+                      child: Row(
+                        children: [
+                          TextoPadrao(texto: 'Data de criação',cor: Cores.primaria,tamanhoFonte: 14,),
+                          SizedBox(width: 10,),
+                          TextoPadrao(texto: dadosEspecificacao==null?'00/00/0000':VariavelEstatica.mascaraData.format(dadosEspecificacao!['dataCriacao'].toDate()),cor: Cores.cinzaTextoEscuro,tamanhoFonte: 14,),
+                          SizedBox(width: 40,),
+                          TextoPadrao(texto: 'Visto',cor: Cores.primaria,tamanhoFonte: 14,),
+                          SizedBox(width: 10,),
+                          Container(
+                              width: largura * 0.1,
+                              child: TextoPadrao(texto: BadStateString(dadosEspecificacao, 'visto'),cor: Cores.cinzaTextoEscuro,tamanhoFonte: 14,)
+                          ),
+                          SizedBox(width: 40,),
+                          TextoPadrao(texto: 'Versão',cor: Cores.primaria,tamanhoFonte: 14,),
+                          SizedBox(width: 10,),
+                          TextoPadrao(texto: BadStateInt(dadosEspecificacao, 'versao').toString(),cor: Cores.cinzaTextoEscuro,tamanhoFonte: 14,),
+                          SizedBox(width: 20,),
+                          TextoPadrao(texto: 'Data',cor: Cores.primaria,tamanhoFonte: 14,),
+                          SizedBox(width: 10,),
+                          TextoPadrao(texto: dadosEspecificacao==null?'00/00/0000':VariavelEstatica.mascaraData.format(dadosEspecificacao!['dataVersao'].toDate()),cor: Cores.cinzaTextoEscuro,tamanhoFonte: 14,),
+                        ],
+                      ),
+                    )
+                  ],
+                ),
+                Padding(
+                  padding: EdgeInsets.symmetric(vertical: 10),
+                  child: Row(
+                    crossAxisAlignment:CrossAxisAlignment.center ,
+                    children: [
+                      TextoPadrao(texto: 'N° FIP',cor: Cores.primaria,negrito: FontWeight.bold,tamanhoFonte: 16,),
+                      SizedBox(width: 10,),
+                      TextoPadrao(texto: BadStateString(dadosEspecificacao, 'numeroFIP').toString(),cor: Cores.cinzaTextoEscuro,negrito: FontWeight.bold,tamanhoFonte: 16,),
+                      SizedBox(width: 40,),
+                      TextoPadrao(texto: 'Nome de Processos',cor: Cores.primaria,negrito: FontWeight.bold,tamanhoFonte: 16,),
+                      SizedBox(width: 10,),
+                      TextoPadrao(texto: BadStateString(dadosEspecificacao, 'nome'),cor: Cores.cinzaTextoEscuro,negrito: FontWeight.bold,tamanhoFonte: 16,),
                     ],
                   ),
-                  Padding(
-                    padding: EdgeInsets.symmetric(vertical: 10),
-                    child: Row(
-                      crossAxisAlignment:CrossAxisAlignment.center ,
+                ),
+                Divider(),
+                ItemEtapa3Titulo(
+                  dadosEspecificacao: dadosEspecificacao,
+                  item1: 'epi',
+                  item2: 'maquina',
+                  titulo1: 'EPI Necessário',
+                  titulo2: 'Máquina',
+                  dadoString1: false,
+                ),
+                ItemEtapaUmTitulo(dadosEspecificacao: dadosEspecificacao,item: 'ferramentas',titulo: 'Ferramentas utilizadas'),
+                Divider(),
+                ItemEtapa3Titulo(
+                  dadosEspecificacao: dadosEspecificacao,
+                  item1: 'materiaPrima',
+                  item2: 'licenca_qualificacoes',
+                  titulo1: 'Matéria-prima utilizada',
+                  titulo2: 'Tempo total das etapas',
+                  dadoString1: false,
+                ),
+                ItemEtapa3Titulo(
+                  dadosEspecificacao: dadosEspecificacao,
+                  item1: 'espeficicacao',
+                  item2: 'prazo',
+                  titulo1: 'Especificações',
+                  titulo2: 'Prazo de aprendizagem',
+                ),
+                ItemEtapa3Titulo(
+                  dadosEspecificacao: dadosEspecificacao,
+                  item1: 'esp_maquina',
+                  item2: 'licenca_qualificacoes',
+                  titulo1: 'Especificações máquina',
+                  titulo2: 'Licenças ou qualificações',
+                ),
+                Divider(),
+                Container(
+                  height: altura*0.9+(listaEtapas.length*290),
+                  child: listaEtapas.isEmpty?Container():Container(
+                    height: listaEtapas.length*250+80,
+                    child: Column(
+                      // crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        TextoPadrao(texto: 'N° FIP',cor: Cores.primaria,negrito: FontWeight.bold,tamanhoFonte: 16,),
-                        SizedBox(width: 10,),
-                        TextoPadrao(texto: BadStateString(dadosEspecificacao, 'numeroFIP').toString(),cor: Cores.cinzaTextoEscuro,negrito: FontWeight.bold,tamanhoFonte: 16,),
-                        SizedBox(width: 40,),
-                        TextoPadrao(texto: 'Nome de Processos',cor: Cores.primaria,negrito: FontWeight.bold,tamanhoFonte: 16,),
-                        SizedBox(width: 10,),
-                        TextoPadrao(texto: BadStateString(dadosEspecificacao, 'nome'),cor: Cores.cinzaTextoEscuro,negrito: FontWeight.bold,tamanhoFonte: 16,),
+                        Container(
+                          height: altura*0.5+listaEtapas.length*300,
+                          width: largura * 0.9,
+                          child: ListView.builder(
+                              // physics: NeverScrollableScrollPhysics(),
+                              itemCount: listaEtapas.length,
+                              itemBuilder: (context,i){
+                                List aux = listaEtapas[i]['listaAnalise'];
+                                List<ModeloAnalise3> listaAnalise = [];
+                                List fotos = [];
+                                List videos = [];
+
+                                for(int j = 0; aux.length > j ; j++){
+                                  for(int posicaoAnalise = 0; listaUrlFotosEtapas.length > posicaoAnalise ; posicaoAnalise++){
+                                    if(listaUrlFotosEtapas[posicaoAnalise].posicaoEtapa==i && listaUrlFotosEtapas[posicaoAnalise].posicaoAnalise==j){
+                                      fotos = listaUrlFotosEtapas[posicaoAnalise].url;
+                                      videos = listaUrlVideosEtapas[posicaoAnalise].urlVideo;
+                                    }
+                                  }
+                                  listaAnalise.add(
+                                      ModeloAnalise3(
+                                          imagemSelecionada: aux[j]['imagemSelecionada'],
+                                          numeroAnalise: aux[j]['numeroAnalise'],
+                                          nomeAnalise: aux[j]['nomeAnalise'],
+                                          tempo: aux[j]['tempoAnalise'],
+                                          pontoChave: aux[j]['pontoChave'],
+                                          urlFotos: fotos,
+                                          urlVideos: videos
+                                      )
+                                  );
+                                }
+
+                                return ItemEtapa3(
+                                  numeroEtapa: listaEtapas[i]['numeroEtapa'],
+                                  nomeEtapa: listaEtapas[i]['nomeEtapa'],
+                                  tempoTotalEtapa: listaEtapas[i]['tempoTotalEtapaMinutos'],
+                                  listaAnalise: listaAnalise,
+                                  comentario: true,
+                                  funcaoComentario: ()=>carregarWidget(listaEtapas[i]['numeroEtapa'], listaEtapas[i]['nomeEtapa'],),
+                                );
+                              }
+                          ),
+                        ),
                       ],
                     ),
                   ),
-                  Divider(),
-                  ItemEtapa3Titulo(
-                    dadosEspecificacao: dadosEspecificacao,
-                    item1: 'epi',
-                    item2: 'maquina',
-                    titulo1: 'EPI Necessário',
-                    titulo2: 'Máquina',
-                    dadoString1: false,
-                  ),
-                  ItemEtapaUmTitulo(dadosEspecificacao: dadosEspecificacao,item: 'ferramentas',titulo: 'Ferramentas utilizadas'),
-                  Divider(),
-                  ItemEtapa3Titulo(
-                    dadosEspecificacao: dadosEspecificacao,
-                    item1: 'materiaPrima',
-                    item2: 'licenca_qualificacoes',
-                    titulo1: 'Matéria-prima utilizada',
-                    titulo2: 'Tempo total das etapas',
-                    dadoString1: false,
-                  ),
-                  ItemEtapa3Titulo(
-                    dadosEspecificacao: dadosEspecificacao,
-                    item1: 'espeficicacao',
-                    item2: 'prazo',
-                    titulo1: 'Especificações',
-                    titulo2: 'Prazo de aprendizagem',
-                  ),
-                  ItemEtapa3Titulo(
-                    dadosEspecificacao: dadosEspecificacao,
-                    item1: 'esp_maquina',
-                    item2: 'licenca_qualificacoes',
-                    titulo1: 'Especificações máquina',
-                    titulo2: 'Licenças ou qualificações',
-                  ),
-                  Divider(),
-                  Container(
-                    height: listaEtapas.length*350,
-                    child: listaEtapas.isEmpty?Container():Container(
-                      height: listaEtapas.length*250+80,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Container(
-                            height: listaEtapas.length*300,
-                            width: largura * 0.9,
-                            child: ListView.builder(
-                                physics: NeverScrollableScrollPhysics(),
-                                itemCount: listaEtapas.length,
-                                itemBuilder: (context,i){
-                                  List aux = listaEtapas[i]['listaAnalise'];
-                                  List<ModeloAnalise3> listaAnalise = [];
-                                  List fotos = [];
-                                  List videos = [];
-        
-                                  for(int j = 0; aux.length > j ; j++){
-                                    for(int posicaoAnalise = 0; listaUrlFotosEtapas.length > posicaoAnalise ; posicaoAnalise++){
-                                      if(listaUrlFotosEtapas[posicaoAnalise].posicaoEtapa==i && listaUrlFotosEtapas[posicaoAnalise].posicaoAnalise==j){
-                                        fotos = listaUrlFotosEtapas[posicaoAnalise].url;
-                                        videos = listaUrlVideosEtapas[posicaoAnalise].urlVideo;
-                                      }
-                                    }
-                                    listaAnalise.add(
-                                        ModeloAnalise3(
-                                            imagemSelecionada: aux[j]['imagemSelecionada'],
-                                            numeroAnalise: aux[j]['numeroAnalise'],
-                                            nomeAnalise: aux[j]['nomeAnalise'],
-                                            tempo: aux[j]['tempoAnalise'],
-                                            pontoChave: aux[j]['pontoChave'],
-                                            urlFotos: fotos,
-                                            urlVideos: videos
-                                        )
-                                    );
-                                  }
-        
-                                  return ItemEtapa3(
-                                    numeroEtapa: listaEtapas[i]['numeroEtapa'],
-                                    nomeEtapa: listaEtapas[i]['nomeEtapa'],
-                                    tempoTotalEtapa: listaEtapas[i]['tempoTotalEtapaMinutos'],
-                                    listaAnalise: listaAnalise,
-                                    comentario: true,
-                                    funcaoComentario: ()=>carregarWidget(listaEtapas[i]['numeroEtapa'], listaEtapas[i]['nomeEtapa'],),
-                                  );
-                                }
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ],
-              ),
+                ),
+              ],
             ),
           ),
         ),
