@@ -14,6 +14,7 @@ class ItemEtapa3Titulo extends StatelessWidget {
   String titulo2;
   bool dadoString1;
   bool dadoString2;
+  bool dadosInt;
 
   ItemEtapa3Titulo({
     required this.dadosEspecificacao,
@@ -23,6 +24,7 @@ class ItemEtapa3Titulo extends StatelessWidget {
     required this.titulo2,
     this.dadoString1 = true,
     this.dadoString2 = true,
+    this.dadosInt = false,
   });
 
   @override
@@ -61,8 +63,8 @@ class ItemEtapa3Titulo extends StatelessWidget {
               SizedBox(width: 10,),
               TextoPadrao(
                 texto: dadoString2
-                    ?BadStateString(dadosEspecificacao, item2)
-                    :BadStateList(dadosEspecificacao, item2).toString().replaceAll('[', '').replaceAll(']', ''),
+                    ?BadStateString(dadosEspecificacao, item2):dadosInt?'${(int.parse(BadStateString(dadosEspecificacao, item2))/60).toStringAsFixed(0)} minutos'
+                    :BadStateList(dadosEspecificacao, item2).toString().replaceAll('[', '').replaceAll(']', '').toString(),
                 cor: Cores.cinzaTextoEscuro,
                 maxLines: 2,
                 tamanhoFonte: 12,

@@ -22,7 +22,7 @@ class _LoginTelaState extends State<LoginTela> {
 
   // var email = TextEditingController(text: 'teste123@gmail.com');
   // var senha = TextEditingController(text: 'senha123');
-  //
+
   var email = TextEditingController();
   var senha = TextEditingController();
 
@@ -57,9 +57,13 @@ class _LoginTelaState extends State<LoginTela> {
             showSnackBar(context,'E-mail ou senha incorreta.\n Tente novamente.',Colors.red);
             break;
           case '[firebase_auth/too-many-requests] Access to this account has been temporarily disabled due to many failed login attempts. You can immediately restore it by resetting your password or you can try again later.':
-            showSnackBar(context, 'Sua conta foi bloqueada provisoriamente.\n Tente mais tarde.',Colors.red);
+            showSnackBar(context, 'Sua conta foi bloqueada provisoriamente.\n Tente mais tarde daqui uns 5 minutos.',Colors.red);
+            break;
+          case '[firebase_auth/invalid-credential] The supplied auth credential is incorrect, malformed or has expired.':
+            showSnackBar(context, 'E-mail ou senha incorreta.\n Tente novamente.',Colors.red);
             break;
           default:
+            print(error);
             showSnackBar(context, error.toString(),Colors.red);
             break;
         }

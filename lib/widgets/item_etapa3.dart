@@ -151,10 +151,12 @@ class ItemEtapa3 extends StatelessWidget {
                         margin: EdgeInsets.only(right: 10),
                       ),
                       SizedBox(width: 10,),
-                      listaAnalise[i].urlVideos.length==0 && listaAnalise[i].urlFotos.length==0?Container(
+                      listaAnalise[i].urlVideos.length==0 && listaAnalise[i].urlFotos.length==0?
+                      Container(
                         height: 50,
                         width: 90,
-                      ):Container(
+                      ):
+                      Container(
                         height: 50,
                         width: 90,
                         child: IconButton(

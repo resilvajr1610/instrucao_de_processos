@@ -280,10 +280,12 @@ class _InstrucaoUsuarioTelaState extends State<InstrucaoUsuarioTela> {
                 ItemEtapa3Titulo(
                   dadosEspecificacao: dadosEspecificacao,
                   item1: 'materiaPrima',
-                  item2: 'licenca_qualificacoes',
+                  item2: 'tempoTotal',
                   titulo1: 'Matéria-prima utilizada',
                   titulo2: 'Tempo total das etapas',
                   dadoString1: false,
+                  dadoString2: false,
+                  dadosInt: true,
                 ),
                 ItemEtapa3Titulo(
                   dadosEspecificacao: dadosEspecificacao,

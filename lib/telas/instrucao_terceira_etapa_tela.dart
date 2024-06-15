@@ -92,7 +92,7 @@ class _InstrucaoTerceiraEtapaTelaState extends State<InstrucaoTerceiraEtapaTela>
                     ),
                     child: Container(
                       width: largura * 0.95,
-                      child: Column(
+                      child: dadosEspecificacao==null?Container():Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Row(
@@ -161,6 +161,8 @@ class _InstrucaoTerceiraEtapaTelaState extends State<InstrucaoTerceiraEtapaTela>
                             titulo1: 'Matéria-prima utilizada',
                             titulo2: 'Tempo total das etapas ( min ) ',
                             dadoString1: false,
+                            dadoString2: false,
+                            dadosInt: true,
                           ),
                           ItemEtapa3Titulo(
                             dadosEspecificacao: dadosEspecificacao,

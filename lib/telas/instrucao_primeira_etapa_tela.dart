@@ -91,7 +91,7 @@ class _InstrucaoPrimeiraEtapaTelaState extends State<InstrucaoPrimeiraEtapaTela>
         prazo.text = BadStateString(dados, 'prazo');
         esp_maquina.text = BadStateString(dados, 'esp_maquina');
         licenca_qualificacoes.text = BadStateString(dados, 'licenca_qualificacoes');
-        tempoEtapas.text = BadStateInt(dados, 'totalEtapas')!=0?'${BadStateInt(dados, 'totalEtapas')} min':'Cálculo automático após finalização das etapas';
+        tempoEtapas.text = BadStateInt(dados, 'totalEtapas')!=0?'${(BadStateInt(dados, 'totalEtapas')/60).toStringAsFixed(0)} min':'Cálculo automático após finalização das etapas';
         dataCriacao = dados['dataCriacao'].toDate();
         dataVersao = dados['dataVersao'].toDate();
         carregando=false;
