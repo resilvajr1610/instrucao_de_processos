@@ -63,7 +63,7 @@ class ItemEtapa3Titulo extends StatelessWidget {
               SizedBox(width: 10,),
               TextoPadrao(
                 texto: dadoString2
-                    ?BadStateString(dadosEspecificacao, item2):dadosInt?'${(int.parse(BadStateString(dadosEspecificacao, item2))/60).toStringAsFixed(0)} minutos'
+                    ?BadStateString(dadosEspecificacao, item2):dadosInt?'${(int.parse(BadStateString(dadosEspecificacao, item2)==''?'0':BadStateString(dadosEspecificacao, item2))/60).toStringAsFixed(0)} minutos'
                     :BadStateList(dadosEspecificacao, item2).toString().replaceAll('[', '').replaceAll(']', '').toString(),
                 cor: Cores.cinzaTextoEscuro,
                 maxLines: 2,

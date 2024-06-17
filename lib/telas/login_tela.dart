@@ -6,7 +6,6 @@ import 'package:instrucao_de_processos/utilidades/cores.dart';
 import 'package:instrucao_de_processos/widgets/caixa_texto.dart';
 import 'package:instrucao_de_processos/widgets/snackBars.dart';
 import 'package:instrucao_de_processos/widgets/texto_padrao.dart';
-import '../utilidades/variavel_estatica.dart';
 import '../widgets/botao_padrao.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -20,11 +19,11 @@ class LoginTela extends StatefulWidget {
 
 class _LoginTelaState extends State<LoginTela> {
 
-  // var email = TextEditingController(text: 'teste123@gmail.com');
-  // var senha = TextEditingController(text: 'senha123');
-
-  var email = TextEditingController();
-  var senha = TextEditingController();
+  var email = TextEditingController(text: 'teste123@gmail.com');
+  var senha = TextEditingController(text: 'senha123');
+  //
+  // var email = TextEditingController();
+  // var senha = TextEditingController();
 
   bool obscure = true;
   bool carregandoConta = true;
