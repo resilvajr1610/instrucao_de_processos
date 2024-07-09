@@ -28,7 +28,11 @@ class ItemEtapa3 extends StatelessWidget {
 
     double largura = MediaQuery.of(context).size.width;
     double altura = MediaQuery.of(context).size.height;
-    
+
+    List tempo = tempoTotalEtapa.split(':');
+    String minutos = tempo[0];
+    String segundos = tempo[1];
+
     return Container(
       width: largura * 0.9,
       padding: EdgeInsets.all(10),
@@ -78,7 +82,7 @@ class ItemEtapa3 extends StatelessWidget {
                       SizedBox(width: 10,),
                       Container(
                           width: largura * 0.1,
-                          child: TextoPadrao(texto: '$tempoTotalEtapa min',cor: Cores.cinzaTextoEscuro,tamanhoFonte: 14,)
+                          child: TextoPadrao(texto: '$minutos min $segundos seg',cor: Cores.cinzaTextoEscuro,tamanhoFonte: 14,)
                       ),
                     ],
                   ),
@@ -155,6 +159,7 @@ class ItemEtapa3 extends StatelessWidget {
                       Container(
                         height: 50,
                         width: 90,
+                        margin: EdgeInsets.only(right: 20),
                       ):
                       Container(
                         height: 50,

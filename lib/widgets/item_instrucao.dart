@@ -79,19 +79,21 @@ class ItemInstrucao extends StatelessWidget {
                     color: Cores.cinzaClaro,
                   // color: Colors.red,
                     alignment: Alignment.centerRight,
-                    width: largura*1.45,
+                    width: largura*1.455,
                     height: 65,
                     padding: EdgeInsets.symmetric(horizontal: 20,vertical: 3.5),
                     child: Row(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         Container(
-                          padding: EdgeInsets.only(top: 3),
+                          margin: EdgeInsets.only(top: acesso_adm?0:8),
                           alignment: Alignment.topCenter,
                           height: 30,
                           child: TextoPadrao(texto: documentoReal,cor: Cores.cinzaTexto,tamanhoFonte: 15,)
                         ),
-                        !acesso_adm?TextoPadrao(texto:' '+ controller.text,cor: Cores.cinzaTexto,tamanhoFonte: 15,):CaixaTexto(controller: controller, largura: largura,textoCaixa: 'Inserir',corCaixa: Cores.cinzaClaro,corBorda: Cores.cinzaClaro,mostrarTitulo: false,escrever: escrever,ativarCaixa: escrever,),
+                        !acesso_adm?
+                        TextoPadrao(texto:' '+ controller.text,cor: Cores.cinzaTexto,tamanhoFonte: 15,)
+                            :CaixaTexto(controller: controller, largura: largura,textoCaixa: 'Inserir',corCaixa: Cores.cinzaClaro,corBorda: Cores.cinzaClaro,mostrarTitulo: false,escrever: escrever,ativarCaixa: escrever,),
                         Spacer(),
                         controller.text.isNotEmpty && listaVersao.length==0 && acesso_adm?BotaoPadraoNovaInstrucao(
                           texto: 'Criar Instrução',
@@ -123,7 +125,7 @@ class ItemInstrucao extends StatelessWidget {
                 itemBuilder: (context,i){
                   return listaIdEsp.isNotEmpty && listaVersao.length>i?Card(
                     child: mostrarLista?GestureDetector(
-                      onTap: ()=> Navigator.push(context, MaterialPageRoute(builder: (context)=>InstrucaoUsuarioTela(emailLogado: emailLogado, idEsp: listaIdEsp[i]))),
+                      onTap: ()=> Navigator.push(context, MaterialPageRoute(builder: (context)=>InstrucaoUsuarioTela(emailLogado: emailLogado, idEsp: listaIdEsp[i],documentoReal: documentoReal,))),
                       child: Container(
                         color: Cores.cardEsp,
                         alignment: Alignment.centerLeft,

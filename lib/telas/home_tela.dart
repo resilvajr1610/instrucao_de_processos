@@ -443,7 +443,7 @@ class _HomeTelaState extends State<HomeTela> {
   }
 
   carregarFuncao()async{
-    FirebaseFirestore.instance.collection('usuarios').where('email',isEqualTo: widget.emailLogado).get().then((dadosUsuario){
+    FirebaseFirestore.instance.collection('usuarios').where('email',isEqualTo: widget.emailLogado.toLowerCase()).get().then((dadosUsuario){
       if(BadStateString(dadosUsuario.docs[0],'tipo_acesso')=='ADM'){
         acesso_adm = true;
       }
@@ -591,7 +591,8 @@ class _HomeTelaState extends State<HomeTela> {
                             itemBuilder: (BuildContext context, int index) {
                               return listaRetornoPesquisa[index].listaVersao==''?Container():ListTile(
                                 onTap: (){
-                                  Navigator.push(context, MaterialPageRoute(builder: (context)=>InstrucaoUsuarioTela(emailLogado: widget.emailLogado, idEsp: listaRetornoPesquisa[index].listaVersao[0])));
+                                  Navigator.push(context, MaterialPageRoute(builder: (context)=>
+                                      InstrucaoUsuarioTela(emailLogado: widget.emailLogado, idEsp: listaRetornoPesquisa[index].listaVersao[0],documentoReal: '$index.0.0',)));
                                 },
                                 title: TextoPadrao(
                                   texto: '${listaRetornoPesquisa[index].listaVersao[0]}',

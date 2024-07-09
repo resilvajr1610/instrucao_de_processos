@@ -48,7 +48,7 @@ class AppBarPadrao extends StatelessWidget implements PreferredSizeWidget{
             ),
             TextoPadrao(texto: 'Instrução de processos',tamanhoFonte: 24,negrito: FontWeight.bold),
             Spacer(),
-            mostrarComentarios?Padding(
+            Padding(
               padding: const EdgeInsets.all(8.0),
               child: Tooltip(
                 message: 'Comentários',
@@ -56,7 +56,7 @@ class AppBarPadrao extends StatelessWidget implements PreferredSizeWidget{
                     onPressed: ()=>Navigator.push(context, MaterialPageRoute(builder: (context)=>ComentarioTela(emailLogado: emailLogado,))),
                     icon: Icon(Icons.report_problem,color: Colors.white,size: 35,)),
               ),
-            ):Container(),
+            ),
             mostrarUsuarios && mostrarComentarios?Tooltip(
               message: 'Cadastrar novo usuário',
               child: Padding(

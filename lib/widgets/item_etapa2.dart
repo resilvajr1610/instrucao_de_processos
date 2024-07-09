@@ -18,8 +18,13 @@ class ItemEtapa2 extends StatelessWidget {
   });
 
 
+
   @override
   Widget build(BuildContext context) {
+
+    List tempo = modeloEtapa.tempoTotalEtapaMinutos.split(':');
+    String minutos = tempo[0];
+    String segundos = tempo[1];
 
     return Container(
         width: 1200,
@@ -59,7 +64,7 @@ class ItemEtapa2 extends StatelessWidget {
                 SizedBox(width: 20,),
                 TextoPadrao(texto:'Tempo total da etapa',cor: Cores.primaria,tamanhoFonte: 14,),
                 SizedBox(width: 10,),
-                TextoPadrao(texto:'${modeloEtapa.tempoTotalEtapaMinutos} min',cor: Cores.cinzaTextoEscuro,tamanhoFonte: 14,),
+                TextoPadrao(texto:'$minutos min $segundos seg',cor: Cores.cinzaTextoEscuro,tamanhoFonte: 14,),
                 Spacer(),
                 IconButton(
                   icon: modeloEtapa.adicionarChaveRazao

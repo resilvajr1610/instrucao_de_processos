@@ -20,10 +20,12 @@ import 'package:video_player/video_player.dart';
 class InstrucaoUsuarioTela extends StatefulWidget {
   String emailLogado;
   String idEsp;
+  String documentoReal;
 
   InstrucaoUsuarioTela({
     required this.emailLogado,
     required this.idEsp,
+    required this.documentoReal,
   });
 
   @override
@@ -258,7 +260,7 @@ class _InstrucaoUsuarioTelaState extends State<InstrucaoUsuarioTela> {
                     children: [
                       TextoPadrao(texto: 'N° FIP',cor: Cores.primaria,negrito: FontWeight.bold,tamanhoFonte: 16,),
                       SizedBox(width: 10,),
-                      TextoPadrao(texto: BadStateString(dadosEspecificacao, 'numeroFIP').toString(),cor: Cores.cinzaTextoEscuro,negrito: FontWeight.bold,tamanhoFonte: 16,),
+                      TextoPadrao(texto: widget.documentoReal,cor: Cores.cinzaTextoEscuro,negrito: FontWeight.bold,tamanhoFonte: 16,),
                       SizedBox(width: 40,),
                       TextoPadrao(texto: 'Nome de Processos',cor: Cores.primaria,negrito: FontWeight.bold,tamanhoFonte: 16,),
                       SizedBox(width: 10,),

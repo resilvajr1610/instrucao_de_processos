@@ -32,7 +32,15 @@ class ItemEtapa3Titulo extends StatelessWidget {
 
     double largura = MediaQuery.of(context).size.width;
     double altura = MediaQuery.of(context).size.height;
-    
+
+    String minutos = '0';
+    String segundos = '0';
+
+    if(dadosInt){
+      minutos = (int.parse(BadStateString(dadosEspecificacao, item2))/60).toStringAsFixed(0);
+      segundos = (int.parse(BadStateString(dadosEspecificacao, item2))%60).toString();
+    }
+
     return Row(
       children: [
         Container(
@@ -63,7 +71,7 @@ class ItemEtapa3Titulo extends StatelessWidget {
               SizedBox(width: 10,),
               TextoPadrao(
                 texto: dadoString2
-                    ?BadStateString(dadosEspecificacao, item2):dadosInt?'${(int.parse(BadStateString(dadosEspecificacao, item2)==''?'0':BadStateString(dadosEspecificacao, item2))/60).toStringAsFixed(0)} minutos'
+                    ?BadStateString(dadosEspecificacao, item2):dadosInt?'$minutos min $segundos seg'
                     :BadStateList(dadosEspecificacao, item2).toString().replaceAll('[', '').replaceAll(']', '').toString(),
                 cor: Cores.cinzaTextoEscuro,
                 maxLines: 2,

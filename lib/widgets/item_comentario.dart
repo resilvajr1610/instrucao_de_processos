@@ -29,7 +29,7 @@ class ItemComentario extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Container(width: largura*0.1,child: TextoPadrao(texto:VariavelEstatica.mascaraDataHora.format(document!['data'].toDate()),cor: Cores.cinzaTextoEscuro,tamanhoFonte: 12)),
-              Container(width: largura*0.08,child: TextoPadrao(texto: BadStateInt(document, 'fip').toString(),cor: Cores.cinzaTextoEscuro,tamanhoFonte: 12,alinhamentoTexto: TextAlign.center,)),
+              Container(width: largura*0.08,child: TextoPadrao(texto: BadStateString(document,'fip'),cor: Cores.cinzaTextoEscuro,tamanhoFonte: 12,alinhamentoTexto: TextAlign.center,)),
               Container(width: largura*0.15,child: TextoPadrao(texto: BadStateString(document, 'processo'),cor: Cores.cinzaTextoEscuro,tamanhoFonte: 12)),
               Container(width: largura*0.08,child: TextoPadrao(texto: BadStateInt(document, 'versao').toString(),cor: Cores.cinzaTextoEscuro,tamanhoFonte: 12,alinhamentoTexto: TextAlign.center)),
               Container(width: largura*0.1,child: TextoPadrao(texto: BadStateInt(document, 'numEtapa').toString(),cor: Cores.cinzaTextoEscuro,tamanhoFonte: 12,alinhamentoTexto: TextAlign.center)),

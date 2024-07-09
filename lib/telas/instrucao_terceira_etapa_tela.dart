@@ -222,8 +222,14 @@ class _InstrucaoTerceiraEtapaTelaState extends State<InstrucaoTerceiraEtapaTela>
                                         }
                                     ),
                                   ),
-                                  TextoPadrao(texto: 'Observações Gerais/ O que é proibido e porque?',cor: Cores.primaria,negrito: FontWeight.bold,tamanhoFonte: 14,),
-                                  TextoPadrao(texto: BadStateString(dadosEtapas, 'observacoes'),cor: Cores.cinzaTextoEscuro,tamanhoFonte: 12,maxLines: 5,),
+                                  Padding(
+                                    padding: EdgeInsets.only(left: 6),
+                                    child: TextoPadrao(texto: 'Observações Gerais/ O que é proibido e porque?',cor: Cores.primaria,negrito: FontWeight.bold,tamanhoFonte: 14,),
+                                  ),
+                                  Padding(
+                                    padding: EdgeInsets.only(left: 6),
+                                    child: TextoPadrao(texto: BadStateString(dadosEtapas, 'observacoes'),cor: Cores.cinzaTextoEscuro,tamanhoFonte: 12,maxLines: 5,),
+                                  ),
                                   Container(
                                       width: largura * 0.7,
                                       padding: EdgeInsets.all(10),
