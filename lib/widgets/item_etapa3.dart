@@ -143,7 +143,7 @@ class ItemEtapa3 extends StatelessWidget {
                       Container(
                         alignment: Alignment.center,
                         width: 90,
-                        height: 50,
+                        height: 40,
                         child: listaAnalise[i].imagemSelecionada==''?TextoPadrao(texto: '-',cor: Cores.cinzaTextoEscuro,):Image.asset(listaAnalise[i].imagemSelecionada),
                         margin: EdgeInsets.only(right: 20),
                       ),

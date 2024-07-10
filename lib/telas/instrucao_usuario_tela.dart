@@ -15,7 +15,6 @@ import '../widgets/item_etapa3.dart';
 import '../widgets/item_etapa3_titulo.dart';
 import '../widgets/item_etapa3_um_titulo.dart';
 import '../widgets/texto_padrao.dart';
-import 'package:video_player/video_player.dart';
 
 class InstrucaoUsuarioTela extends StatefulWidget {
   String emailLogado;

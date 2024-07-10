@@ -37,8 +37,8 @@ class ItemEtapa3Titulo extends StatelessWidget {
     String segundos = '0';
 
     if(dadosInt){
-      minutos = (int.parse(BadStateString(dadosEspecificacao, item2))/60).toStringAsFixed(0);
-      segundos = (int.parse(BadStateString(dadosEspecificacao, item2))%60).toString();
+      minutos = (int.parse(BadStateString(dadosEspecificacao, item2)==''?'0':BadStateString(dadosEspecificacao, item2))/60).toStringAsFixed(0);
+      segundos = (int.parse(BadStateString(dadosEspecificacao, item2)==''?'0':BadStateString(dadosEspecificacao, item2))%60).toString();
     }
 
     return Row(

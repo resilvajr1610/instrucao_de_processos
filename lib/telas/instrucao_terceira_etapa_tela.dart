@@ -3,6 +3,7 @@ import 'package:instrucao_de_processos/modelos/bad_state_int.dart';
 import 'package:instrucao_de_processos/modelos/bad_state_list.dart';
 import 'package:instrucao_de_processos/modelos/bad_state_string.dart';
 import 'package:instrucao_de_processos/modelos/modelo_analise3.dart';
+import 'package:instrucao_de_processos/modelos/modelo_historico.dart';
 import 'package:instrucao_de_processos/telas/home_tela.dart';
 import 'package:instrucao_de_processos/widgets/item_etapa3.dart';
 import 'package:instrucao_de_processos/widgets/item_etapa3_titulo.dart';
@@ -19,11 +20,13 @@ class InstrucaoTerceiraEtapaTela extends StatefulWidget {
   String emailLogado;
   String idEtapa;
   String FIP;
+  String idFirebase;
 
   InstrucaoTerceiraEtapaTela({
     required this.emailLogado,
     required this.idEtapa,
     required this.FIP,
+    required this.idFirebase,
   });
 
   @override
@@ -36,7 +39,31 @@ class _InstrucaoTerceiraEtapaTelaState extends State<InstrucaoTerceiraEtapaTela>
   DocumentSnapshot? dadosEtapas;
   List listaEtapas=[];
   String idDoc = '';
+  List<ModeloHistorico> listaHistorico = [];
 
+  carregarEdicoes(){
+    FirebaseFirestore.instance.collection('documentos').doc(widget.idFirebase).get().then((edicao){
+      List edicoes = BadStateList(edicao, 'listaIdEsp');
+      for(int i = 0; edicoes.length > i; i++){
+        FirebaseFirestore.instance.collection('etapas').doc(edicoes[i]).get().then((etapa){
+          FirebaseFirestore.instance.collection('usuarios').doc(BadStateString(etapa,'idUsuario')).get().then((usuario){
+            listaHistorico.add(
+                ModeloHistorico(
+                    versao: i+1,
+                    data: VariavelEstatica.mascaraData.format(etapa!['dataCriacao'].toDate()),
+                    responsavel: BadStateString(usuario,'nome'),
+                    alteracao: BadStateString(etapa, 'alteracao')
+                )
+            );
+            print('listaHistorico.length');
+            print(listaHistorico.length);
+            setState(() {});
+          });
+        });
+      }
+    });
+  }
+  
   carregarDados(){
     FirebaseFirestore.instance.collection('especificacao').doc(widget.idEtapa).get().then((dadosEsp){
       dadosEspecificacao = dadosEsp;
@@ -47,12 +74,8 @@ class _InstrucaoTerceiraEtapaTelaState extends State<InstrucaoTerceiraEtapaTela>
       listaEtapas = BadStateList(dadosEta, 'listaEtapa');
       setState((){});
     });
-    print('widget.idEtapa');
-    print(widget.idEtapa);
     FirebaseFirestore.instance.collection('documentos').where('listaIdEsp',arrayContainsAny: [widget.idEtapa]).get().then((dadosDocumento){
       idDoc = dadosDocumento.docs[0].id;
-      print('teste');
-      print(dadosDocumento.docs.length);
     });
   }
   DateTime converterData(Timestamp timestamp) {
@@ -62,6 +85,7 @@ class _InstrucaoTerceiraEtapaTelaState extends State<InstrucaoTerceiraEtapaTela>
   @override
   void initState() {
     super.initState();
+    carregarEdicoes();
     carregarDados();
   }
 
@@ -243,72 +267,78 @@ class _InstrucaoTerceiraEtapaTelaState extends State<InstrucaoTerceiraEtapaTela>
                                       crossAxisAlignment: CrossAxisAlignment.start,
                                       children: [
                                         TextoPadrao(texto: 'Histórico',cor: Cores.primaria,negrito: FontWeight.bold,tamanhoFonte: 16,),
-                                        Column(
-                                          children: [
-                                            Container(
-                                              width: largura * 0.7,
-                                              child: Row(
-                                                mainAxisSize: MainAxisSize.min,
-                                                children: [
-                                                  Container(
-                                                      width: 50,
-                                                      child: TextoPadrao(texto:'Versão',cor: Cores.primaria,tamanhoFonte: 14,)
-                                                  ),
-                                                  Container(
-                                                      width: 100,
-                                                      child: TextoPadrao(texto:'Data',cor: Cores.primaria,tamanhoFonte: 14,alinhamentoTexto: TextAlign.center,)
-                                                  ),
-                                                  SizedBox(width: 10,),
-                                                  Container(
-                                                      width: 300,
-                                                      child: TextoPadrao(texto:'Resp. Alteração',cor: Cores.primaria,tamanhoFonte: 14,)
-                                                  ),
-                                                  SizedBox(width: 10,),
-                                                  Container(
-                                                      width: 350,
-                                                      child: TextoPadrao(texto:'Razão',cor: Cores.primaria,tamanhoFonte: 14,)
-                                                  ),
-                                                ],
+                                        Container(
+                                          width: largura * 0.7,
+                                          child: Row(
+                                            mainAxisAlignment: MainAxisAlignment.start,
+                                            children: [
+                                              Container(
+                                                  width: 50,
+                                                  child: TextoPadrao(texto:'Versão',cor: Cores.primaria,tamanhoFonte: 14,)
                                               ),
-                                            ),
-                                            Container(
-                                              width: largura * 0.7,
-                                              child: Row(
-                                                mainAxisSize: MainAxisSize.min,
-                                                children: [
-                                                  Container(
-                                                    width: 50,
-                                                    child: TextoPadrao(
-                                                      texto:BadStateInt(dadosEspecificacao, 'versao').toString(),
-                                                      cor: Cores.cinzaTextoEscuro,
-                                                      tamanhoFonte: 14,
-                                                      alinhamentoTexto: TextAlign.center,
-                                                    )
-                                                  ),
-                                                  Container(
-                                                    width: 100,
-                                                    child: TextoPadrao(
-                                                      texto:dadosEspecificacao==null?'':VariavelEstatica.mascaraData.format(dadosEspecificacao!['dataVersao'].toDate()),
-                                                      cor: Cores.cinzaTextoEscuro,
-                                                      tamanhoFonte: 14,
-                                                      alinhamentoTexto: TextAlign.center,
-                                                    )
-                                                  ),
-                                                  SizedBox(width: 10,),
-                                                  Container(
-                                                    width: 300,
-                                                    child: TextoPadrao(texto:BadStateString(dadosEspecificacao, 'visto'),cor: Cores.cinzaTextoEscuro,tamanhoFonte: 14,)
-                                                  ),
-                                                  SizedBox(width: 10,),
-                                                  Container(
-                                                    width: largura*0.3,
-                                                    child: TextoPadrao(texto:BadStateString(dadosEtapas, 'alteracao'),cor: Cores.cinzaTextoEscuro,tamanhoFonte: 14,)
-                                                  ),
-                                                ],
+                                              Container(
+                                                  width: 100,
+                                                  child: TextoPadrao(texto:'Data',cor: Cores.primaria,tamanhoFonte: 14,alinhamentoTexto: TextAlign.center,)
                                               ),
-                                            ),
-                                          ],
+                                              SizedBox(width: 10,),
+                                              Container(
+                                                  width: 300,
+                                                  child: TextoPadrao(texto:'Resp. Alteração',cor: Cores.primaria,tamanhoFonte: 14,)
+                                              ),
+                                              SizedBox(width: 10,),
+                                              Container(
+                                                  width: largura*0.3,
+                                                  child: TextoPadrao(texto:'Razão',cor: Cores.primaria,tamanhoFonte: 14,)
+                                              ),
+                                            ],
+                                          ),
                                         ),
+                                        Container(
+                                          height: listaHistorico.length*30,
+                                          child: ListView.builder(
+                                            itemCount: listaHistorico.length,
+                                            itemBuilder: (context,i){
+                                              return Container(
+                                                width: largura * 0.7,
+                                                child: Row(
+                                                  mainAxisSize: MainAxisSize.min,
+                                                  children: [
+                                                    Container(
+                                                        width: 50,
+                                                        child: TextoPadrao(
+                                                          texto: listaHistorico[i].versao.toString(),
+                                                          // texto: 'versao',
+                                                          cor: Cores.cinzaTextoEscuro,
+                                                          tamanhoFonte: 14,
+                                                          alinhamentoTexto: TextAlign.center,
+                                                        )
+                                                    ),
+                                                    Container(
+                                                        width: 100,
+                                                        child: TextoPadrao(
+                                                          texto: listaHistorico[i].data,
+                                                          // texto: 'data',
+                                                          cor: Cores.cinzaTextoEscuro,
+                                                          tamanhoFonte: 14,
+                                                          alinhamentoTexto: TextAlign.center,
+                                                        )
+                                                    ),
+                                                    SizedBox(width: 10,),
+                                                    Container(
+                                                        width: 300,
+                                                        child: TextoPadrao(texto:listaHistorico[i].responsavel,cor: Cores.cinzaTextoEscuro,tamanhoFonte: 14,)
+                                                    ),
+                                                    SizedBox(width: 10,),
+                                                    Container(
+                                                        width: largura*0.3,
+                                                        child: TextoPadrao(texto:listaHistorico[i].alteracao,cor: Cores.cinzaTextoEscuro,tamanhoFonte: 14,)
+                                                    ),
+                                                  ],
+                                                ),
+                                              );
+                                            },
+                                          ),
+                                        )
                                       ],
                                     ),
                                   ),

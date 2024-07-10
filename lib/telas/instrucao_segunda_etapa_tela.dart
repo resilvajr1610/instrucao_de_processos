@@ -29,6 +29,9 @@ class InstrucaoSegundaEtapaTela extends StatefulWidget {
   String idEspAtual;
   String idEspAnterior;
   bool etapaCriada;
+  Map<String,dynamic> primeiraEtapaEsp;
+  Map<String,dynamic> primeiraEtapaDoc;
+  String idFirebase;
 
   InstrucaoSegundaEtapaTela({
     required this.emailLogado,
@@ -37,6 +40,9 @@ class InstrucaoSegundaEtapaTela extends StatefulWidget {
     required this.idEspAtual,
     required this.idEspAnterior,
     required this.etapaCriada,
+    required this.primeiraEtapaEsp,
+    required this.primeiraEtapaDoc,
+    required this.idFirebase
   });
 
   @override
@@ -92,7 +98,7 @@ class _InstrucaoSegundaEtapaTelaState extends State<InstrucaoSegundaEtapaTela> {
     );
   }
 
-  carregarEtapa() {
+  carregarEtapa()async {
 
     double tempoTotal = 0;
 
@@ -100,7 +106,7 @@ class _InstrucaoSegundaEtapaTelaState extends State<InstrucaoSegundaEtapaTela> {
         .collection('etapas')
         .doc(widget.idEspAnterior)
         .get()
-        .then((etapasDoc) {
+        .then((etapasDoc)async {
       List<dynamic> listaMapEtapa = BadStateList(etapasDoc,'listaEtapa');
 
       for (int i = 0; i < listaMapEtapa.length; i++) {
@@ -108,6 +114,10 @@ class _InstrucaoSegundaEtapaTelaState extends State<InstrucaoSegundaEtapaTela> {
         List<ModeloAnalise2> listaAnalise = [];
 
         for (int j = 0; j < listaMapAnalise.length; j++) {
+
+          List fotosURL = BadStateList(etapasDoc, 'fotos_etapa${i}_analise${j}');
+          List videosURL = BadStateList(etapasDoc, 'videos_etapa${i}_analise${j}');
+
           listaAnalise.add(
               ModeloAnalise2(
                   analiseAtiva: true,
@@ -119,8 +129,8 @@ class _InstrucaoSegundaEtapaTelaState extends State<InstrucaoSegundaEtapaTela> {
                   pontoChave: TextEditingController(text: listaMapAnalise[j]['pontoChave']),
                   mostrarListaImagens: false,
                   listaCompleta: true,
-                  listaFotos: [],
-                  listaVideos: []
+                  listaFotos: fotosURL,
+                  listaVideos: videosURL
               )
           );
           tempoTotal = tempoTotal + double.parse(listaMapAnalise[j]['tempoAnalise']);
@@ -195,6 +205,8 @@ class _InstrucaoSegundaEtapaTelaState extends State<InstrucaoSegundaEtapaTela> {
         }
       }
 
+      FirebaseFirestore.instance.collection('documentos').doc(widget.idFirebase).update(widget.primeiraEtapaDoc);
+
       FirebaseFirestore.instance.collection('etapas').doc(widget.idEspAtual).set({
         'idEsp'       : widget.idEspAtual,
         'listaEtapa'  : listaMapEtapa,
@@ -204,12 +216,16 @@ class _InstrucaoSegundaEtapaTelaState extends State<InstrucaoSegundaEtapaTela> {
         'idEmail'     : FirebaseAuth.instance.currentUser!.email,
         'dataCriacao' : DateTime.now(),
       },SetOptions(merge: true)).then((value){
-        FirebaseFirestore.instance.collection('especificacao').doc(widget.idEspAtual).update({
+
+        widget.primeiraEtapaEsp.addAll({
           'etapa'     : 'criada',
-          'tempoTotal': tempoTotal
-        }).then((value){
+          'tempoTotal': tempoTotal,
+        });
+
+        FirebaseFirestore.instance.collection('especificacao').doc(widget.idEspAtual).set(widget.primeiraEtapaEsp).then((value){
           showSnackBar(context, 'Etapas foram salvas', Colors.green);
-          Navigator.of(context).push(MaterialPageRoute(builder: (context)=>InstrucaoTerceiraEtapaTela(emailLogado: widget.emailLogado,idEtapa: widget.idEspAtual,FIP: widget.FIP,)));
+          Navigator.of(context).push(MaterialPageRoute(builder: (context)=>
+              InstrucaoTerceiraEtapaTela(emailLogado: widget.emailLogado,idEtapa: widget.idEspAtual,FIP: widget.FIP,idFirebase: widget.idFirebase,)));
         });
       });
     }else{
@@ -256,6 +272,9 @@ class _InstrucaoSegundaEtapaTelaState extends State<InstrucaoSegundaEtapaTela> {
         }
       }
 
+
+      FirebaseFirestore.instance.collection('documentos').doc(widget.idFirebase).update(widget.primeiraEtapaDoc);
+
       FirebaseFirestore.instance.collection('etapas').doc(widget.idEspAtual).set({
         'idEsp'       : widget.idEspAtual,
         'listaEtapa'  : listaMapEtapa,
@@ -265,12 +284,16 @@ class _InstrucaoSegundaEtapaTelaState extends State<InstrucaoSegundaEtapaTela> {
         'idEmail'     : FirebaseAuth.instance.currentUser!.email,
         'dataCriacao' : DateTime.now(),
       },SetOptions(merge: true)).then((value){
-        FirebaseFirestore.instance.collection('especificacao').doc(widget.idEspAtual).update({
+
+        widget.primeiraEtapaEsp.addAll({
           'etapa'     : 'criada',
-          'tempoTotal': tempoTotal
-        }).then((value){
+          'tempoTotal': tempoTotal,
+        });
+
+        FirebaseFirestore.instance.collection('especificacao').doc(widget.idEspAtual).set(widget.primeiraEtapaEsp).then((value){
           showSnackBar(context, 'Etapas foram salvas', Colors.green);
-          Navigator.of(context).push(MaterialPageRoute(builder: (context)=>InstrucaoTerceiraEtapaTela(emailLogado: widget.emailLogado,idEtapa: widget.idEspAtual,FIP: widget.FIP)));
+          Navigator.of(context).push(MaterialPageRoute(builder: (context)=>
+              InstrucaoTerceiraEtapaTela(emailLogado: widget.emailLogado,idEtapa: widget.idEspAtual,FIP: widget.FIP,idFirebase: widget.idFirebase,)));
         });
       });
     }else{
@@ -617,8 +640,8 @@ class _InstrucaoSegundaEtapaTelaState extends State<InstrucaoSegundaEtapaTela> {
                                                   },
                                                   child: Container(
                                                       padding: EdgeInsets.all(5),
-                                                      width: 50,
-                                                      height: 50,
+                                                      width: 40,
+                                                      height: 40,
                                                       child: Image.asset(VariavelEstatica.listaImagens[k])
                                                   ),
                                                 );

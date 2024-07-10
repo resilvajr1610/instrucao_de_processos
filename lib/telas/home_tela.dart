@@ -7,7 +7,6 @@ import 'package:instrucao_de_processos/modelos/modelo_instrucao_lista_1_1_1.dart
 import 'package:instrucao_de_processos/modelos/modelo_pesquisa.dart';
 import 'package:instrucao_de_processos/telas/login_tela.dart';
 import 'package:instrucao_de_processos/utilidades/cores.dart';
-import 'package:instrucao_de_processos/utilidades/variavel_estatica.dart';
 import 'package:instrucao_de_processos/widgets/appbar_padrao.dart';
 import 'package:instrucao_de_processos/widgets/botao_padrao.dart';
 import 'package:instrucao_de_processos/widgets/item_instrucao.dart';
@@ -143,6 +142,7 @@ class _HomeTelaState extends State<HomeTela> {
             }
           }
         }
+        corrigirDoc();
       }else{
         adicionarListaInicio('1.0.0', '',[],'',[],'', false, true,true);
         carregando = false;
@@ -429,13 +429,22 @@ class _HomeTelaState extends State<HomeTela> {
     });
   }
 
+  corrigirDoc(){
+    for(int i = 0; listaInstrucaoPrincipal.length > i; i++){
+      FirebaseFirestore.instance.collection('documentos').doc(listaInstrucaoPrincipal[i].idFire).update({
+        'idDoc' : '${i + 1}.0.0',
+        'numeroFIP' : '${i + 1}.0.0',
+      });
+    }
+  }
+
   Future<String> salvarFirebase(String colecao, String titulo, String idDocumento, String nivel,String nomeProcesso) async {
     DocumentReference docRef = FirebaseFirestore.instance.collection(colecao).doc();
     await docRef.set({
       'idFire': docRef.id,
       'listaIdEsp' : [],
       'idDoc'     : idDocumento,
-      'titulo'    : titulo,
+      'titulo'    : titulo.toUpperCase(),
       'posicao'   : nivel,
       'nomeProcesso': nomeProcesso
     });
@@ -626,7 +635,7 @@ class _HomeTelaState extends State<HomeTela> {
                               idFirebase: listaInstrucaoPrincipal[inicio].idFire,
                               idDocumento: listaInstrucaoPrincipal[inicio].idDoc,
                               listaIdEsp: listaInstrucaoPrincipal[inicio].listaIdEsp,
-                              nomeProcesso: listaInstrucaoPrincipal[inicio].nomeProcesso,
+                              nomeProcesso: listaInstrucaoPrincipal[inicio].nomeProcesso.toUpperCase(),
                               listaVersao: listaInstrucaoPrincipal[inicio].listaVersao,
                               mostrarLista: listaInstrucaoPrincipal[inicio].mostrarListaInicio,
                               emailLogado: widget.emailLogado,
@@ -718,7 +727,7 @@ class _HomeTelaState extends State<HomeTela> {
                                         idFirebase: listaInstrucaoPrincipal[inicio].listaMeio[meio].idFire,
                                         idDocumento: listaInstrucaoPrincipal[inicio].listaMeio[meio].idDoc,
                                         listaIdEsp: listaInstrucaoPrincipal[inicio].listaMeio[meio].listaIdEsp,
-                                        nomeProcesso: listaInstrucaoPrincipal[inicio].listaMeio[meio].nomeProcesso,
+                                        nomeProcesso: listaInstrucaoPrincipal[inicio].listaMeio[meio].nomeProcesso.toUpperCase(),
                                         listaVersao: listaInstrucaoPrincipal[inicio].listaMeio[meio].listaVersao,
                                         mostrarLista: listaInstrucaoPrincipal[inicio].listaMeio[meio].mostrarListaMeio,
                                         emailLogado: widget.emailLogado,
@@ -803,7 +812,7 @@ class _HomeTelaState extends State<HomeTela> {
                                                 idFirebase: listaInstrucaoPrincipal[inicio].listaMeio[meio].listaFinal[fim].idFire,
                                                 idDocumento: listaInstrucaoPrincipal[inicio].listaMeio[meio].listaFinal[fim].idDoc,
                                                 listaIdEsp: listaInstrucaoPrincipal[inicio].listaMeio[meio].listaFinal[fim].listaIdEsp,
-                                                nomeProcesso: listaInstrucaoPrincipal[inicio].listaMeio[meio].listaFinal[fim].nomeProcesso,
+                                                nomeProcesso: listaInstrucaoPrincipal[inicio].listaMeio[meio].listaFinal[fim].nomeProcesso.toUpperCase(),
                                                 listaVersao: listaInstrucaoPrincipal[inicio].listaMeio[meio].listaFinal[fim].listaVersao,
                                                 mostrarLista: listaInstrucaoPrincipal[inicio].listaMeio[meio].listaFinal[fim].mostrarListaFinal,
                                                 emailLogado: widget.emailLogado,

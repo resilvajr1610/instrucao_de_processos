@@ -12,8 +12,8 @@ class ModeloAnalise2{
   bool mostrarListaImagens;
   bool analiseAtiva;
   bool listaCompleta;
-  List <XFile> listaFotos;
-  List <Uint8List> listaVideos;
+  List listaFotos;
+  List listaVideos;
 
   ModeloAnalise2({
     required this.etapaAtiva,

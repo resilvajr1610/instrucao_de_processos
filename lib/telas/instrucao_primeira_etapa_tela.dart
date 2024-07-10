@@ -112,44 +112,69 @@ class _InstrucaoPrimeiraEtapaTelaState extends State<InstrucaoPrimeiraEtapaTela>
         && esp_maquina.text.isNotEmpty && licenca_qualificacoes.text.isNotEmpty){
 
         DocumentReference docRef = FirebaseFirestore.instance.collection('especificacao').doc();
-        docRef.set({
-          'id' : docRef.id,
-          'nome' : nomeProcesso.text.trim().toUpperCase(),
-          'maquina' : maquina.text.trim().toUpperCase(),
-          'epi' : listaTagDocEpi,
-          'ferramentas' : listaTagDocFerramenta,
-          'materiaPrima' : listaTagDocMaterial,
-          'espeficicacao' : espeficicacao.text.trim().toUpperCase(),
-          'esp_maquina' : esp_maquina.text.trim().toUpperCase(),
-          'licenca_qualificacoes' : licenca_qualificacoes.text.trim().toUpperCase(),
-          'prazo' : prazo.text.trim().toUpperCase(),
-          'visto': dadosUsuarioFire['nome'],
-          'idCriador': dadosUsuarioFire['id'],
-          'numeroFIP' : widget.idDocumento,
-          'versao' : versao+1,
-          'dataCriacao':DateTime.now(),
-          'dataVersao':DateTime.now(),
-        }).then((value){
-          FirebaseFirestore.instance.collection('documentos').doc(widget.idFirebase).update({
-            'listaIdEsp'  : FieldValue.arrayUnion([docRef.id]),
-            'listaVersao':FieldValue.arrayUnion([nomeProcesso.text.trim().toUpperCase() +' ${versao+1}']),
-            'versao' : versao+1,
-            'numeroFIP' : widget.idDocumento,
-          }).then((value){
-            showSnackBar(context, 'Dados salvos com sucesso!', Colors.green);
-            Navigator.push(context, MaterialPageRoute(builder: (context)=>
-                InstrucaoSegundaEtapaTela(
-                  emailLogado: widget.emailLogado,
-                  nomeProcesso: nomeProcesso.text,
-                  FIP: widget.idDocumento,
-                  idEspAtual: docRef.id,
-                  etapaCriada: false,
-                  idEspAnterior: '',
-                )
-              )
-            );
-          });
-        });
+        // docRef.set({
+        //   'id' : docRef.id,
+        //   'nome' : nomeProcesso.text.trim().toUpperCase(),
+        //   'maquina' : maquina.text.trim().toUpperCase(),
+        //   'epi' : listaTagDocEpi,
+        //   'ferramentas' : listaTagDocFerramenta,
+        //   'materiaPrima' : listaTagDocMaterial,
+        //   'espeficicacao' : espeficicacao.text.trim().toUpperCase(),
+        //   'esp_maquina' : esp_maquina.text.trim().toUpperCase(),
+        //   'licenca_qualificacoes' : licenca_qualificacoes.text.trim().toUpperCase(),
+        //   'prazo' : prazo.text.trim().toUpperCase(),
+        //   'visto': dadosUsuarioFire['nome'],
+        //   'idCriador': dadosUsuarioFire['id'],
+        //   'numeroFIP' : widget.idDocumento,
+        //   'versao' : versao+1,
+        //   'dataCriacao':DateTime.now(),
+        //   'dataVersao':DateTime.now(),
+        // }).then((value){
+        //   FirebaseFirestore.instance.collection('documentos').doc(widget.idFirebase).update({
+        //     'listaIdEsp'  : FieldValue.arrayUnion([docRef.id]),
+        //     'listaVersao':FieldValue.arrayUnion([nomeProcesso.text.trim().toUpperCase() +' ${versao+1}']),
+        //     'versao' : versao+1,
+        //     'numeroFIP' : widget.idDocumento,
+        //   }).then((value){
+        //
+        // });
+        showSnackBar(context, 'Dados salvos com sucesso!', Colors.green);
+        Navigator.push(context, MaterialPageRoute(builder: (context)=>
+            InstrucaoSegundaEtapaTela(
+              emailLogado: widget.emailLogado,
+              nomeProcesso: nomeProcesso.text,
+              FIP: widget.idDocumento,
+              idEspAtual: docRef.id,
+              etapaCriada: false,
+              idEspAnterior: '',
+              idFirebase: widget.idFirebase,
+              primeiraEtapaEsp: {
+                'id' : docRef.id,
+                'nome' : nomeProcesso.text.trim().toUpperCase(),
+                'maquina' : maquina.text.trim().toUpperCase(),
+                'epi' : listaTagDocEpi,
+                'ferramentas' : listaTagDocFerramenta,
+                'materiaPrima' : listaTagDocMaterial,
+                'espeficicacao' : espeficicacao.text.trim().toUpperCase(),
+                'esp_maquina' : esp_maquina.text.trim().toUpperCase(),
+                'licenca_qualificacoes' : licenca_qualificacoes.text.trim().toUpperCase(),
+                'prazo' : prazo.text.trim().toUpperCase(),
+                'visto': dadosUsuarioFire['nome'],
+                'idCriador': dadosUsuarioFire['id'],
+                'numeroFIP' : widget.idDocumento,
+                'versao' : versao+1,
+                'dataCriacao':DateTime.now(),
+                'dataVersao':DateTime.now(),
+              },
+              primeiraEtapaDoc: {
+                'listaIdEsp'  : FieldValue.arrayUnion([docRef.id]),
+                'listaVersao':FieldValue.arrayUnion([nomeProcesso.text.trim().toUpperCase() +' ${versao+1}']),
+                'versao' : versao+1,
+                'numeroFIP' : widget.idDocumento,
+              },
+            )
+          )
+        );
     }else{
       showSnackBar(context, 'Preencha todos os campos para avançar!', Colors.red);
     }
@@ -160,44 +185,71 @@ class _InstrucaoPrimeiraEtapaTelaState extends State<InstrucaoPrimeiraEtapaTela>
         && esp_maquina.text.isNotEmpty && licenca_qualificacoes.text.isNotEmpty){
 
       DocumentReference docRef = FirebaseFirestore.instance.collection('especificacao').doc();
-      docRef.set({
-        'id' : docRef.id,
-        'nome' : nomeProcesso.text.trim().toUpperCase(),
-        'maquina' : maquina.text.trim().toUpperCase(),
-        'epi' : listaTagDocEpi,
-        'ferramentas' : listaTagDocFerramenta,
-        'materiaPrima' : listaTagDocMaterial,
-        'espeficicacao' : espeficicacao.text.trim().toUpperCase(),
-        'esp_maquina' : esp_maquina.text.trim().toUpperCase(),
-        'licenca_qualificacoes' : licenca_qualificacoes.text.trim().toUpperCase(),
-        'prazo' : prazo.text.trim().toUpperCase(),
-        'visto': dadosUsuarioFire['nome'],
-        'idCriador': dadosUsuarioFire['id'],
-        'numeroFIP' : widget.idDocumento,
-        'versao' : versao+1,
-        'dataCriacao':dataCriacao,
-        'dataVersao':DateTime.now(),
-      }).then((value){
-        FirebaseFirestore.instance.collection('documentos').doc(widget.idFirebase).update({
-          'listaIdEsp'  : FieldValue.arrayUnion([docRef.id]),
-          'nomeProcesso': nomeProcesso.text.trim().toUpperCase(),
-          'listaVersao' : FieldValue.arrayUnion(['${nomeProcesso.text.trim().toUpperCase()} - versão ${versao+1}']),
-          'numeroFIP'   : widget.idDocumento,
-        }).then((value){
-          showSnackBar(context, 'Dados salvos com sucesso!', Colors.green);
-          Navigator.push(context, MaterialPageRoute(builder: (context)=>
-              InstrucaoSegundaEtapaTela(
-                emailLogado: widget.emailLogado,
-                nomeProcesso: nomeProcesso.text,
-                FIP: widget.idDocumento,
-                idEspAtual: docRef.id,
-                etapaCriada: true,
-                idEspAnterior: widget.idEsp,
-              )
-            )
-          );
-        });
-      });
+      // docRef.set({
+      //   'id' : docRef.id,
+      //   'nome' : nomeProcesso.text.trim().toUpperCase(),
+      //   'maquina' : maquina.text.trim().toUpperCase(),
+      //   'epi' : listaTagDocEpi,
+      //   'ferramentas' : listaTagDocFerramenta,
+      //   'materiaPrima' : listaTagDocMaterial,
+      //   'espeficicacao' : espeficicacao.text.trim().toUpperCase(),
+      //   'esp_maquina' : esp_maquina.text.trim().toUpperCase(),
+      //   'licenca_qualificacoes' : licenca_qualificacoes.text.trim().toUpperCase(),
+      //   'prazo' : prazo.text.trim().toUpperCase(),
+      //   'visto': dadosUsuarioFire['nome'],
+      //   'idCriador': dadosUsuarioFire['id'],
+      //   'numeroFIP' : widget.idDocumento,
+      //   'versao' : versao+1,
+      //   'dataCriacao':dataCriacao,
+      //   'dataVersao':DateTime.now(),
+      // }).then((value){
+      //   FirebaseFirestore.instance.collection('documentos').doc(widget.idFirebase).update({
+      //     'listaIdEsp'  : FieldValue.arrayUnion([docRef.id]),
+      //     'nomeProcesso': nomeProcesso.text.trim().toUpperCase(),
+      //     'listaVersao' : FieldValue.arrayUnion(['${nomeProcesso.text.trim().toUpperCase()} - versão ${versao+1}']),
+      //     'numeroFIP'   : widget.idDocumento,
+      //   }).then((value){
+      //
+      //   });
+      // });
+
+      showSnackBar(context, 'Dados salvos com sucesso!', Colors.green);
+      Navigator.push(context, MaterialPageRoute(builder: (context)=>
+          InstrucaoSegundaEtapaTela(
+            emailLogado: widget.emailLogado,
+            nomeProcesso: nomeProcesso.text,
+            FIP: widget.idDocumento,
+            idEspAtual: docRef.id,
+            etapaCriada: true,
+            idEspAnterior: widget.idEsp,
+            idFirebase: widget.idFirebase,
+            primeiraEtapaEsp: {
+              'id' : docRef.id,
+              'nome' : nomeProcesso.text.trim().toUpperCase(),
+              'maquina' : maquina.text.trim().toUpperCase(),
+              'epi' : listaTagDocEpi,
+              'ferramentas' : listaTagDocFerramenta,
+              'materiaPrima' : listaTagDocMaterial,
+              'espeficicacao' : espeficicacao.text.trim().toUpperCase(),
+              'esp_maquina' : esp_maquina.text.trim().toUpperCase(),
+              'licenca_qualificacoes' : licenca_qualificacoes.text.trim().toUpperCase(),
+              'prazo' : prazo.text.trim().toUpperCase(),
+              'visto': dadosUsuarioFire['nome'],
+              'idCriador': dadosUsuarioFire['id'],
+              'numeroFIP' : widget.idDocumento,
+              'versao' : versao+1,
+              'dataCriacao':dataCriacao,
+              'dataVersao':DateTime.now(),
+            },
+            primeiraEtapaDoc: {
+              'listaIdEsp'  : FieldValue.arrayUnion([docRef.id]),
+              'nomeProcesso': nomeProcesso.text.trim().toUpperCase(),
+              'listaVersao' : FieldValue.arrayUnion(['${nomeProcesso.text.trim().toUpperCase()} - versão ${versao+1}']),
+              'numeroFIP'   : widget.idDocumento,
+            },
+          )
+        )
+      );
     }else{
       showSnackBar(context, 'Preencha todos os campos para avançar!', Colors.red);
     }
