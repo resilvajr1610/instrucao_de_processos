@@ -4,6 +4,7 @@ import 'package:instrucao_de_processos/modelos/bad_state_int.dart';
 import 'package:instrucao_de_processos/modelos/bad_state_list.dart';
 import 'package:instrucao_de_processos/modelos/bad_state_string.dart';
 import 'package:instrucao_de_processos/telas/instrucao_segunda_etapa_tela.dart';
+import 'package:instrucao_de_processos/utilidades/funcoes_principais.dart';
 import 'package:instrucao_de_processos/utilidades/variavel_estatica.dart';
 import 'package:instrucao_de_processos/widgets/botao_padrao.dart';
 import 'package:instrucao_de_processos/widgets/nivel_etapa2.dart';
@@ -185,33 +186,6 @@ class _InstrucaoPrimeiraEtapaTelaState extends State<InstrucaoPrimeiraEtapaTela>
         && esp_maquina.text.isNotEmpty && licenca_qualificacoes.text.isNotEmpty){
 
       DocumentReference docRef = FirebaseFirestore.instance.collection('especificacao').doc();
-      // docRef.set({
-      //   'id' : docRef.id,
-      //   'nome' : nomeProcesso.text.trim().toUpperCase(),
-      //   'maquina' : maquina.text.trim().toUpperCase(),
-      //   'epi' : listaTagDocEpi,
-      //   'ferramentas' : listaTagDocFerramenta,
-      //   'materiaPrima' : listaTagDocMaterial,
-      //   'espeficicacao' : espeficicacao.text.trim().toUpperCase(),
-      //   'esp_maquina' : esp_maquina.text.trim().toUpperCase(),
-      //   'licenca_qualificacoes' : licenca_qualificacoes.text.trim().toUpperCase(),
-      //   'prazo' : prazo.text.trim().toUpperCase(),
-      //   'visto': dadosUsuarioFire['nome'],
-      //   'idCriador': dadosUsuarioFire['id'],
-      //   'numeroFIP' : widget.idDocumento,
-      //   'versao' : versao+1,
-      //   'dataCriacao':dataCriacao,
-      //   'dataVersao':DateTime.now(),
-      // }).then((value){
-      //   FirebaseFirestore.instance.collection('documentos').doc(widget.idFirebase).update({
-      //     'listaIdEsp'  : FieldValue.arrayUnion([docRef.id]),
-      //     'nomeProcesso': nomeProcesso.text.trim().toUpperCase(),
-      //     'listaVersao' : FieldValue.arrayUnion(['${nomeProcesso.text.trim().toUpperCase()} - versão ${versao+1}']),
-      //     'numeroFIP'   : widget.idDocumento,
-      //   }).then((value){
-      //
-      //   });
-      // });
 
       showSnackBar(context, 'Dados salvos com sucesso!', Colors.green);
       Navigator.push(context, MaterialPageRoute(builder: (context)=>
@@ -443,6 +417,7 @@ class _InstrucaoPrimeiraEtapaTelaState extends State<InstrucaoPrimeiraEtapaTela>
                           largura: largura*0.3,
                           corCaixa: Cores.cinzaClaro,
                           ativarCaixa: widget.idEsp=='',
+                          copiar: true,
                         ),
                         Row(
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -451,8 +426,9 @@ class _InstrucaoPrimeiraEtapaTelaState extends State<InstrucaoPrimeiraEtapaTela>
                               textoCaixa: 'Informe a máquina',
                               titulo: 'Máquina',
                               controller: maquina,
-                              largura: largura*0.45,
+                              largura: largura*0.43,
                               corCaixa: Cores.cinzaClaro,
+                              copiar: true,
                             ),
                             SizedBox(width: 30,),
                             Column(
@@ -688,7 +664,7 @@ class _InstrucaoPrimeiraEtapaTelaState extends State<InstrucaoPrimeiraEtapaTela>
                                 TituloPadrao(title:'Matéria-prima utilizada'),
                                 Container(
                                   height: 50,
-                                  width: largura*0.45,
+                                  width: largura*0.45+40,
                                   decoration: BoxDecoration(
                                       color: Cores.cinzaClaro,
                                       borderRadius: BorderRadius.all(Radius.circular(3))
@@ -797,7 +773,7 @@ class _InstrucaoPrimeiraEtapaTelaState extends State<InstrucaoPrimeiraEtapaTela>
                             CaixaTexto(
                               titulo: 'Tempo total das Etapas',
                               controller: tempoEtapas,
-                              largura: largura*0.25,
+                              largura: largura*0.25+40,
                               corCaixa: Cores.cinzaClaro,
                               ativarCaixa: false,
                             ),
@@ -810,6 +786,7 @@ class _InstrucaoPrimeiraEtapaTelaState extends State<InstrucaoPrimeiraEtapaTela>
                               controller: espeficicacao,
                               largura: largura*0.45,
                               corCaixa: Cores.cinzaClaro,
+                              copiar: true,
                             ),
                             SizedBox(width: 30,),
                             CaixaTexto(
@@ -817,6 +794,7 @@ class _InstrucaoPrimeiraEtapaTelaState extends State<InstrucaoPrimeiraEtapaTela>
                               controller: prazo,
                               largura: largura*0.25,
                               corCaixa: Cores.cinzaClaro,
+                              copiar: true,
                             ),
                           ],
                         ),
@@ -827,13 +805,15 @@ class _InstrucaoPrimeiraEtapaTelaState extends State<InstrucaoPrimeiraEtapaTela>
                               controller: esp_maquina,
                               largura: largura*0.45,
                               corCaixa: Cores.cinzaClaro,
+                              copiar: true,
                             ),
                             SizedBox(width: 30,),
                             CaixaTexto(
                               titulo: 'Licenças ou qualificações',
                               controller: licenca_qualificacoes,
-                              largura: largura*0.45,
+                              largura: largura*0.4,
                               corCaixa: Cores.cinzaClaro,
+                              copiar: true,
                             ),
                           ],
                         ),

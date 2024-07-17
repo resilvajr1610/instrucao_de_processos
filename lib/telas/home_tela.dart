@@ -601,7 +601,14 @@ class _HomeTelaState extends State<HomeTela> {
                               return listaRetornoPesquisa[index].listaVersao==''?Container():ListTile(
                                 onTap: (){
                                   Navigator.push(context, MaterialPageRoute(builder: (context)=>
-                                      InstrucaoUsuarioTela(emailLogado: widget.emailLogado, idEsp: listaRetornoPesquisa[index].listaVersao[0],documentoReal: '$index.0.0',)));
+                                      InstrucaoUsuarioTela(
+                                        emailLogado: widget.emailLogado,
+                                        idEsp: listaRetornoPesquisa[index].listaVersao[0],
+                                        documentoReal: '$index.0.0',
+                                        idDocumento: listaRetornoPesquisa[index].idDocumento,
+                                      )
+                                  )
+                                  );
                                 },
                                 title: TextoPadrao(
                                   texto: '${listaRetornoPesquisa[index].listaVersao[0]}',

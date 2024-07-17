@@ -125,7 +125,8 @@ class ItemInstrucao extends StatelessWidget {
                 itemBuilder: (context,i){
                   return listaIdEsp.isNotEmpty && listaVersao.length>i?Card(
                     child: mostrarLista?GestureDetector(
-                      onTap: ()=> Navigator.push(context, MaterialPageRoute(builder: (context)=>InstrucaoUsuarioTela(emailLogado: emailLogado, idEsp: listaIdEsp[i],documentoReal: documentoReal,))),
+                      onTap: ()=> Navigator.push(context, MaterialPageRoute(builder: (context)=>
+                          InstrucaoUsuarioTela(emailLogado: emailLogado, idEsp: listaIdEsp[i],documentoReal: documentoReal,idDocumento: idFirebase,))),
                       child: Container(
                         color: Cores.cardEsp,
                         alignment: Alignment.centerLeft,

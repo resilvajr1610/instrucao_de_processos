@@ -60,6 +60,7 @@ class ItemEtapa2 extends StatelessWidget {
                   largura: 400,
                   corCaixa: Cores.cinzaClaro,
                   ativarCaixa: true,
+                  copiar: true,
                 ),
                 SizedBox(width: 20,),
                 TextoPadrao(texto:'Tempo total da etapa',cor: Cores.primaria,tamanhoFonte: 14,),

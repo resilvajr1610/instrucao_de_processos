@@ -87,7 +87,9 @@ class _InstrucaoSegundaEtapaTelaState extends State<InstrucaoSegundaEtapaTela> {
                 mostrarListaImagens: false,
                 listaCompleta: false,
                 listaFotos: [],
-                listaVideos: []
+                listaFotosUrl: [],
+                listaVideos: [],
+                listaVideosUrl: [],
               )
             ],
             aumentarAlturaContainer: false,
@@ -118,6 +120,9 @@ class _InstrucaoSegundaEtapaTelaState extends State<InstrucaoSegundaEtapaTela> {
           List fotosURL = BadStateList(etapasDoc, 'fotos_etapa${i}_analise${j}');
           List videosURL = BadStateList(etapasDoc, 'videos_etapa${i}_analise${j}');
 
+          print(fotosURL);
+          print(videosURL);
+
           listaAnalise.add(
               ModeloAnalise2(
                   analiseAtiva: true,
@@ -129,12 +134,31 @@ class _InstrucaoSegundaEtapaTelaState extends State<InstrucaoSegundaEtapaTela> {
                   pontoChave: TextEditingController(text: listaMapAnalise[j]['pontoChave']),
                   mostrarListaImagens: false,
                   listaCompleta: true,
-                  listaFotos: fotosURL,
-                  listaVideos: videosURL
+                  listaFotos: [],
+                  listaFotosUrl: fotosURL,
+                  listaVideos: [],
+                  listaVideosUrl: videosURL
               )
           );
           tempoTotal = tempoTotal + double.parse(listaMapAnalise[j]['tempoAnalise']);
         }
+        listaAnalise.add(
+            ModeloAnalise2(
+                analiseAtiva: false,
+                etapaAtiva: false,
+                imagemSelecionada: '',
+                numeroAnalise: 0,
+                nomeAnalise: TextEditingController(),
+                tempoAnalise: TextEditingController(),
+                pontoChave: TextEditingController(),
+                mostrarListaImagens: false,
+                listaCompleta: false,
+                listaFotos: [],
+                listaFotosUrl: [],
+                listaVideos: [],
+                listaVideosUrl: [],
+            )
+        );
 
         listaEtapas.add(
             ModeloEtapa2(
@@ -166,14 +190,25 @@ class _InstrucaoSegundaEtapaTelaState extends State<InstrucaoSegundaEtapaTela> {
     });
   }
 
+  salvarMidias(){
+    for(int i = 0; listaEtapas.length > i; i++){
+      for(int j = 0; listaEtapas[i].listaAnalise.length > j; j++){
+        FirebaseFirestore.instance.collection('etapas').doc(widget.idEspAtual).set({
+          "idEsp": widget.idEspAtual,
+          "fotos_etapa${i}_analise${j}": FieldValue.arrayUnion(listaEtapas[i].listaAnalise[j].listaFotosUrl),
+          "videos_etapa${i}_analise${j}": FieldValue.arrayUnion(listaEtapas[i].listaAnalise[j].listaVideosUrl)
+        },SetOptions(merge: true)).then((value){
+          print('listaFotosUrl : ${listaEtapas[i].listaAnalise[j].listaFotosUrl.length}');
+          print('listaVideosUrl : ${listaEtapas[i].listaAnalise[j].listaVideosUrl.length}');
+        });
+      }
+    }
+  }
+
   editarEtapa() {
-
     double tempoTotal = 0;
-
     if(listaEtapas[0].adicionaNovo!=0){
-
       List <Map> listaMapEtapa = [];
-
       for(int i = 0; listaEtapas.length > i; i++){
         List <Map> listaMapAnalise = [];
         for(int j = 0; listaEtapas[i].listaAnalise.length > j; j++){
@@ -204,6 +239,8 @@ class _InstrucaoSegundaEtapaTelaState extends State<InstrucaoSegundaEtapaTela> {
           });
         }
       }
+
+      salvarMidias();
 
       FirebaseFirestore.instance.collection('documentos').doc(widget.idFirebase).update(widget.primeiraEtapaDoc);
 
@@ -329,7 +366,7 @@ class _InstrucaoSegundaEtapaTelaState extends State<InstrucaoSegundaEtapaTela> {
                         Card(
                           child: TextButton(
                             child: TextoPadrao(texto: 'Foto',cor: Cores.cinzaTextoEscuro,negrito: FontWeight.bold,),
-                            onPressed: ()=>escolherImagens(posicaoEtapa,posicaoAnalise)
+                            onPressed: ()async=>await escolherImagens(posicaoEtapa,posicaoAnalise)
                           ),
                         ),
                         Card(
@@ -352,6 +389,11 @@ class _InstrucaoSegundaEtapaTelaState extends State<InstrucaoSegundaEtapaTela> {
   }
 
   Future escolherImagens(int posicaoEtapa, int posicaoAnalise) async {
+
+    print('posicaoEtapa $posicaoEtapa');
+    print('posicaoAnalise $posicaoAnalise');
+    print('+'+listaEtapas[posicaoEtapa].listaAnalise[posicaoAnalise].nomeAnalise.text.trim()+'+');
+
     final multiPicker = ImagePicker();
     List <XFile> imageFromWebList = [];
     if(imageFromWebList!=[]){
@@ -359,18 +401,26 @@ class _InstrucaoSegundaEtapaTelaState extends State<InstrucaoSegundaEtapaTela> {
     }
 
     if(mounted){
-      await multiPicker.pickMultiImage(imageQuality: 30,).then((value){
-        setState(() {
-          if(value.isNotEmpty){
-            listaEtapas[posicaoEtapa].listaAnalise[posicaoAnalise].listaFotos.addAll(value);
-            Navigator.pop(context);
-            carregando = true;
-            salvarFotos(posicaoEtapa,posicaoAnalise);
-          }else{
-            print('sem imagens');
-          }
+      try{
+        await multiPicker.pickMultiImage(imageQuality: 30,).then((value){
+          setState(() {
+            if(value.isNotEmpty){
+              listaEtapas[posicaoEtapa].listaAnalise[posicaoAnalise].listaFotos.addAll(value);
+              Navigator.pop(context);
+              carregando = true;
+              salvarFotos(posicaoEtapa,posicaoAnalise);
+            }else{
+              print('sem imagens');
+            }
+          });
         });
-      });
+      } catch (erro){
+        print(erro.toString());
+        carregando = false;
+        showSnackBar(context, 'Foto não capturada', Colors.red);
+        setState(() {});
+
+      }
     }
   }
 
@@ -378,8 +428,8 @@ class _InstrucaoSegundaEtapaTelaState extends State<InstrucaoSegundaEtapaTela> {
     for(int i = 0; listaEtapas[posicaoEtapa].listaAnalise[posicaoAnalise].listaFotos.length > i ; i++){
       Uint8List arquivoSelecionado = await listaEtapas[posicaoEtapa].listaAnalise[posicaoAnalise].listaFotos[i].readAsBytes();
       FirebaseStorage storage = FirebaseStorage.instance;
-      String nomearquivo = "Processo/${listaEtapas[posicaoEtapa].nomeProcesso}/Etapa/${listaEtapas[posicaoEtapa].nomeEtapa.text}/Analise/"
-          "${listaEtapas[posicaoEtapa].listaAnalise[posicaoAnalise].nomeAnalise.text}/Fotos/${DateTime.now()}.jpeg";
+      String nomearquivo = "Processo/$posicaoEtapa/Etapa/listaEtapas$posicaoEtapa/Analise/"
+          "listaAnalise$posicaoAnalise}/Fotos/${DateTime.now()}.jpeg";
       Reference reference = storage.ref(nomearquivo);
       UploadTask uploadTaskSnapshot = reference.putData(arquivoSelecionado, SettableMetadata(contentType: 'image/jpeg'));
       await uploadTaskSnapshot.whenComplete(()async{
@@ -454,8 +504,8 @@ class _InstrucaoSegundaEtapaTelaState extends State<InstrucaoSegundaEtapaTela> {
               print(listaEtapas[posicaoEtapa].listaAnalise[posicaoAnalise].listaVideos.length);
               if (listaEtapas[posicaoEtapa].listaAnalise[posicaoAnalise].listaVideos.isNotEmpty) {
                 var arquivo = XFile.fromData(uploadfile);
-                String nomearquivo = "Processo/${listaEtapas[posicaoEtapa].nomeProcesso}/Etapa/${listaEtapas[posicaoEtapa].nomeEtapa.text}/Analise/"
-                    "${listaEtapas[posicaoEtapa].listaAnalise[posicaoAnalise].nomeAnalise.text}/Videos/${DateTime.now()}.mp4";
+                String nomearquivo = "Processo/$posicaoEtapa/Etapa/listaEtapas$posicaoEtapa/Analise/"
+                    "listaAnalise$posicaoAnalise/Videos/${DateTime.now()}.mp4";
                 carregando = true;
                 Navigator.pop(context);
                 salvarVideo(nomearquivo, arquivo,posicaoEtapa,posicaoAnalise);
@@ -590,19 +640,21 @@ class _InstrucaoSegundaEtapaTelaState extends State<InstrucaoSegundaEtapaTela> {
                                                       }
 
                                                     listaEtapas[i].listaAnalise.add(
-                                                        ModeloAnalise2(
-                                                            etapaAtiva: true,
-                                                            imagemSelecionada: '',
-                                                            numeroAnalise: int.parse('${j+1}0'),
-                                                            nomeAnalise: TextEditingController(),
-                                                            tempoAnalise: TextEditingController(),
-                                                            pontoChave: TextEditingController(),
-                                                            mostrarListaImagens: false,
-                                                            analiseAtiva: true,
-                                                            listaCompleta: false,
-                                                            listaFotos: [],
-                                                            listaVideos: []
-                                                        )
+                                                      ModeloAnalise2(
+                                                        etapaAtiva: true,
+                                                        imagemSelecionada: '',
+                                                        numeroAnalise: int.parse('${j+1}0'),
+                                                        nomeAnalise: TextEditingController(),
+                                                        tempoAnalise: TextEditingController(),
+                                                        pontoChave: TextEditingController(),
+                                                        mostrarListaImagens: false,
+                                                        analiseAtiva: true,
+                                                        listaCompleta: false,
+                                                        listaFotos: [],
+                                                        listaFotosUrl: [],
+                                                        listaVideos: [],
+                                                        listaVideosUrl: [],
+                                                      )
                                                     );
                                                     int minutos = listaEtapas[i].tempoTotalEtapaSegundos ~/60;
                                                     double segundos = listaEtapas[i].tempoTotalEtapaSegundos % 60;

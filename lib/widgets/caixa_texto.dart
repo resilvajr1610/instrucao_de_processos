@@ -3,6 +3,8 @@ import 'package:flutter/services.dart';
 import 'package:instrucao_de_processos/utilidades/cores.dart';
 import 'package:instrucao_de_processos/widgets/titulo_padrao.dart';
 
+import '../utilidades/funcoes_principais.dart';
+
 class CaixaTexto extends StatelessWidget {
   bool obscure;
   bool mostrarOlho;
@@ -22,6 +24,7 @@ class CaixaTexto extends StatelessWidget {
   bool escrever;
   double margimBottom;
   bool ativarCaixa;
+  bool copiar;
 
   CaixaTexto({
     required this.controller,
@@ -42,6 +45,7 @@ class CaixaTexto extends StatelessWidget {
     this.escrever = true,
     this.margimBottom = 5,
     this.ativarCaixa = true,
+    this.copiar = false,
   }) : inputFormatters = inputFormatters ?? [];
 
   @override
@@ -51,7 +55,7 @@ class CaixaTexto extends StatelessWidget {
       children: [
         mostrarTitulo?TituloPadrao(title:titulo):Container(),
         Container(
-          width: largura,
+          width: copiar?largura+40:largura,
           margin: EdgeInsets.only(bottom: margimBottom),
           decoration: BoxDecoration(
             color: corCaixa,
@@ -102,6 +106,12 @@ class CaixaTexto extends StatelessWidget {
                   )
                 ),
               ),
+              copiar?IconButton(
+                onPressed:()async{
+                  controller.text = await FuncoesPrincipais().pegarTextoCopiado();
+                },
+                icon: Icon(Icons.copy)
+              ):Container(),
               mostrarOlho?Container(
                 width: mostrarOlho?largura*0.1:0,
                 child: IconButton(

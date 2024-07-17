@@ -13,7 +13,9 @@ class ModeloAnalise2{
   bool analiseAtiva;
   bool listaCompleta;
   List listaFotos;
+  List listaFotosUrl;
   List listaVideos;
+  List listaVideosUrl;
 
   ModeloAnalise2({
     required this.etapaAtiva,
@@ -26,6 +28,8 @@ class ModeloAnalise2{
     required this.analiseAtiva,
     required this.listaCompleta,
     required this.listaFotos,
+    required this.listaFotosUrl,
     required this.listaVideos,
+    required this.listaVideosUrl,
   });
 }
