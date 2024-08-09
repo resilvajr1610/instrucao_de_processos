@@ -8,16 +8,22 @@ class ItemEtapaUmTitulo extends StatelessWidget {
   DocumentSnapshot? dadosEspecificacao;
   String titulo;
   String item;
+  bool pc;
 
   ItemEtapaUmTitulo({
     required this.dadosEspecificacao,
     required this.titulo,
     required this.item,
+    required this.pc
   });
 
   @override
   Widget build(BuildContext context) {
-    return Row(
+
+    double largura = MediaQuery.of(context).size.width;
+    double altura = MediaQuery.of(context).size.height;
+
+    return pc?Row(
       children: [
         TextoPadrao(texto: titulo,cor: Cores.primaria,tamanhoFonte: 14,),
         SizedBox(width: 10,),
@@ -26,6 +32,19 @@ class ItemEtapaUmTitulo extends StatelessWidget {
           cor: Cores.cinzaTextoEscuro,
           tamanhoFonte: 12,
           maxLines: 2,),
+      ],
+    ):Row(
+      children: [
+        TextoPadrao(texto: titulo,cor: Cores.primaria,tamanhoFonte: 14,),
+        SizedBox(width: 10,),
+        Container(
+          width: largura*0.6,
+          child: TextoPadrao(
+            texto: BadStateList(dadosEspecificacao, item).toString().replaceAll('[', '').replaceAll(']', ''),
+            cor: Cores.cinzaTextoEscuro,
+            tamanhoFonte: 12,
+            maxLines: 2,),
+        ),
       ],
     );
   }

@@ -81,7 +81,7 @@ class ItemInstrucao extends StatelessWidget {
                     alignment: Alignment.centerRight,
                     width: largura*1.455,
                     height: 65,
-                    padding: EdgeInsets.symmetric(horizontal: 20,vertical: 3.5),
+                    padding: largura<850?EdgeInsets.symmetric(horizontal: 10,vertical: 0):EdgeInsets.symmetric(horizontal: 20,vertical: 3.5),
                     child: Row(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
@@ -119,18 +119,21 @@ class ItemInstrucao extends StatelessWidget {
             ),
             Container(
               height: mostrarLista?listaIdEsp.length * 80:0,
-              width: largura,
+              width: largura==300?350:largura,
               child: ListView.builder(
                 itemCount: listaIdEsp.length,
                 itemBuilder: (context,i){
+
                   return listaIdEsp.isNotEmpty && listaVersao.length>i?Card(
                     child: mostrarLista?GestureDetector(
                       onTap: ()=> Navigator.push(context, MaterialPageRoute(builder: (context)=>
                           InstrucaoUsuarioTela(emailLogado: emailLogado, idEsp: listaIdEsp[i],documentoReal: documentoReal,idDocumento: idFirebase,))),
                       child: Container(
                         color: Cores.cardEsp,
+                        // color: Colors.blue,
                         alignment: Alignment.centerLeft,
-                        width: largura,
+                        width: largura==300?350:largura,
+                        // width: 500,
                         height: 65,
                         padding: EdgeInsets.symmetric(horizontal: 15),
                         child: Row(
@@ -138,16 +141,18 @@ class ItemInstrucao extends StatelessWidget {
                           mainAxisAlignment: MainAxisAlignment.end,
                           children: [
                             Container(
+                              // color: Colors.yellow,
                               width: !acesso_adm?largura*0.9:largura*0.75,
                               child: TextoPadrao(
                                 texto: listaVersao[i],
                                 cor: Cores.primaria,
+                                tamanhoFonte: largura==300?10:14,
                               ),
                             ),
                             acesso_adm?IconButton(
                                 onPressed: ()=>Navigator.push(context, MaterialPageRoute(builder: (context)=>
                                     InstrucaoPrimeiraEtapaTela(idDocumento: idDocumento,idFirebase: idFirebase,emailLogado: emailLogado,idEsp: listaIdEsp[i],nomeProcedimento: nomeProcesso,))),
-                                icon: Icon(Icons.edit,color: Cores.primaria,)
+                                icon: Icon(Icons.edit,color: Cores.primaria,size: largura==300?15:20,)
                             ):Container(),
                             acesso_adm?IconButton(onPressed: (){
                               showDialog(context: context,
@@ -179,7 +184,7 @@ class ItemInstrucao extends StatelessWidget {
                                       ),
                                     );
                                   });
-                            }, icon: Icon(Icons.delete,size: 20,color: Colors.red,)):Container()
+                            }, icon: Icon(Icons.delete,size: largura==300?15:20,color: Colors.red,)):Container()
                           ],
                         ),
                       ),
@@ -191,7 +196,7 @@ class ItemInstrucao extends StatelessWidget {
           ],
         ),
         acesso_adm &&idFirebase!=''?Padding(
-          padding: const EdgeInsets.symmetric(vertical: 20.0),
+          padding: EdgeInsets.symmetric(vertical: 20.0),
           child: IconButton(
             onPressed: funcaoExcluirGeral,
             icon: Icon(Icons.delete,color: Colors.red,)

@@ -10,14 +10,14 @@ class ItemEtapa2 extends StatelessWidget {
   ModeloEtapa2 modeloEtapa;
   var botaoAtivaEtapa;
   Widget listViewAnalise;
+  bool pc;
 
   ItemEtapa2({
     required this.modeloEtapa,
     required this.botaoAtivaEtapa,
     required this.listViewAnalise,
+    required this.pc
   });
-
-
 
   @override
   Widget build(BuildContext context) {
@@ -26,10 +26,13 @@ class ItemEtapa2 extends StatelessWidget {
     String minutos = tempo[0];
     String segundos = tempo[1];
 
+    double largura = MediaQuery.of(context).size.width;
+    double altura = MediaQuery.of(context).size.height;
+
     return Container(
         width: 1200,
         height: modeloEtapa.aumentarAlturaContainer?400:modeloEtapa.adicionarChaveRazao?400:120,
-        padding: EdgeInsets.all(20),
+        padding: EdgeInsets.all(pc?20:5),
         margin: EdgeInsets.symmetric(vertical: 10,horizontal: 5),
         decoration: BoxDecoration(
           color: Colors.white,
@@ -47,7 +50,7 @@ class ItemEtapa2 extends StatelessWidget {
           // crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             TextoPadrao(texto:'Etapa ${modeloEtapa.numeroEtapa}',cor: Cores.primaria,negrito: FontWeight.bold,tamanhoFonte: 14,),
-            Row(
+            pc?Row(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 TextoPadrao(texto:'Nome da Etapa',cor: Cores.primaria,tamanhoFonte: 14,),
@@ -76,8 +79,50 @@ class ItemEtapa2 extends StatelessWidget {
                   onPressed: botaoAtivaEtapa,
                 )
               ],
+            ):Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Container(
+                  width: largura*0.8,
+                  child: Row(
+                    children: [
+                      TextoPadrao(texto:'Nome da Etapa',cor: Cores.primaria,tamanhoFonte: 14,),
+                      SizedBox(width: 5,),
+                      CaixaTexto(
+                        mostrarTitulo: false,
+                        textoCaixa: 'Inserir nome da etapa',
+                        titulo: '',
+                        controller: modeloEtapa.nomeEtapa,
+                        largura: 200,
+                        corCaixa: Cores.cinzaClaro,
+                        ativarCaixa: true,
+                        copiar: true,
+                      ),
+                    ],
+                  ),
+                ),
+                Container(
+                  width: largura*0.8,
+                  child: Row(
+                    children: [
+                      TextoPadrao(texto:'Tempo total da etapa',cor: Cores.primaria,tamanhoFonte: 14,),
+                      SizedBox(width: 10,),
+                      TextoPadrao(texto:'$minutos min $segundos seg',cor: Cores.cinzaTextoEscuro,tamanhoFonte: 14,),
+                      Spacer(),
+                      IconButton(
+                        icon: modeloEtapa.adicionarChaveRazao
+                            ?Icon(Icons.arrow_drop_down,color: Cores.cinzaTextoEscuro,size: 30,)
+                            :modeloEtapa.ativarCaixaEtapa
+                            ?Icon(Icons.arrow_right,color: Cores.cinzaTextoEscuro,size: 30,)
+                            :Icon(Icons.add_box,color: Cores.primaria,),
+                        onPressed: botaoAtivaEtapa,
+                      )
+                    ],
+                  ),
+                ),
+              ],
             ),
-            modeloEtapa.adicionarChaveRazao?Column(
+            modeloEtapa.adicionarChaveRazao && pc?Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Row(
@@ -112,6 +157,11 @@ class ItemEtapa2 extends StatelessWidget {
                 listViewAnalise
               ],
             ):Container(),
+            modeloEtapa.adicionarChaveRazao && !pc?Column(
+              children: [
+                Divider(),
+                listViewAnalise],
+            ):Container()
           ],
         ),
       );

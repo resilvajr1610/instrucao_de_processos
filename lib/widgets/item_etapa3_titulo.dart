@@ -15,6 +15,7 @@ class ItemEtapa3Titulo extends StatelessWidget {
   bool dadoString1;
   bool dadoString2;
   bool dadosInt;
+  bool pc;
 
   ItemEtapa3Titulo({
     required this.dadosEspecificacao,
@@ -22,6 +23,7 @@ class ItemEtapa3Titulo extends StatelessWidget {
     required this.item2,
     required this.titulo1,
     required this.titulo2,
+    required this.pc,
     this.dadoString1 = true,
     this.dadoString2 = true,
     this.dadosInt = false,
@@ -41,7 +43,7 @@ class ItemEtapa3Titulo extends StatelessWidget {
       segundos = (int.parse(BadStateString(dadosEspecificacao, item2)==''?'0':BadStateString(dadosEspecificacao, item2))%60).toString();
     }
 
-    return Row(
+    return pc?Row(
       children: [
         Container(
           width: largura>1200?largura * 0.45:largura * 0.15,
@@ -76,6 +78,50 @@ class ItemEtapa3Titulo extends StatelessWidget {
                 cor: Cores.cinzaTextoEscuro,
                 maxLines: 2,
                 tamanhoFonte: 12,
+              ),
+            ],
+          ),
+        ),
+      ],
+    ):Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Container(
+          width: largura * 0.95,
+          child: Row(
+            children: [
+              TextoPadrao(texto: titulo1,cor: Cores.primaria,tamanhoFonte: 14,),
+              SizedBox(width: 10,),
+              Container(
+                width: largura*0.55,
+                child: TextoPadrao(
+                  texto: dadoString1
+                      ?BadStateString(dadosEspecificacao, item1)
+                      :BadStateList(dadosEspecificacao, item1).toString().replaceAll('[', '').replaceAll(']', ''),
+                  cor: Cores.cinzaTextoEscuro,
+                  maxLines: 2,
+                  tamanhoFonte: 12,
+                ),
+              ),
+            ],
+          ),
+        ),
+        Container(
+          width: largura * 0.95,
+          child: Row(
+            children: [
+              TextoPadrao(texto: titulo2,cor: Cores.primaria,tamanhoFonte: 14,),
+              SizedBox(width: 10,),
+              Container(
+                width: largura*0.55,
+                child: TextoPadrao(
+                  texto: dadoString2
+                      ?BadStateString(dadosEspecificacao, item2):dadosInt?'$minutos min $segundos seg'
+                      :BadStateList(dadosEspecificacao, item2).toString().replaceAll('[', '').replaceAll(']', '').toString(),
+                  cor: Cores.cinzaTextoEscuro,
+                  maxLines: 2,
+                  tamanhoFonte: 12,
+                ),
               ),
             ],
           ),

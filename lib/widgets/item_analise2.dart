@@ -14,6 +14,7 @@ class ItemAnalise2 extends StatelessWidget {
   var funcaoFotoVideo;
   var funcaoAlterar;
   int indice;
+  bool pc;
 
   ItemAnalise2({
     required this.modeloAnalise,
@@ -22,20 +23,21 @@ class ItemAnalise2 extends StatelessWidget {
     required this.botaoMostrarListaImagem,
     required this.funcaoFotoVideo,
     required this.funcaoAlterar,
-    required this.indice
+    required this.indice,
+    required this.pc
   });
 
   @override
   Widget build(BuildContext context) {
 
-    return  Row(
+    return  pc?Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Container(
           width: 100,
           height: modeloAnalise.mostrarListaImagens?300:50,
           child: modeloAnalise.mostrarListaImagens?listViewImagens
-              :GestureDetector(
+          :GestureDetector(
             onTap: modeloAnalise.analiseAtiva?botaoMostrarListaImagem:null,
             child: Container(
               width: 30,
@@ -135,6 +137,158 @@ class ItemAnalise2 extends StatelessWidget {
             icon: Icon(Icons.edit,color: Colors.orange,),
             onPressed: funcaoAlterar,
           ),
+        ),
+      ],
+    ):Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Column(
+              children: [
+                Container(
+                    width: 90,
+                    child: TextoPadrao(texto:'Característica',cor: Cores.primaria,tamanhoFonte: 14,)
+                ),
+                Container(
+                  width: 90,
+                  height: modeloAnalise.mostrarListaImagens?300:50,
+                  child: modeloAnalise.mostrarListaImagens?listViewImagens
+                      :GestureDetector(
+                    onTap: modeloAnalise.analiseAtiva?botaoMostrarListaImagem:null,
+                    child: Container(
+                      width: 30,
+                      height: 30,
+                      child: modeloAnalise.imagemSelecionada==''?Container(
+                        margin: EdgeInsets.symmetric(vertical: 5,horizontal: 20),
+                        width: 20,
+                        height: 20,
+                        decoration: BoxDecoration(
+                          color: Cores.cinzaClaro,
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            TextoPadrao(texto: '-',cor: Cores.cinzaTextoEscuro,),
+                            Icon(Icons.arrow_drop_down,size: 20,color: Cores.cinzaTextoEscuro,)
+                          ],
+                        ),
+                      ):GestureDetector(
+                        onTap: modeloAnalise.analiseAtiva?botaoMostrarListaImagem:null,
+                        child: Container(
+                            padding: EdgeInsets.all(5),
+                            width: 50,
+                            height: 50,
+                            child: Image.asset(modeloAnalise.imagemSelecionada)
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            SizedBox(width: 10,),
+            Column(
+              children: [
+                Container(
+                    child: TextoPadrao(texto:'Análise',cor: Cores.primaria,tamanhoFonte: 14,)
+                ),
+                Container(
+                    padding: EdgeInsets.symmetric(vertical: 12),
+                    width: 50,
+                    child: TextoPadrao(texto:'${indice+1}0',cor: Cores.primaria,tamanhoFonte: 14,alinhamentoTexto: TextAlign.center,)
+                ),
+              ],
+            ),
+            SizedBox(width: 10,),
+            Column(
+              children: [
+                Container(
+                    width: 70,
+                    child: TextoPadrao(texto:'Mídias',cor: Cores.primaria,tamanhoFonte: 14,)
+                ),
+                Container(
+                  width: 70,
+                  padding: EdgeInsets.symmetric(vertical: 8),
+                  child: IconButton(
+                    icon: Icon(Icons.add_photo_alternate_outlined,color: Cores.cinzaTexto,),
+                    onPressed: !modeloAnalise.analiseAtiva?null:funcaoFotoVideo,
+                  ),
+                ),
+              ],
+            ),
+            SizedBox(width: 10,),
+            Column(
+              children: [
+                Container(
+                    width: 100,
+                    child: TextoPadrao(texto:'Tempo (seg)',cor: Cores.primaria,tamanhoFonte: 14,)
+                ),
+                CaixaTexto(
+                  mostrarTitulo: false,
+                  textoCaixa: 'Inserir tempo',
+                  titulo: '',
+                  controller: modeloAnalise.tempoAnalise,
+                  largura: 100,
+                  corCaixa: Cores.cinzaClaro,
+                  ativarCaixa: modeloAnalise.analiseAtiva,
+                  textInputType: TextInputType.number,
+                  inputFormatters: [
+                    FilteringTextInputFormatter.digitsOnly
+                  ],
+                ),
+              ],
+            ),
+            Padding(
+              padding: EdgeInsets.symmetric(vertical: 8.0),
+              child: IconButton(
+                icon: !modeloAnalise.listaCompleta?Icon(Icons.add_box,color: Cores.primaria,):Icon(Icons.clear,color: Colors.red,),
+                onPressed: botaoSalvarNovaAnalise,
+              ),
+            ),
+            Padding(
+              padding: EdgeInsets.symmetric(vertical: 8.0),
+              child: IconButton(
+                icon: Icon(Icons.edit,color: Colors.orange,),
+                onPressed: funcaoAlterar,
+              ),
+            ),
+          ],
+        ),
+        Container(
+          width: 300,
+          child: TextoPadrao(texto:'Análise da Operação',cor: Cores.primaria,tamanhoFonte: 14,)
+        ),
+        CaixaTexto(
+          mostrarTitulo: false,
+          textoCaixa: 'Inserir nova análise',
+          titulo: '',
+          controller: modeloAnalise.nomeAnalise,
+          largura: 300,
+          corCaixa: Cores.cinzaClaro,
+          ativarCaixa: modeloAnalise.analiseAtiva,
+          maximoLinhas: 3,
+          textInputType: TextInputType.multiline,
+          copiar: true,
+        ),
+        Container(
+          width: 300,
+          child: TextoPadrao(texto:'Ponto Chave/Razão',cor: Cores.primaria,tamanhoFonte: 14,)
+        ),
+        CaixaTexto(
+          mostrarTitulo: false,
+          textoCaixa: 'Inserir ponto chave',
+          titulo: '',
+          controller: modeloAnalise.pontoChave,
+          largura: 300,
+          corCaixa: Cores.cinzaClaro,
+          ativarCaixa: modeloAnalise.analiseAtiva,
+          textInputType: TextInputType.multiline,
+          maximoLinhas: 3,
+          copiar: true,
         ),
       ],
     );

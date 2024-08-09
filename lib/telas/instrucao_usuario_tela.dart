@@ -59,8 +59,6 @@ class _InstrucaoUsuarioTelaState extends State<InstrucaoUsuarioTela> {
                     alteracao: BadStateString(etapa, 'alteracao')
                 )
             );
-            print('listaHistorico.length');
-            print(listaHistorico.length);
             setState(() {});
           });
         });
@@ -69,6 +67,8 @@ class _InstrucaoUsuarioTelaState extends State<InstrucaoUsuarioTela> {
   }
 
   carregarDados(){
+    print('idEsp');
+    print(widget.idEsp);
     FirebaseFirestore.instance.collection('especificacao').doc(widget.idEsp).get().then((dadosEsp){
       dadosEspecificacao = dadosEsp;
       setState((){});
@@ -107,6 +107,9 @@ class _InstrucaoUsuarioTelaState extends State<InstrucaoUsuarioTela> {
   carregarWidget(int numEtapa, String descricaoEtapa,){
     showDialog(context: context,
         builder: (context){
+
+        double largura = MediaQuery.of(context).size.width;
+
           return Center(
             child: AlertDialog(
               title: TextoPadrao(texto: 'Reportar Anomalia',cor: Cores.primaria,negrito: FontWeight.bold,),
@@ -121,7 +124,7 @@ class _InstrucaoUsuarioTelaState extends State<InstrucaoUsuarioTela> {
                       cor: Cores.cinzaTextoEscuro,
                       maxLines: 5,
                     ),
-                    CaixaTexto(controller: controllerComentario, largura: 480)
+                    CaixaTexto(controller: controllerComentario, largura: largura>700?480:300)
                   ],
                 ),
               ),
@@ -234,10 +237,10 @@ class _InstrucaoUsuarioTelaState extends State<InstrucaoUsuarioTela> {
         height: altura*1.2 +(listaEtapas.length*360),
         width: largura,
         child: Container(
-          width: largura * 0.8,
+          width: largura>700?largura * 0.8:largura,
           height: altura*1.2 +(listaEtapas.length*350),
-          margin: EdgeInsets.all(20),
-          padding: EdgeInsets.all(36),
+          margin: EdgeInsets.all(largura>700?20:10),
+          padding: EdgeInsets.all(largura>700?36:5),
           alignment: Alignment.topLeft,
           decoration: BoxDecoration(
               color: Colors.white,
@@ -248,17 +251,17 @@ class _InstrucaoUsuarioTelaState extends State<InstrucaoUsuarioTela> {
             child: ListView(
               // crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Row(
+                largura>700?Row(
                   children: [
                     Container(
                         width: largura * 0.45,
-                        child: TextoPadrao(texto: 'Instrução de Processos',cor: Cores.primaria,negrito: FontWeight.bold,tamanhoFonte: 20,)
+                        child: TextoPadrao(texto: 'Instrução de Processos',cor: Cores.primaria,negrito: FontWeight.bold,tamanhoFonte: largura>700?20:14,)
                     ),
                     Container(
                       width: largura * 0.45,
                       child: Row(
                         children: [
-                          TextoPadrao(texto: 'Data de criação',cor: Cores.primaria,tamanhoFonte: 14,),
+                          TextoPadrao(texto: 'Data de criação',cor: Cores.primaria,tamanhoFonte: largura>700?14:10,),
                           SizedBox(width: 10,),
                           TextoPadrao(texto: dadosEspecificacao==null?'00/00/0000':VariavelEstatica.mascaraData.format(dadosEspecificacao!['dataCriacao'].toDate()),cor: Cores.cinzaTextoEscuro,tamanhoFonte: 14,),
                           SizedBox(width: 40,),
@@ -280,8 +283,43 @@ class _InstrucaoUsuarioTelaState extends State<InstrucaoUsuarioTela> {
                       ),
                     )
                   ],
+                ):Column(
+                  children: [
+                    Container(
+                        width: largura,
+                        child: TextoPadrao(texto: 'Instrução de Processos',cor: Cores.primaria,negrito: FontWeight.bold,tamanhoFonte: largura>700?20:14,)
+                    ),
+                    Container(
+                      width: largura,
+                      child: Row(
+                        children: [
+                          TextoPadrao(texto: 'Data de criação',cor: Cores.primaria,tamanhoFonte: largura>700?14:10,),
+                          SizedBox(width: 10,),
+                          TextoPadrao(texto: dadosEspecificacao==null?'00/00/0000':VariavelEstatica.mascaraData.format(dadosEspecificacao!['dataCriacao'].toDate()),cor: Cores.cinzaTextoEscuro,tamanhoFonte: 14,),
+                          SizedBox(width: 40,),
+                          TextoPadrao(texto: 'Visto',cor: Cores.primaria,tamanhoFonte: 14,),
+                          SizedBox(width: 10,),
+                          Container(
+                              width: largura * 0.4,
+                              child: TextoPadrao(texto: BadStateString(dadosEspecificacao, 'visto'),cor: Cores.cinzaTextoEscuro,tamanhoFonte: 10,)
+                          ),
+                        ],
+                      ),
+                    ),
+                    Row(
+                      children: [
+                        TextoPadrao(texto: 'Versão',cor: Cores.primaria,tamanhoFonte: 14,),
+                        SizedBox(width: 10,),
+                        TextoPadrao(texto: BadStateInt(dadosEspecificacao, 'versao').toString(),cor: Cores.cinzaTextoEscuro,tamanhoFonte: 14,),
+                        SizedBox(width: 20,),
+                        TextoPadrao(texto: 'Data',cor: Cores.primaria,tamanhoFonte: 14,),
+                        SizedBox(width: 10,),
+                        TextoPadrao(texto: dadosEspecificacao==null?'00/00/0000':VariavelEstatica.mascaraData.format(dadosEspecificacao!['dataVersao'].toDate()),cor: Cores.cinzaTextoEscuro,tamanhoFonte: 14,),
+                      ],
+                    )
+                  ],
                 ),
-                Padding(
+                largura>700?Padding(
                   padding: EdgeInsets.symmetric(vertical: 10),
                   child: Row(
                     crossAxisAlignment:CrossAxisAlignment.center ,
@@ -295,6 +333,27 @@ class _InstrucaoUsuarioTelaState extends State<InstrucaoUsuarioTela> {
                       TextoPadrao(texto: BadStateString(dadosEspecificacao, 'nome'),cor: Cores.cinzaTextoEscuro,negrito: FontWeight.bold,tamanhoFonte: 16,),
                     ],
                   ),
+                ):Padding(
+                  padding: EdgeInsets.symmetric(vertical: 10),
+                  child: Column(
+                    crossAxisAlignment:CrossAxisAlignment.center ,
+                    children: [
+                      Row(
+                        children: [
+                          TextoPadrao(texto: 'N° FIP',cor: Cores.primaria,negrito: FontWeight.bold,tamanhoFonte: 12,),
+                          SizedBox(width: 10,),
+                          TextoPadrao(texto: widget.documentoReal,cor: Cores.cinzaTextoEscuro,negrito: FontWeight.bold,tamanhoFonte: 12,),
+                        ],
+                      ),
+                      Row(
+                        children: [
+                          TextoPadrao(texto: 'Nome de Processos',cor: Cores.primaria,negrito: FontWeight.bold,tamanhoFonte: 12,),
+                          SizedBox(width: 10,),
+                          TextoPadrao(texto: BadStateString(dadosEspecificacao, 'nome'),cor: Cores.cinzaTextoEscuro,negrito: FontWeight.bold,tamanhoFonte: 12,),
+                        ],
+                      ),
+                    ],
+                  ),
                 ),
                 Divider(),
                 ItemEtapa3Titulo(
@@ -304,8 +363,9 @@ class _InstrucaoUsuarioTelaState extends State<InstrucaoUsuarioTela> {
                   titulo1: 'EPI Necessário',
                   titulo2: 'Máquina',
                   dadoString1: false,
+                  pc: largura>700?true:false,
                 ),
-                ItemEtapaUmTitulo(dadosEspecificacao: dadosEspecificacao,item: 'ferramentas',titulo: 'Ferramentas utilizadas'),
+                ItemEtapaUmTitulo(dadosEspecificacao: dadosEspecificacao,item: 'ferramentas',titulo: 'Ferramentas utilizadas',pc:largura>700?true:false),
                 Divider(),
                 ItemEtapa3Titulo(
                   dadosEspecificacao: dadosEspecificacao,
@@ -316,6 +376,7 @@ class _InstrucaoUsuarioTelaState extends State<InstrucaoUsuarioTela> {
                   dadoString1: false,
                   dadoString2: false,
                   dadosInt: true,
+                  pc: largura>700?true:false,
                 ),
                 ItemEtapa3Titulo(
                   dadosEspecificacao: dadosEspecificacao,
@@ -323,6 +384,7 @@ class _InstrucaoUsuarioTelaState extends State<InstrucaoUsuarioTela> {
                   item2: 'prazo',
                   titulo1: 'Especificações',
                   titulo2: 'Prazo de aprendizagem',
+                  pc: largura>700?true:false,
                 ),
                 ItemEtapa3Titulo(
                   dadosEspecificacao: dadosEspecificacao,
@@ -330,17 +392,19 @@ class _InstrucaoUsuarioTelaState extends State<InstrucaoUsuarioTela> {
                   item2: 'licenca_qualificacoes',
                   titulo1: 'Especificações máquina',
                   titulo2: 'Licenças ou qualificações',
+                  pc: largura>700?true:false,
                 ),
                 Divider(),
                 Container(
                   height: altura*0.9+(listaEtapas.length*290),
                   child: listaEtapas.isEmpty?Container():Container(
-                    height: listaEtapas.length*250+80,
+                    height: largura>700?listaEtapas.length*250+80:listaEtapas.length*500+80,
                     child: Column(
                       // crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Container(
-                          height: altura*0.5+listaEtapas.length*300,
+                          // color: Colors.red,
+                          height: largura>700?altura*0.5+listaEtapas.length*300:altura*0.3+listaEtapas.length*350,
                           width: largura * 0.9,
                           child: ListView.builder(
                               // physics: NeverScrollableScrollPhysics(),
@@ -350,8 +414,10 @@ class _InstrucaoUsuarioTelaState extends State<InstrucaoUsuarioTela> {
                                 List<ModeloAnalise3> listaAnalise = [];
                                 List fotos = [];
                                 List videos = [];
+                                int totalEtapa = 0;
 
                                 for(int j = 0; aux.length > j ; j++){
+                                  totalEtapa = int.parse(aux[j]['tempoAnalise'])+totalEtapa;
                                   for(int posicaoAnalise = 0; listaUrlFotosEtapas.length > posicaoAnalise ; posicaoAnalise++){
                                     if(listaUrlFotosEtapas[posicaoAnalise].posicaoEtapa==i && listaUrlFotosEtapas[posicaoAnalise].posicaoAnalise==j){
                                       fotos = listaUrlFotosEtapas[posicaoAnalise].url;
@@ -372,12 +438,14 @@ class _InstrucaoUsuarioTelaState extends State<InstrucaoUsuarioTela> {
                                 }
 
                                 return ItemEtapa3(
+                                  idEsp: '',
                                   numeroEtapa: listaEtapas[i]['numeroEtapa'],
                                   nomeEtapa: listaEtapas[i]['nomeEtapa'],
-                                  tempoTotalEtapa: listaEtapas[i]['tempoTotalEtapaMinutos'],
+                                  tempoTotalEtapa: totalEtapa,
                                   listaAnalise: listaAnalise,
                                   comentario: true,
                                   funcaoComentario: ()=>carregarWidget(listaEtapas[i]['numeroEtapa'], listaEtapas[i]['nomeEtapa'],),
+                                  pc: largura>700?true:false,
                                 );
                               }
                           ),
@@ -387,7 +455,7 @@ class _InstrucaoUsuarioTelaState extends State<InstrucaoUsuarioTela> {
                   ),
                 ),
                 Container(
-                  width: largura * 0.7,
+                  width: largura>700?largura * 0.7:largura,
                   padding: EdgeInsets.all(10),
                   margin: EdgeInsets.symmetric(vertical: 5,horizontal: 5),
                   decoration: BoxDecoration(
@@ -400,27 +468,27 @@ class _InstrucaoUsuarioTelaState extends State<InstrucaoUsuarioTela> {
                     children: [
                       TextoPadrao(texto: 'Histórico',cor: Cores.primaria,negrito: FontWeight.bold,tamanhoFonte: 16,),
                       Container(
-                        width: largura * 0.7,
+                        width: largura>700?largura * 0.7:largura,
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: [
                             Container(
-                                width: 50,
-                                child: TextoPadrao(texto:'Versão',cor: Cores.primaria,tamanhoFonte: 14,)
+                                width: largura>700?50:35,
+                                child: TextoPadrao(texto:'Versão',cor: Cores.primaria,tamanhoFonte: largura>700?14:10,)
                             ),
                             Container(
-                                width: 100,
-                                child: TextoPadrao(texto:'Data',cor: Cores.primaria,tamanhoFonte: 14,alinhamentoTexto: TextAlign.center,)
-                            ),
-                            SizedBox(width: 10,),
-                            Container(
-                                width: 300,
-                                child: TextoPadrao(texto:'Resp. Alteração',cor: Cores.primaria,tamanhoFonte: 14,)
+                                width: largura>700?100:70,
+                                child: TextoPadrao(texto:'Data',cor: Cores.primaria,tamanhoFonte: largura>700?14:10,alinhamentoTexto: TextAlign.center,)
                             ),
                             SizedBox(width: 10,),
                             Container(
-                                width: largura*0.3,
-                                child: TextoPadrao(texto:'Razão',cor: Cores.primaria,tamanhoFonte: 14,)
+                                width: largura>700?300:120,
+                                child: TextoPadrao(texto:'Resp. Alteração',cor: Cores.primaria,tamanhoFonte: largura>700?14:10,)
+                            ),
+                            SizedBox(width: 10,),
+                            Container(
+                                width: largura>700?largura*0.3:180,
+                                child: TextoPadrao(texto:'Razão',cor: Cores.primaria,tamanhoFonte: largura>700?14:10,)
                             ),
                           ],
                         ),
@@ -431,39 +499,39 @@ class _InstrucaoUsuarioTelaState extends State<InstrucaoUsuarioTela> {
                           itemCount: listaHistorico.length,
                           itemBuilder: (context,i){
                             return Container(
-                              width: largura * 0.7,
+                              width: largura>700?largura * 0.7:largura,
                               child: Row(
                                 mainAxisSize: MainAxisSize.min,
                                 children: [
                                   Container(
-                                      width: 50,
+                                      width: largura>700?50:35,
                                       child: TextoPadrao(
                                         texto: listaHistorico[i].versao.toString(),
                                         // texto: 'versao',
                                         cor: Cores.cinzaTextoEscuro,
-                                        tamanhoFonte: 14,
+                                        tamanhoFonte: largura>700?14:10,
                                         alinhamentoTexto: TextAlign.center,
                                       )
                                   ),
                                   Container(
-                                      width: 100,
+                                      width: largura>700?100:70,
                                       child: TextoPadrao(
                                         texto: listaHistorico[i].data,
                                         // texto: 'data',
                                         cor: Cores.cinzaTextoEscuro,
-                                        tamanhoFonte: 14,
+                                        tamanhoFonte: largura>700?14:10,
                                         alinhamentoTexto: TextAlign.center,
                                       )
                                   ),
                                   SizedBox(width: 10,),
                                   Container(
-                                      width: 300,
-                                      child: TextoPadrao(texto:listaHistorico[i].responsavel,cor: Cores.cinzaTextoEscuro,tamanhoFonte: 14,)
+                                      width: largura>700?300:120,
+                                      child: TextoPadrao(texto:listaHistorico[i].responsavel,cor: Cores.cinzaTextoEscuro,tamanhoFonte: largura>700?14:10,)
                                   ),
                                   SizedBox(width: 10,),
                                   Container(
-                                      width: largura*0.3,
-                                      child: TextoPadrao(texto:listaHistorico[i].alteracao,cor: Cores.cinzaTextoEscuro,tamanhoFonte: 14,)
+                                      width: largura>700?largura*0.3:180,
+                                      child: TextoPadrao(texto:listaHistorico[i].alteracao,cor: Cores.cinzaTextoEscuro,tamanhoFonte: largura>700?14:10,maxLines: 3,)
                                   ),
                                 ],
                               ),

@@ -125,7 +125,7 @@ class _LoginTelaState extends State<LoginTela> {
     double largura = MediaQuery.of(context).size.width;
     double altura = MediaQuery.of(context).size.height;
 
-    return Scaffold(
+    return largura>700?Scaffold(
       body: carregandoConta?Container():Container(
         width: largura,
         height: altura,
@@ -192,6 +192,63 @@ class _LoginTelaState extends State<LoginTela> {
               )
             ],
           ),
+        ),
+      ),
+    ):Scaffold(
+      body: Container(
+        width: largura,
+        height: altura,
+        decoration: BoxDecoration(
+            color: Colors.white24,
+            borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(40.0),
+              topRight: Radius.circular(40.0),
+            )
+        ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Container(
+              margin: EdgeInsets.only(top: altura*0.07,bottom: altura*0.08),
+              child: Text(
+                'Instrução\nde\nProcessos',
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  color: Cores.primaria,
+                  fontFamily: 'Nunito',
+                  fontWeight: FontWeight.bold,
+                  fontSize: 48.0,
+                ),
+              ),
+            ),
+            Container(
+              alignment: Alignment.center,
+              child: CaixaTexto(
+                  titulo: 'E-mail',
+                  controller: email,
+                  largura: largura*0.7
+              ),
+            ),
+            Container(
+              alignment: Alignment.center,
+              child: CaixaTexto(
+                titulo: 'Senha',
+                controller: senha,
+                largura: largura*0.7,
+                obscure: obscure,
+                mostrarOlho: true,
+                onPressedSenha: ()=>setState(()=>obscure?obscure=false:obscure=true),
+              ),
+            ),
+            Container(
+              margin: EdgeInsets.symmetric(horizontal: largura*0.15),
+              child: BotaoPadrao(
+                texto: 'Entrar',
+                onTap: ()=>checkLogin(),
+                largura: largura*0.7,
+              ),
+            )
+          ],
         ),
       ),
     );

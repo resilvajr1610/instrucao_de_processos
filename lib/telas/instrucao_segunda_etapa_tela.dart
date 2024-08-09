@@ -120,9 +120,6 @@ class _InstrucaoSegundaEtapaTelaState extends State<InstrucaoSegundaEtapaTela> {
           List fotosURL = BadStateList(etapasDoc, 'fotos_etapa${i}_analise${j}');
           List videosURL = BadStateList(etapasDoc, 'videos_etapa${i}_analise${j}');
 
-          print(fotosURL);
-          print(videosURL);
-
           listaAnalise.add(
               ModeloAnalise2(
                   analiseAtiva: true,
@@ -198,8 +195,6 @@ class _InstrucaoSegundaEtapaTelaState extends State<InstrucaoSegundaEtapaTela> {
           "fotos_etapa${i}_analise${j}": FieldValue.arrayUnion(listaEtapas[i].listaAnalise[j].listaFotosUrl),
           "videos_etapa${i}_analise${j}": FieldValue.arrayUnion(listaEtapas[i].listaAnalise[j].listaVideosUrl)
         },SetOptions(merge: true)).then((value){
-          print('listaFotosUrl : ${listaEtapas[i].listaAnalise[j].listaFotosUrl.length}');
-          print('listaVideosUrl : ${listaEtapas[i].listaAnalise[j].listaVideosUrl.length}');
         });
       }
     }
@@ -543,7 +538,7 @@ class _InstrucaoSegundaEtapaTelaState extends State<InstrucaoSegundaEtapaTela> {
         width: largura,
         child: ListView(
           children: [
-            NivelEtapa(nivel: 2),
+            NivelEtapa(nivel: 2,pc: largura>700?true:false,),
             carregando?Container(
               width: largura,
               height: altura*0.8,
@@ -557,10 +552,10 @@ class _InstrucaoSegundaEtapaTelaState extends State<InstrucaoSegundaEtapaTela> {
                 ),
               ),
             ):Container(
-              width: largura*0.8,
+              width:  largura>700?largura*0.8:largura,
               height: altura*0.75,
-              margin: EdgeInsets.all(20),
-              padding: EdgeInsets.all(36),
+              margin: EdgeInsets.all( largura>700?20:5),
+              padding: EdgeInsets.all( largura>700?36:5),
               alignment: Alignment.topLeft,
               decoration: BoxDecoration(
                   color: Colors.white,
@@ -570,10 +565,10 @@ class _InstrucaoSegundaEtapaTelaState extends State<InstrucaoSegundaEtapaTela> {
                 width: 1300,
                 child: ListView(
                   children: [
-                    TextoPadrao(texto: 'Inserir Etapas da Instrução de Processos',cor: Cores.primaria,negrito: FontWeight.bold,tamanhoFonte: 20,),
+                    TextoPadrao(texto: 'Inserir Etapas da Instrução de Processos',cor: Cores.primaria,negrito: FontWeight.bold,tamanhoFonte:  largura>700?20:14,),
                     Padding(
                       padding: EdgeInsets.symmetric(vertical: 10),
-                      child: Row(
+                      child:  largura>700?Row(
                         crossAxisAlignment:CrossAxisAlignment.center ,
                         children: [
                           TextoPadrao(texto: 'N° FIP',cor: Cores.primaria,negrito: FontWeight.bold,tamanhoFonte: 16,),
@@ -584,6 +579,24 @@ class _InstrucaoSegundaEtapaTelaState extends State<InstrucaoSegundaEtapaTela> {
                           SizedBox(width: 10,),
                           TextoPadrao(texto: widget.nomeProcesso,cor: Cores.cinzaTextoEscuro,negrito: FontWeight.bold,tamanhoFonte: 16,),
                         ],
+                      ):Column(
+                        crossAxisAlignment:CrossAxisAlignment.center ,
+                        children: [
+                          Row(
+                            children: [
+                              TextoPadrao(texto: 'N° FIP',cor: Cores.primaria,negrito: FontWeight.bold,tamanhoFonte: 12,),
+                              SizedBox(width: 10,),
+                              TextoPadrao(texto: widget.FIP,cor: Cores.cinzaTextoEscuro,negrito: FontWeight.bold,tamanhoFonte: 12,),
+                            ],
+                          ),
+                          Row(
+                            children: [
+                              TextoPadrao(texto: 'Nome de Processos',cor: Cores.primaria,negrito: FontWeight.bold,tamanhoFonte: 12,),
+                              SizedBox(width: 10,),
+                              TextoPadrao(texto: widget.nomeProcesso,cor: Cores.cinzaTextoEscuro,negrito: FontWeight.bold,tamanhoFonte: 12,),
+                            ],
+                          ),
+                        ],
                       ),
                     ),
                     Container(
@@ -592,6 +605,7 @@ class _InstrucaoSegundaEtapaTelaState extends State<InstrucaoSegundaEtapaTela> {
                           itemCount: listaEtapas.length,
                           itemBuilder: (context,i){
                             return ItemEtapa2(
+                              pc:  largura>700?true:false,
                               modeloEtapa: listaEtapas[i],
                               botaoAtivaEtapa: (){
                                   if(listaEtapas[i].nomeEtapa.text.isNotEmpty){
@@ -618,8 +632,9 @@ class _InstrucaoSegundaEtapaTelaState extends State<InstrucaoSegundaEtapaTela> {
                                     itemCount: listaEtapas[i].listaAnalise.length,
                                     itemBuilder: (context, j){
                                       return Container(
-                                        height: 120,
+                                        height:  largura>700?120:300,
                                         child: ItemAnalise2(
+                                            pc:  largura>700?true:false,
                                             indice: j,
                                             modeloAnalise: listaEtapas[i].listaAnalise[j],
                                             botaoMostrarListaImagem:  ()=>setState((){
@@ -719,7 +734,7 @@ class _InstrucaoSegundaEtapaTelaState extends State<InstrucaoSegundaEtapaTela> {
                       textoCaixa: 'Informar observações',
                       titulo: '',
                       controller: observacoes,
-                      largura: 950,
+                      largura:  largura>700?950:largura*0.75,
                       corCaixa: Cores.cinzaClaro,
                       maximoLinhas: 3,
                       textInputType: TextInputType.multiline,
@@ -730,7 +745,7 @@ class _InstrucaoSegundaEtapaTelaState extends State<InstrucaoSegundaEtapaTela> {
                       textoCaixa: 'Informe o que alterou',
                       titulo: '',
                       controller: alteracao,
-                      largura: 950,
+                      largura:  largura>700?950:largura*0.75,
                       corCaixa: Cores.cinzaClaro,
                       textInputType: TextInputType.multiline,
                       maximoLinhas: 3,

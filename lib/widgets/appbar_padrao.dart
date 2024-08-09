@@ -46,7 +46,7 @@ class AppBarPadrao extends StatelessWidget implements PreferredSizeWidget{
               padding: const EdgeInsets.all(8.0),
               child: CircleAvatar(radius: 35,backgroundColor: Cores.azul_escuro_degrade,backgroundImage: AssetImage('assets/imagens/logo.png',)),
             ),
-            TextoPadrao(texto: 'Instrução de processos',tamanhoFonte: 24,negrito: FontWeight.bold),
+            TextoPadrao(texto: 'Instrução de processos',tamanhoFonte: largura>700?24:20,negrito: FontWeight.bold),
             Spacer(),
             Padding(
               padding: const EdgeInsets.all(8.0),
@@ -54,20 +54,20 @@ class AppBarPadrao extends StatelessWidget implements PreferredSizeWidget{
                 message: 'Comentários',
                 child: IconButton(
                     onPressed: ()=>Navigator.push(context, MaterialPageRoute(builder: (context)=>ComentarioTela(emailLogado: emailLogado,))),
-                    icon: Icon(Icons.report_problem,color: Colors.white,size: 35,)),
+                    icon: Icon(Icons.report_problem,color: Colors.white,size: largura>700?35:25,)),
               ),
             ),
             mostrarUsuarios && mostrarComentarios?Tooltip(
               message: 'Cadastrar novo usuário',
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
-                child: IconButton(onPressed: ()=>Navigator.push(context, MaterialPageRoute(builder: (context)=>UsuariosTela(emailLogado: emailLogado,))), icon: Icon(Icons.person_add_alt_1,color: Colors.white,size: 35,)),
+                child: IconButton(onPressed: ()=>Navigator.push(context, MaterialPageRoute(builder: (context)=>UsuariosTela(emailLogado: emailLogado,))), icon: Icon(Icons.person_add_alt_1,color: Colors.white,size: largura>700?35:25,)),
               ),
             ):Tooltip(
               message: 'Tela Inicial',
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
-                child: IconButton(onPressed: ()=>Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>HomeTela(emailLogado: emailLogado,))), icon: Icon(Icons.home,color: Colors.white,size: 35,)),
+                child: IconButton(onPressed: ()=>Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>HomeTela(emailLogado: emailLogado,))), icon: Icon(Icons.home,color: Colors.white,size: largura>700?35:25,)),
               ),
             ),
             Tooltip(
@@ -81,7 +81,7 @@ class AppBarPadrao extends StatelessWidget implements PreferredSizeWidget{
                             Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>LoginTela()))
                         )
                       ),
-                    icon: Icon(Icons.logout,color: Colors.white,size: 35,)),
+                    icon: Icon(Icons.logout,color: Colors.white,size: largura>700?35:25,)),
               ),
             ),
           ],

@@ -32,13 +32,18 @@ class _HomeTelaState extends State<HomeTela> {
 
   List<ModeloInstrucaoLista_1_0_0> listaInstrucaoPrincipal=[];
   var pesquisa = TextEditingController();
-  double larguraInicioCaixaTexto = 600;
-  double larguraMeioCaixaTexto = 450;
-  double larguraFinalCaixaTexto = 300;
+  double larguraMeioCaixaTextoPC = 450;
+  double larguraMeioCaixaTextoMobile = 450;
+  double larguraFinalCaixaTextoPC = 300;
+  double larguraFinalCaixaTextoMobile = 250;
 
-  double larguraInicioCard = 850;
-  double larguraMeioCard = 750;
-  double larguraFinalCard = 550;
+  double larguraInicioCardPC = 850;
+  double larguraInicioCardMobile = 1100;
+  double larguraMeioCardPC = 750;
+  double larguraMeioCardMobile = 550;
+  double larguraFinalCardPC = 550;
+  double larguraFinalCardMobile = 450;
+
   double alturaItens = 75;
   double alturaListaFinal = 0;
   double alturaListaInicio = 0;
@@ -54,6 +59,10 @@ class _HomeTelaState extends State<HomeTela> {
 
   adicionarListaInicio(String idDoc,String idFire,List listaIdEsp,String nomeProcesso,List listaVersao, String titulo,bool ativarBotaoAdicionarItemLista, bool escrever, bool mostrarLista ){
 
+
+    double largura = MediaQuery.of(context).size.width;
+    double altura = MediaQuery.of(context).size.height;
+
     listaInstrucaoPrincipal.add(
       ModeloInstrucaoLista_1_0_0(
         idDoc: idDoc,
@@ -64,7 +73,7 @@ class _HomeTelaState extends State<HomeTela> {
         controller: TextEditingController(text: titulo),
         ativarBotaoAdicionarItemLista: ativarBotaoAdicionarItemLista,
         escrever: escrever,
-        larguraInicio: 550,
+        larguraInicio: largura>700?550:300,
         listaMeio: [],
         alturaListaMeio: 0,
         mostrarListaInicio: mostrarLista,
@@ -150,8 +159,11 @@ class _HomeTelaState extends State<HomeTela> {
       }
     });
   }
-
   adicionarListaMeio(int inicio, bool addPrincipal,String idFire, String idDoc, List listaIdEsp, String nomeProcesso, List listaVersao, String titulo, bool ativarBotaoAdicionarItemLista, bool escrever,bool mostrarListaMeio){
+
+    double largura = MediaQuery.of(context).size.width;
+    double altura = MediaQuery.of(context).size.height;
+
     listaInstrucaoPrincipal[inicio].listaMeio.add(
       ModeloInstrucaoLista_1_1_0(
         idFire: idFire,
@@ -161,7 +173,7 @@ class _HomeTelaState extends State<HomeTela> {
         listaVersao: listaVersao,
         controller: TextEditingController(text: titulo),
         ativarBotaoAdicionarItemLista: false,
-        larguraMeio: larguraMeioCaixaTexto,
+        larguraMeio: largura>700?larguraMeioCaixaTextoPC:larguraFinalCaixaTextoMobile,
         escrever: escrever,
         listaFinal: [],
         alturaListaFinal: 0,
@@ -183,6 +195,9 @@ class _HomeTelaState extends State<HomeTela> {
     setState(() {});
   }
   carregarDadosMeio()async{
+
+    double largura = MediaQuery.of(context).size.width;
+    double altura = MediaQuery.of(context).size.height;
     FirebaseFirestore.instance.collection('documentos').where('posicao',isEqualTo: 'meio').orderBy('idDoc').get().then((docs){
       for(int i = 0; docs.docs.length > i; i++) {
         if(acesso_adm){
@@ -229,7 +244,7 @@ class _HomeTelaState extends State<HomeTela> {
                     idDoc: '$inicio.${meio+1}.0',
                     controller: TextEditingController(text: 'add meio'),
                     ativarBotaoAdicionarItemLista: false,
-                    larguraMeio: larguraMeioCaixaTexto,
+                    larguraMeio: largura>700?larguraMeioCaixaTextoPC:larguraMeioCaixaTextoMobile,
                     escrever: true,
                     listaFinal: [],
                     alturaListaFinal: 0,
@@ -274,22 +289,6 @@ class _HomeTelaState extends State<HomeTela> {
             if(docs.docs.length == i+1){
               alturaListaInicio = alturaListaInicio + alturaItens;
               listaInstrucaoPrincipal[inicio-1].alturaListaMeio = listaInstrucaoPrincipal[inicio-1].alturaListaMeio + alturaItens;
-              // listaInstrucaoPrincipal[inicio-1].listaMeio.add(
-              //     ModeloInstrucaoLista_1_1_0(
-              //         idFire: '',
-              //         listaIdEsp: [],
-              //         nomeProcesso: '',
-              //         listaVersao: [],
-              //         idDoc: '$inicio.${meio+1}.0',
-              //         controller: TextEditingController(text: 'add meio'),
-              //         ativarBotaoAdicionarItemLista: false,
-              //         larguraMeio: larguraMeioCaixaTexto,
-              //         escrever: true,
-              //         listaFinal: [],
-              //         alturaListaFinal: 0,
-              //         mostrarListaMeio: true
-              //     )
-              // );
               setState(() {});
               carregarDadosFim();
             }
@@ -298,8 +297,10 @@ class _HomeTelaState extends State<HomeTela> {
       }
     });
   }
-
   adicionarListaFim(int inicio, int meio,bool addMeio,String idFire, String idDoc,List listaIdEsp, String nomeProcesso,List listaVersao, String titulo, bool checkFinal, bool escrever, bool mostrarListaFinal){
+
+    double largura = MediaQuery.of(context).size.width;
+    double altura = MediaQuery.of(context).size.height;
     List<ModeloInstrucaoLista_1_1_1> listaFinal = [];
     listaFinal.add(
       ModeloInstrucaoLista_1_1_1(
@@ -310,7 +311,7 @@ class _HomeTelaState extends State<HomeTela> {
         listaVersao: listaVersao,
         controller: TextEditingController(text: titulo),
         checkFinal: checkFinal,
-        larguraFinal: larguraFinalCaixaTexto,
+        larguraFinal: largura>700?larguraFinalCaixaTextoPC:larguraFinalCaixaTextoMobile,
         escrever: escrever,
         mostrarListaFinal: mostrarListaFinal
       )
@@ -338,7 +339,7 @@ class _HomeTelaState extends State<HomeTela> {
               idDoc: '${inicio+1}.${meio+2}.0',
               controller: TextEditingController(),
               ativarBotaoAdicionarItemLista: false,
-              larguraMeio: larguraMeioCaixaTexto,
+              larguraMeio: largura>700?larguraMeioCaixaTextoPC:larguraMeioCaixaTextoMobile,
               escrever: true,
               listaFinal: [],
               alturaListaFinal: 0,
@@ -348,7 +349,6 @@ class _HomeTelaState extends State<HomeTela> {
     }
     setState(() {});
   }
-
   carregarDadosFim()async{
     FirebaseFirestore.instance.collection('documentos').where('posicao',isEqualTo: 'fim').orderBy('idDoc').get().then((docs){
       for(int i = 0; docs.docs.length > i; i++) {
@@ -428,7 +428,6 @@ class _HomeTelaState extends State<HomeTela> {
       }
     });
   }
-
   corrigirDoc(){
     for(int i = 0; listaInstrucaoPrincipal.length > i; i++){
       FirebaseFirestore.instance.collection('documentos').doc(listaInstrucaoPrincipal[i].idFire).update({
@@ -504,7 +503,7 @@ class _HomeTelaState extends State<HomeTela> {
       body: Container(
         width: largura,
         height: altura,
-        padding: EdgeInsets.symmetric(vertical: 32,horizontal: 60),
+        padding: EdgeInsets.symmetric(vertical: largura>700?32:0,horizontal: largura>700?60:0),
         child: carregando?Center(
           child: Column(
             mainAxisSize: MainAxisSize.min,
@@ -518,14 +517,14 @@ class _HomeTelaState extends State<HomeTela> {
         ):Card(
           child: SingleChildScrollView(
             child: Container(
-              padding: EdgeInsets.symmetric(vertical: 36, horizontal: 46),
+              padding: largura>700?EdgeInsets.symmetric(vertical: 36, horizontal: 46):EdgeInsets.symmetric(vertical: 0,horizontal: 0),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  TextoPadrao(texto: 'Documentos disponíveis',cor: Cores.primaria,negrito: FontWeight.bold,tamanhoFonte: 20,),
+                  TextoPadrao(texto: 'Documentos disponíveis',cor: Cores.primaria,negrito: FontWeight.bold,tamanhoFonte: largura>700?20:18,),
                   SizedBox(height: 40,),
                   Container(
-                    width: 600,
+                    width: largura>700?600:500,
                     margin: EdgeInsets.only(bottom: 5),
                     decoration: BoxDecoration(
                         color: Colors.white,
@@ -535,7 +534,7 @@ class _HomeTelaState extends State<HomeTela> {
                     child: Row(
                       children: [
                         Container(
-                          width: 600*0.9,
+                          width: largura>700?600*0.9:350,
                           child: TextFormField(
                               keyboardType: TextInputType.text,
                               maxLines: 1,
@@ -622,7 +621,7 @@ class _HomeTelaState extends State<HomeTela> {
                       :Container(
                     // color: Colors.green,
                     height: alturaListaInicio,
-                    width: larguraInicioCard,
+                    width: largura>700?larguraInicioCardPC:larguraInicioCardMobile,
                     child: ListView.builder(
                       // physics: NeverScrollableScrollPhysics(),
                       itemCount: listaInstrucaoPrincipal.length,
@@ -714,7 +713,7 @@ class _HomeTelaState extends State<HomeTela> {
                             Container(
                               // color: Colors.red,
                               height: listaInstrucaoPrincipal[inicio].alturaListaMeio,
-                              width: larguraMeioCard,
+                              width: largura>700?larguraMeioCardPC:larguraMeioCardMobile,
                               child: ListView.builder(
                                 // physics: NeverScrollableScrollPhysics(),
                                 itemCount: listaInstrucaoPrincipal[inicio].listaMeio.length,
@@ -802,7 +801,7 @@ class _HomeTelaState extends State<HomeTela> {
                                       Container(
                                         // color: Colors.amber,
                                         height: listaInstrucaoPrincipal[inicio].listaMeio[meio].alturaListaFinal,
-                                        width: larguraFinalCard,
+                                        width: largura>700?larguraFinalCardPC:larguraFinalCardMobile,
                                         child: ListView.builder(
                                             // physics: NeverScrollableScrollPhysics(),
                                             itemCount: listaInstrucaoPrincipal[inicio].listaMeio[meio].listaFinal.length,

@@ -371,12 +371,12 @@ class _InstrucaoPrimeiraEtapaTelaState extends State<InstrucaoPrimeiraEtapaTela>
             width: largura,
             child: ListView(
               children: [
-                NivelEtapa(nivel: 1),
+                NivelEtapa(nivel: 1,pc: largura>700?true:false,),
                 Container(
-                  width: largura*0.8,
+                  width: largura>700?largura*0.8:largura,
                   height: altura*0.75,
-                  margin: EdgeInsets.all(20),
-                  padding: EdgeInsets.all(36),
+                  margin: EdgeInsets.all(largura>700?20:5),
+                  padding: EdgeInsets.all(largura>700?36:10),
                   alignment: Alignment.topLeft,
                   decoration: BoxDecoration(
                       color: Colors.white,
@@ -387,39 +387,39 @@ class _InstrucaoPrimeiraEtapaTelaState extends State<InstrucaoPrimeiraEtapaTela>
                         Row(
                           crossAxisAlignment:CrossAxisAlignment.center ,
                           children: [
-                            TextoPadrao(texto: 'Cadastrar nova Instrução de Processos',cor: Cores.primaria,negrito: FontWeight.bold,tamanhoFonte: 20,),
-                            SizedBox(width: 100,),
-                            TextoPadrao(texto: 'N° FIP',cor: Cores.primaria,negrito: FontWeight.bold,tamanhoFonte: 16,),
-                            SizedBox(width: 10,),
-                            TextoPadrao(texto: widget.idDocumento,cor: Cores.cinzaTextoEscuro,negrito: FontWeight.bold,tamanhoFonte: 16,),
-                            SizedBox(width: 40,),
-                            TextoPadrao(texto: 'Data de criação',cor: Cores.primaria,tamanhoFonte: 14,),
-                            SizedBox(width: 10,),
-                            TextoPadrao(texto: VariavelEstatica.mascaraData.format(dataCriacao),cor: Cores.cinzaTextoEscuro,tamanhoFonte: 14,),
-                            SizedBox(width: 40,),
-                            TextoPadrao(texto: 'Visto',cor: Cores.primaria,tamanhoFonte: 14,),
-                            SizedBox(width: 10,),
-                            TextoPadrao(texto: dadosUsuarioFire==null?'':dadosUsuarioFire['nome'],cor: Cores.cinzaTextoEscuro,tamanhoFonte: 14,),
-                            SizedBox(width: 50,),
-                            TextoPadrao(texto: 'Versão',cor: Cores.primaria,tamanhoFonte: 14,),
-                            SizedBox(width: 10,),
-                            TextoPadrao(texto: versao==0?'1':versao.toString(),cor: Cores.cinzaTextoEscuro,tamanhoFonte: 14,),
-                            SizedBox(width: 30,),
-                            TextoPadrao(texto: 'Data',cor: Cores.primaria,tamanhoFonte: 14,),
-                            SizedBox(width: 10,),
-                            TextoPadrao(texto: VariavelEstatica.mascaraData.format(dataVersao),cor: Cores.cinzaTextoEscuro,tamanhoFonte: 14,),
+                            TextoPadrao(texto: 'Cadastrar nova Instrução de Processos',cor: Cores.primaria,negrito: FontWeight.bold,tamanhoFonte: largura>700?20:14,),
+                            largura<700?Container():SizedBox(width: 100,),
+                            largura<700?Container():TextoPadrao(texto: 'N° FIP',cor: Cores.primaria,negrito: FontWeight.bold,tamanhoFonte: 16,),
+                            largura<700?Container():SizedBox(width: 10,),
+                            largura<700?Container():TextoPadrao(texto: widget.idDocumento,cor: Cores.cinzaTextoEscuro,negrito: FontWeight.bold,tamanhoFonte: 16,),
+                            largura<700?Container():SizedBox(width: 40,),
+                            largura<700?Container():TextoPadrao(texto: 'Data de criação',cor: Cores.primaria,tamanhoFonte: 14,),
+                            largura<700?Container():SizedBox(width: 10,),
+                            largura<700?Container():TextoPadrao(texto: VariavelEstatica.mascaraData.format(dataCriacao),cor: Cores.cinzaTextoEscuro,tamanhoFonte: 14,),
+                            largura<700?Container():SizedBox(width: 40,),
+                            largura<700?Container():TextoPadrao(texto: 'Visto',cor: Cores.primaria,tamanhoFonte: 14,),
+                            largura<700?Container():SizedBox(width: 10,),
+                            largura<700?Container():TextoPadrao(texto: dadosUsuarioFire==null?'':dadosUsuarioFire['nome'],cor: Cores.cinzaTextoEscuro,tamanhoFonte: 14,),
+                            largura<700?Container():SizedBox(width: 50,),
+                            largura<700?Container():TextoPadrao(texto: 'Versão',cor: Cores.primaria,tamanhoFonte: 14,),
+                            largura<700?Container():SizedBox(width: 10,),
+                            largura<700?Container():TextoPadrao(texto: versao==0?'1':versao.toString(),cor: Cores.cinzaTextoEscuro,tamanhoFonte: 14,),
+                            largura<700?Container():SizedBox(width: 30,),
+                            largura<700?Container():TextoPadrao(texto: 'Data',cor: Cores.primaria,tamanhoFonte: 14,),
+                            largura<700?Container():SizedBox(width: 10,),
+                            largura<700?Container():TextoPadrao(texto: VariavelEstatica.mascaraData.format(dataVersao),cor: Cores.cinzaTextoEscuro,tamanhoFonte: 14,),
                           ],
                         ),
                         CaixaTexto(
                           textoCaixa: 'Infome o nome do processo',
                           titulo: 'Nome do Processo',
                           controller: nomeProcesso,
-                          largura: largura*0.3,
+                          largura: largura>700?largura*0.3:largura*0.85,
                           corCaixa: Cores.cinzaClaro,
                           ativarCaixa: widget.idEsp=='',
                           copiar: true,
                         ),
-                        Row(
+                        largura>700?Row(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             CaixaTexto(
@@ -547,19 +547,146 @@ class _InstrucaoPrimeiraEtapaTelaState extends State<InstrucaoPrimeiraEtapaTela>
                               ],
                             ),
                           ],
+                        ):Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            CaixaTexto(
+                              textoCaixa: 'Informe a máquina',
+                              titulo: 'Máquina',
+                              controller: maquina,
+                              largura: largura*0.85,
+                              corCaixa: Cores.cinzaClaro,
+                              copiar: true,
+                            ),
+                            // SizedBox(width: 30,),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                TituloPadrao(title:'EPI necessário'),
+                                Container(
+                                  height: 150,
+                                  width: largura*0.95,
+                                  decoration: BoxDecoration(
+                                      color: Cores.cinzaClaro,
+                                      borderRadius: BorderRadius.all(Radius.circular(3))
+                                  ),
+                                  child: Column(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      Container(
+                                        color: Cores.cardEsp,
+                                        padding: EdgeInsets.only(left: 5),
+                                        height: 50,
+                                        width: largura*0.95,
+                                        child: TextField(
+                                          controller: epi,
+                                          onChanged: (value) {
+                                            buscaEPI(value);
+                                          },
+                                          decoration: InputDecoration(
+                                            hintText: 'Informe epi',
+                                            border: InputBorder.none,
+                                          ),
+                                          style: TextStyle(
+                                            color: Cores.cinzaTexto,
+                                            fontSize: 14,
+                                          ),
+                                          onSubmitted: (String palavra){
+                                            if(palavra.isNotEmpty){
+                                              listaTagDocEpi.add(palavra.toUpperCase().trim());
+                                              listaTagDocEpi.sort();
+                                              salvarFirebasePalavraNovaTag(palavra.toUpperCase().trim(),'lista_epi');
+                                              epi.clear();
+                                            }
+                                          },
+                                        ),
+                                      ),
+                                      Container(
+                                        width: largura*0.8,
+                                        height: 50,
+                                        alignment: Alignment.centerLeft,
+                                        child: GridView.builder(
+                                            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 4,mainAxisExtent: 20),
+                                            itemCount: listaTagDocEpi.length,
+                                            itemBuilder: (context,i){
+
+                                              WidgetsBinding.instance.addPostFrameCallback((_) {
+                                                setState(() {});
+                                              });
+
+                                              return Card(
+                                                child: Container(
+                                                  height: 20,
+                                                  padding: const EdgeInsets.symmetric(vertical: 1,horizontal: 1),
+                                                  child: GestureDetector(
+                                                    onTap: (){
+                                                      listaTagDocEpi.removeAt(i);
+                                                      setState(() {});
+                                                    },
+                                                    child: Container(
+                                                        height: 20,
+                                                        child: Row(
+                                                          mainAxisSize: MainAxisSize.min,
+                                                          children: [
+                                                            Container(
+                                                                height: 15,
+                                                                width: largura*0.15,
+                                                                child: TextoPadrao(texto: listaTagDocEpi[i],cor: Cores.cinzaTextoEscuro,tamanhoFonte: 10,alinhamentoTexto: TextAlign.center,)
+                                                            ),
+                                                            Icon(Icons.close,color: Colors.red,size: 10,)
+                                                          ],
+                                                        )
+                                                    ),
+                                                  ),
+                                                ),
+                                              );
+                                            }
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                Container(
+                                  height:epi.text.isNotEmpty? 200 :0,
+                                  width: largura*0.45,
+                                  child: Scrollbar(
+                                    controller: scrollEPI,
+                                    thumbVisibility: true,
+                                    trackVisibility: true,
+                                    child: ListView.builder(
+                                      controller: scrollEPI,
+                                      itemCount: listaFiltroBancoEpi.length,
+                                      itemBuilder: (BuildContext context, int index) {
+                                        return ListTile(
+                                          onTap: (){
+                                            listaTagDocEpi.add(listaFiltroBancoEpi[index]);
+                                            listaFiltroBancoEpi.clear();
+                                            epi.clear();
+                                            setState(() {});
+                                          },
+                                          title: Text(listaFiltroBancoEpi[index],style: TextStyle(fontSize: 12),),
+                                        );
+                                      },
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
                         ),
+                        SizedBox(height: 10,),
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             TituloPadrao(title:'Ferramentas utilizadas'),
                             Container(
-                              height: 53,
-                              width: largura*0.9+30,
+                              height: largura>700?53:150,
+                              width: largura>700?largura*0.9+30:largura*0.95,
                               decoration: BoxDecoration(
                                   color: Cores.cinzaClaro,
                                   borderRadius: BorderRadius.all(Radius.circular(3))
                               ),
-                              child: Row(
+                              child:  largura>700?Row(
                                 children: [
                                   Container(
                                     color: Cores.cardEsp,
@@ -628,6 +755,74 @@ class _InstrucaoPrimeiraEtapaTelaState extends State<InstrucaoPrimeiraEtapaTela>
                                   ),
                                   Spacer()
                                 ],
+                              ):Column(
+                                children: [
+                                  Container(
+                                    color: Cores.cardEsp,
+                                    height: 50,
+                                    width: largura*0.95,
+                                    padding: EdgeInsets.only(left: 10),
+                                    child: TextField(
+                                      controller: ferramentas,
+                                      onChanged: (texto) {
+                                        buscaFerramenta(texto);
+                                      },
+                                      decoration: InputDecoration(
+                                        hintText: 'Informe ferramentas',
+                                        border: InputBorder.none,
+                                      ),
+                                      style: TextStyle(
+                                        color: Cores.cinzaTexto,
+                                        fontSize: 14,
+                                      ),
+                                      onSubmitted: (String palavra){
+                                        if(palavra.isNotEmpty){
+                                          listaTagDocFerramenta.add(palavra.toUpperCase().trim());
+                                          listaTagDocFerramenta.sort();
+                                          salvarFirebasePalavraNovaTag(palavra.toUpperCase().trim(),'lista_ferramenta');
+                                          ferramentas.clear();
+                                        }
+                                      },
+                                    ),
+                                  ),
+                                  Container(
+                                    width: largura*0.8,
+                                    height: 100,
+                                    alignment: Alignment.centerLeft,
+                                    child: GridView.builder(
+                                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2,mainAxisExtent: 20),
+                                        itemCount: listaTagDocFerramenta.length,
+                                        itemBuilder: (context,i){
+                                          WidgetsBinding.instance.addPostFrameCallback((_) {
+                                            setState(() {});
+                                          });
+
+                                          return GestureDetector(
+                                            onTap: (){
+                                              listaTagDocFerramenta.removeAt(i);
+                                              setState(() {});
+                                            },
+                                            child: Card(
+                                                child: Container(
+                                                    height: 50,
+                                                    width: largura*0.30,
+                                                    child: Row(
+                                                      children: [
+                                                        Container(
+                                                            width: 150,
+                                                            height: 50,
+                                                            child: TextoPadrao(texto: listaTagDocFerramenta[i],cor: Cores.cinzaTextoEscuro,tamanhoFonte: 10,alinhamentoTexto: TextAlign.center,)
+                                                        ),
+                                                        Icon(Icons.close,color: Colors.red,size: 10,)
+                                                      ],
+                                                    )
+                                                )
+                                            ),
+                                          );
+                                        }
+                                    ),
+                                  ),
+                                ],
                               ),
                             ),
                             Container(
@@ -656,7 +851,7 @@ class _InstrucaoPrimeiraEtapaTelaState extends State<InstrucaoPrimeiraEtapaTela>
                             ),
                           ],
                         ),
-                        Row(
+                        largura>700?Row(
                           children: [
                             Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
@@ -778,8 +973,125 @@ class _InstrucaoPrimeiraEtapaTelaState extends State<InstrucaoPrimeiraEtapaTela>
                               ativarCaixa: false,
                             ),
                           ],
+                        ):Column(
+                          children: [
+                            SizedBox(height: 10,),
+                            TituloPadrao(title:'Matéria-prima utilizada'),
+                            Container(
+                              height: 150,
+                              width: largura,
+                              decoration: BoxDecoration(
+                                  color: Cores.cinzaClaro,
+                                  borderRadius: BorderRadius.all(Radius.circular(3))
+                              ),
+                              child: Column(
+                                children: [
+                                  Container(
+                                    color: Cores.cardEsp,
+                                    padding: EdgeInsets.only(left: 5),
+                                    height: 50,
+                                    width: largura*0.95,
+                                    child: TextField(
+                                      controller: materiaPrima,
+                                      onChanged: (value) {
+                                        buscaMaterial(value);
+                                      },
+                                      decoration: InputDecoration(
+                                        hintText: 'Informe matéria-prima ',
+                                        border: InputBorder.none,
+                                      ),
+                                      style: TextStyle(
+                                        color: Cores.cinzaTexto,
+                                        fontSize: 14,
+                                      ),
+                                      onSubmitted: (String palavra){
+                                        if(palavra.isNotEmpty){
+                                          listaTagDocMaterial.add(palavra.toUpperCase().trim());
+                                          listaTagDocMaterial.sort();
+                                          salvarFirebasePalavraNovaTag(palavra.toUpperCase().trim(),'lista_materia_prima');
+                                          materiaPrima.clear();
+                                        }
+                                      },
+                                    ),
+                                  ),
+                                  Container(
+                                    width: largura*0.9,
+                                    height: 50,
+                                    alignment: Alignment.centerLeft,
+                                    child: GridView.builder(
+                                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2,mainAxisExtent: 20),
+                                        itemCount: listaTagDocMaterial.length,
+                                        itemBuilder: (context,i){
+
+                                          WidgetsBinding.instance.addPostFrameCallback((_) {
+                                            setState(() {});
+                                          });
+
+                                          return Center(
+                                              child: GestureDetector(
+                                                onTap: (){
+                                                  listaTagDocMaterial.removeAt(i);
+                                                  setState(() {});
+                                                },
+                                                child: Card(
+                                                    child: Container(
+                                                        height: 20,
+                                                        width: largura*0.3,
+                                                        child: Row(
+                                                          children: [
+                                                            Container(
+                                                                height: 15,
+                                                                width: 140,
+                                                                child: TextoPadrao(texto: listaTagDocMaterial[i],cor: Cores.cinzaTextoEscuro,tamanhoFonte: 10,alinhamentoTexto: TextAlign.center,)
+                                                            ),
+                                                            Icon(Icons.close,color: Colors.red,size: 10,)
+                                                          ],
+                                                        )
+                                                    )
+                                                ),
+                                              )
+                                          );
+                                        }
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            Container(
+                              height:materiaPrima.text.isNotEmpty? 200 :0,
+                              width: largura*0.45,
+                              child: Scrollbar(
+                                controller: scrollMaterial,
+                                thumbVisibility: true,
+                                trackVisibility: true,
+                                child: ListView.builder(
+                                  controller: scrollMaterial,
+                                  itemCount: listaFiltroBancoMaterial.length,
+                                  itemBuilder: (BuildContext context, int index) {
+                                    return ListTile(
+                                      onTap: (){
+                                        listaTagDocMaterial.add(listaFiltroBancoMaterial[index]);
+                                        listaFiltroBancoMaterial.clear();
+                                        materiaPrima.clear();
+                                        setState(() {});
+                                      },
+                                      title: Text(listaFiltroBancoMaterial[index]),
+                                    );
+                                  },
+                                ),
+                              ),
+                            ),
+                            SizedBox(width: 30,),
+                            CaixaTexto(
+                              titulo: 'Tempo total das Etapas',
+                              controller: tempoEtapas,
+                              largura: largura*0.93,
+                              corCaixa: Cores.cinzaClaro,
+                              ativarCaixa: false,
+                            ),
+                          ],
                         ),
-                        Row(
+                        largura>700?Row(
                           children: [
                             CaixaTexto(
                               titulo: 'Específicações do Processo',
@@ -797,8 +1109,25 @@ class _InstrucaoPrimeiraEtapaTelaState extends State<InstrucaoPrimeiraEtapaTela>
                               copiar: true,
                             ),
                           ],
+                        ):Column(
+                          children: [
+                            CaixaTexto(
+                              titulo: 'Específicações do Processo',
+                              controller: espeficicacao,
+                              largura: largura*0.85,
+                              corCaixa: Cores.cinzaClaro,
+                              copiar: true,
+                            ),
+                            CaixaTexto(
+                              titulo: 'Prazo de Aprendizagem',
+                              controller: prazo,
+                              largura: largura*0.85,
+                              corCaixa: Cores.cinzaClaro,
+                              copiar: true,
+                            ),
+                          ],
                         ),
-                        Row(
+                        largura>700?Row(
                           children: [
                             CaixaTexto(
                               titulo: 'Específicações máquina',
@@ -812,6 +1141,23 @@ class _InstrucaoPrimeiraEtapaTelaState extends State<InstrucaoPrimeiraEtapaTela>
                               titulo: 'Licenças ou qualificações',
                               controller: licenca_qualificacoes,
                               largura: largura*0.4,
+                              corCaixa: Cores.cinzaClaro,
+                              copiar: true,
+                            ),
+                          ],
+                        ):Column(
+                          children: [
+                            CaixaTexto(
+                              titulo: 'Específicações máquina',
+                              controller: esp_maquina,
+                              largura: largura*0.85,
+                              corCaixa: Cores.cinzaClaro,
+                              copiar: true,
+                            ),
+                            CaixaTexto(
+                              titulo: 'Licenças ou qualificações',
+                              controller: licenca_qualificacoes,
+                              largura: largura*0.85,
                               corCaixa: Cores.cinzaClaro,
                               copiar: true,
                             ),
