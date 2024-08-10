@@ -73,7 +73,7 @@ class _HomeTelaState extends State<HomeTela> {
         controller: TextEditingController(text: titulo),
         ativarBotaoAdicionarItemLista: ativarBotaoAdicionarItemLista,
         escrever: escrever,
-        larguraInicio: largura>700?550:300,
+        larguraInicio: largura>700?550:230,
         listaMeio: [],
         alturaListaMeio: 0,
         mostrarListaInicio: mostrarLista,

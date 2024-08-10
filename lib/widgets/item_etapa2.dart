@@ -86,14 +86,15 @@ class ItemEtapa2 extends StatelessWidget {
                   width: largura*0.8,
                   child: Row(
                     children: [
-                      TextoPadrao(texto:'Nome da Etapa',cor: Cores.primaria,tamanhoFonte: 14,),
+                      TextoPadrao(texto:'Nome da Etapa',cor: Cores.primaria,tamanhoFonte: 12,),
                       SizedBox(width: 5,),
                       CaixaTexto(
                         mostrarTitulo: false,
+                        tamanhoFonte: 10,
                         textoCaixa: 'Inserir nome da etapa',
                         titulo: '',
                         controller: modeloEtapa.nomeEtapa,
-                        largura: 200,
+                        largura: 180,
                         corCaixa: Cores.cinzaClaro,
                         ativarCaixa: true,
                         copiar: true,

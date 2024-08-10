@@ -89,10 +89,10 @@ class ItemInstrucao extends StatelessWidget {
                           margin: EdgeInsets.only(top: acesso_adm?0:8),
                           alignment: Alignment.topCenter,
                           height: 30,
-                          child: TextoPadrao(texto: documentoReal,cor: Cores.cinzaTexto,tamanhoFonte: 15,)
+                          child: TextoPadrao(texto: documentoReal,cor: Cores.cinzaTexto,tamanhoFonte: largura<850?10:15,)
                         ),
                         !acesso_adm?
-                        TextoPadrao(texto:' '+ controller.text,cor: Cores.cinzaTexto,tamanhoFonte: 15,)
+                        TextoPadrao(texto:' '+ controller.text,cor: Cores.cinzaTexto,tamanhoFonte: largura<850?10:15,)
                             :CaixaTexto(controller: controller, largura: largura,textoCaixa: 'Inserir',corCaixa: Cores.cinzaClaro,corBorda: Cores.cinzaClaro,mostrarTitulo: false,escrever: escrever,ativarCaixa: escrever,),
                         Spacer(),
                         controller.text.isNotEmpty && listaVersao.length==0 && acesso_adm?BotaoPadraoNovaInstrucao(
@@ -119,7 +119,7 @@ class ItemInstrucao extends StatelessWidget {
             ),
             Container(
               height: mostrarLista?listaIdEsp.length * 80:0,
-              width: largura==300?350:largura,
+              width: largura<350?280:largura,
               child: ListView.builder(
                 itemCount: listaIdEsp.length,
                 itemBuilder: (context,i){
@@ -132,10 +132,10 @@ class ItemInstrucao extends StatelessWidget {
                         color: Cores.cardEsp,
                         // color: Colors.blue,
                         alignment: Alignment.centerLeft,
-                        width: largura==300?350:largura,
+                        width: largura<350?250:largura,
                         // width: 500,
                         height: 65,
-                        padding: EdgeInsets.symmetric(horizontal: 15),
+                        padding: EdgeInsets.symmetric(horizontal: largura>700?15:5),
                         child: Row(
                           mainAxisSize: MainAxisSize.min,
                           mainAxisAlignment: MainAxisAlignment.end,
@@ -146,7 +146,7 @@ class ItemInstrucao extends StatelessWidget {
                               child: TextoPadrao(
                                 texto: listaVersao[i],
                                 cor: Cores.primaria,
-                                tamanhoFonte: largura==300?10:14,
+                                tamanhoFonte: largura<350?10:14,
                               ),
                             ),
                             acesso_adm?IconButton(

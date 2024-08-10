@@ -86,9 +86,9 @@ class _UsuariosTelaState extends State<UsuariosTela> {
       backgroundColor: Cores.cinzaClaro,
       appBar: AppBarPadrao(emailLogado: widget.emailLogado),
       body: Container(
-        width: largura*0.7,
+        width: largura>700?largura*0.7:largura,
         height: altura,
-        padding: EdgeInsets.symmetric(vertical: 25,horizontal: 60),
+        padding: EdgeInsets.symmetric(vertical: 25,horizontal: largura>700?60:0),
         child: ListView(
           children:[
             Card(
@@ -102,17 +102,17 @@ class _UsuariosTelaState extends State<UsuariosTela> {
                   children: [
                     TextoPadrao(texto: 'Cadastrar novo usuário',cor: Cores.primaria,negrito: FontWeight.bold,tamanhoFonte: 20,),
                     Container(
-                      width: 580,
+                      width: largura>700?580:largura*0.8,
                       child: CaixaTexto(
                         titulo: 'Nome',
                         textoCaixa: 'Nome Completo',
                         controller: nome,
-                        largura: 580,
+                        largura:largura>700?580:largura*0.8,
                         corCaixa: Cores.cinzaClaro,
                       ),
                     ),
                     Container(
-                      width: 580,
+                      width: largura>700?580:largura*0.8,
                       height: 80,
                       child: Row(
                         crossAxisAlignment: CrossAxisAlignment.center,
@@ -121,7 +121,7 @@ class _UsuariosTelaState extends State<UsuariosTela> {
                             titulo: 'Função',
                             textoCaixa: 'Função do usuário',
                             controller: funcao,
-                            largura: 350,
+                            largura:largura>700?350:largura*0.31,
                             corCaixa: Cores.cinzaClaro,
                           ),
                           Spacer(),
@@ -152,22 +152,22 @@ class _UsuariosTelaState extends State<UsuariosTela> {
                       ),
                     ),
                     Container(
-                      width: 580,
+                      width: largura>700?580:largura*0.8,
                       child: CaixaTexto(
                         titulo: 'E - mail',
                         textoCaixa: 'usuario@email.com',
                         controller: email,
-                        largura: 580,
+                        largura:largura>700?580:largura*0.8,
                         corCaixa: Cores.cinzaClaro,
                       ),
                     ),
                     Container(
                       height: 50,
-                      width: 850,
+                      width: largura>700?580:largura*0.8,
                       child: Row(
                         crossAxisAlignment: CrossAxisAlignment.end,
                         children: [
-                          TextoPadrao(texto: 'Observação: A senha padrão é “senha123”, deverá ser alterada no primeiro acesso!',cor: Cores.primaria,tamanhoFonte: 14,negrito: FontWeight.bold,),
+                          largura>700?TextoPadrao(texto: 'Observação: A senha padrão é “senha123”, deverá ser alterada no primeiro acesso!',cor: Cores.primaria,tamanhoFonte: 14,negrito: FontWeight.bold,):Container(),
                           Spacer(),
                           BotaoPadrao(onTap: ()=>verificarDados(),texto: 'Cadastrar',largura: 142,margemVertical: 0,)
                         ],
@@ -179,7 +179,7 @@ class _UsuariosTelaState extends State<UsuariosTela> {
             ),
             Card(
               child: Container(
-                width: largura*0.7,
+                width: largura>700?largura*0.7:largura,
                 padding: EdgeInsets.symmetric(horizontal: 20,vertical: 20),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -187,14 +187,15 @@ class _UsuariosTelaState extends State<UsuariosTela> {
                     TextoPadrao(texto: 'Usuários cadastrados',cor: Cores.primaria,negrito: FontWeight.bold,tamanhoFonte: 20,),
                     Row(
                       children: [
-                        Container(width: 300,child: TextoPadrao(texto: 'Nome',cor: Cores.primaria,)),
-                        Container(width: 200,child: TextoPadrao(texto: 'Função',cor: Cores.primaria)),
-                        Container(width: 300,child:TextoPadrao(texto: 'E-mail',cor: Cores.primaria)),
-                        Container(width: 200,child: TextoPadrao(texto: 'Tipo',cor: Cores.primaria)),
+                        Container(width: largura>700?300:largura*0.5,child: TextoPadrao(texto: 'Nome',cor: Cores.primaria,)),
+                        largura>700?Container(width: 200,child: TextoPadrao(texto: 'Função',cor: Cores.primaria)):Container(),
+                        largura>700?Container(width: 300,child:TextoPadrao(texto: 'E-mail',cor: Cores.primaria)):Container(),
+                        largura>700?Container():SizedBox(width: 10,),
+                        Container(width: largura>700?200:largura*0.3,child: TextoPadrao(texto: 'Tipo',cor: Cores.primaria)),
                       ],
                     ),
                     Container(
-                      width: largura*0.7,
+                      width: largura>700?largura*0.7:largura,
                       height: 380,
                       child: StreamBuilder<QuerySnapshot>(
                         stream: FirebaseFirestore.instance.collection('usuarios').snapshots(),

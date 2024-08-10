@@ -189,12 +189,12 @@ class _InstrucaoTerceiraEtapaTelaState extends State<InstrucaoTerceiraEtapaTela>
                                 width: largura*0.9,
                                 child: Row(
                                   children: [
-                                    TextoPadrao(texto: 'Data de criação',cor: Cores.primaria,tamanhoFonte: 14,),
+                                    TextoPadrao(texto: 'Data de criação',cor: Cores.primaria,tamanhoFonte: 12,),
+                                    SizedBox(width: 5,),
+                                    TextoPadrao(texto: dadosEspecificacao==null?'00/00/0000':VariavelEstatica.mascaraData.format(dadosEspecificacao!['dataCriacao'].toDate()),cor: Cores.cinzaTextoEscuro,tamanhoFonte: 12,),
                                     SizedBox(width: 10,),
-                                    TextoPadrao(texto: dadosEspecificacao==null?'00/00/0000':VariavelEstatica.mascaraData.format(dadosEspecificacao!['dataCriacao'].toDate()),cor: Cores.cinzaTextoEscuro,tamanhoFonte: 14,),
-                                    SizedBox(width: 40,),
                                     TextoPadrao(texto: 'Visto',cor: Cores.primaria,tamanhoFonte: 14,),
-                                    SizedBox(width: 10,),
+                                    SizedBox(width: 5,),
                                     Container(
                                       child: TextoPadrao(texto: BadStateString(dadosEspecificacao, 'visto'),cor: Cores.cinzaTextoEscuro,tamanhoFonte: 12,)
                                     ),
@@ -375,21 +375,21 @@ class _InstrucaoTerceiraEtapaTelaState extends State<InstrucaoTerceiraEtapaTela>
                                             children: [
                                               Container(
                                                   width:  largura>700?50:35,
-                                                  child: TextoPadrao(texto:'Versão',cor: Cores.primaria,tamanhoFonte: 14,)
+                                                  child: TextoPadrao(texto:'Versão',cor: Cores.primaria,tamanhoFonte: largura>700?14:12,)
                                               ),
                                               Container(
-                                                  width: 100,
-                                                  child: TextoPadrao(texto:'Data',cor: Cores.primaria,tamanhoFonte: 14,alinhamentoTexto: TextAlign.center,)
+                                                  width: largura>700?100:50,
+                                                  child: TextoPadrao(texto:'Data',cor: Cores.primaria,tamanhoFonte: largura>700?14:12,alinhamentoTexto: TextAlign.center,)
                                               ),
-                                              SizedBox(width: 10,),
+                                              SizedBox(width: largura>700?10:5,),
                                               Container(
-                                                  width:  largura>700?300:100,
-                                                  child: TextoPadrao(texto:'Resp. Alteração',cor: Cores.primaria,tamanhoFonte: 14,)
+                                                  width:  largura>700?300:90,
+                                                  child: TextoPadrao(texto:'Resp. Alteração',cor: Cores.primaria,tamanhoFonte: largura>700?14:12,)
                                               ),
-                                              SizedBox(width: 10,),
+                                              SizedBox(width: largura>700?10:5,),
                                               Container(
-                                                  width:  largura>700?largura*0.3:largura*0.35,
-                                                  child: TextoPadrao(texto:'Razão',cor: Cores.primaria,tamanhoFonte: 14,)
+                                                  width:  largura>700?largura*0.3:largura*0.25,
+                                                  child: TextoPadrao(texto:'Razão',cor: Cores.primaria,tamanhoFonte: largura>700?14:12,)
                                               ),
                                             ],
                                           ),
@@ -415,23 +415,23 @@ class _InstrucaoTerceiraEtapaTelaState extends State<InstrucaoTerceiraEtapaTela>
                                                         )
                                                     ),
                                                     Container(
-                                                        width: 100,
+                                                        width: largura>700?100:50,
                                                         child: TextoPadrao(
                                                           texto: listaHistorico[i].data,
                                                           // texto: 'data',
                                                           cor: Cores.cinzaTextoEscuro,
-                                                          tamanhoFonte: 14,
+                                                          tamanhoFonte: largura>700?14:10,
                                                           alinhamentoTexto: TextAlign.center,
                                                         )
                                                     ),
-                                                    SizedBox(width: 10,),
+                                                    SizedBox(width: largura>700?10:5,),
                                                     Container(
-                                                        width:  largura>700?300:100,
+                                                        width:  largura>700?300:90,
                                                         child: TextoPadrao(texto:listaHistorico[i].responsavel,cor: Cores.cinzaTextoEscuro,tamanhoFonte:  largura>700?14:10,)
                                                     ),
-                                                    SizedBox(width: 10,),
+                                                    SizedBox(width: largura>700?10:5,),
                                                     Container(
-                                                        width: largura>700?largura*0.3:largura*0.35,
+                                                        width: largura>700?largura*0.3:largura*0.25,
                                                         child: TextoPadrao(texto:listaHistorico[i].alteracao,cor: Cores.cinzaTextoEscuro,tamanhoFonte: largura>700?14:10,)
                                                     ),
                                                   ],

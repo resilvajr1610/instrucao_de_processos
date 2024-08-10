@@ -38,12 +38,12 @@ class ItemEtapaUmTitulo extends StatelessWidget {
         TextoPadrao(texto: titulo,cor: Cores.primaria,tamanhoFonte: 14,),
         SizedBox(width: 10,),
         Container(
-          width: largura*0.6,
+          width: largura*0.5,
           child: TextoPadrao(
             texto: BadStateList(dadosEspecificacao, item).toString().replaceAll('[', '').replaceAll(']', ''),
             cor: Cores.cinzaTextoEscuro,
-            tamanhoFonte: 12,
-            maxLines: 2,),
+            tamanhoFonte: 10,
+            maxLines: 3,),
         ),
       ],
     );

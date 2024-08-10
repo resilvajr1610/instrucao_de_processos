@@ -44,9 +44,9 @@ class AppBarPadrao extends StatelessWidget implements PreferredSizeWidget{
           children: [
             Container(
               padding: const EdgeInsets.all(8.0),
-              child: CircleAvatar(radius: 35,backgroundColor: Cores.azul_escuro_degrade,backgroundImage: AssetImage('assets/imagens/logo.png',)),
+              child: CircleAvatar(radius: largura>700?35:25,backgroundColor: Cores.azul_escuro_degrade,backgroundImage: AssetImage('assets/imagens/logo.png',)),
             ),
-            TextoPadrao(texto: 'Instrução de processos',tamanhoFonte: largura>700?24:20,negrito: FontWeight.bold),
+            TextoPadrao(texto: 'Instrução de processos',tamanhoFonte: largura>700?24:15,negrito: FontWeight.bold),
             Spacer(),
             Padding(
               padding: const EdgeInsets.all(8.0),

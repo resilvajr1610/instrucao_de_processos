@@ -432,7 +432,7 @@ class ItemEtapa3 extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          TextoPadrao(texto: 'Etapa $numeroEtapa',cor: Cores.primaria,negrito: FontWeight.bold,tamanhoFonte: 16,),
+          TextoPadrao(texto: 'Etapa $numeroEtapa',cor: Cores.primaria,negrito: FontWeight.bold,tamanhoFonte: 12,),
           Container(
             width: largura * 0.8,
             child: Column(
@@ -446,21 +446,21 @@ class ItemEtapa3 extends StatelessWidget {
                       TextoPadrao(texto: 'Nome da Etapa',cor: Cores.primaria,tamanhoFonte: 12,),
                       SizedBox(width: 10,),
                       Container(
-                          width: largura * 0.6,
+                          width: largura * 0.5,
                           child: TextoPadrao(texto: nomeEtapa,cor: Cores.cinzaTextoEscuro,tamanhoFonte: 10,maxLines: 5,)
                       ),
                     ],
                   ),
                 ),
                 Container(
-                  width: largura * 0.8,
+                  width: largura * 0.85,
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       TextoPadrao(texto: 'Tempo total da etapa',cor: Cores.primaria,tamanhoFonte: 12,),
                       SizedBox(width: 10,),
                       Container(
-                          width: largura * 0.5,
+                          width: largura * 0.45,
                           child: TextoPadrao(texto: '$minutos min $segundos seg',cor: Cores.cinzaTextoEscuro,tamanhoFonte: 10,)
                       ),
                     ],
@@ -470,7 +470,7 @@ class ItemEtapa3 extends StatelessWidget {
             ),
           ),
           Container(
-              width:largura*0.9,
+              width:largura*0.8,
               child: Divider()
           ),
           Container(
@@ -506,7 +506,7 @@ class ItemEtapa3 extends StatelessWidget {
                               ),
                             ],
                           ),
-                          SizedBox(width: 10,),
+                          SizedBox(width: 5,),
                           Column(
                             children: [
                               Container(
@@ -516,19 +516,19 @@ class ItemEtapa3 extends StatelessWidget {
                                 height: 40,
                                 alignment: Alignment.center,
                                 child: TextoPadrao(texto:'${i+1}0',cor: Cores.primaria,tamanhoFonte: 14,alinhamentoTexto: TextAlign.center,),
-                                margin: EdgeInsets.only(right: 10),
+                                margin: EdgeInsets.only(right: 5,)
                               ),
                             ],
                           ),
                           listaAnalise[i].urlVideos.length==0 && listaAnalise[i].urlFotos.length==0?
                           Container(
                             height: 50,
-                            width: 90,
+                            width: 50,
                             margin: EdgeInsets.only(right: 20),
                           ):
                           Container(
                             height: 50,
-                            width: 90,
+                            width: 50,
                             child: IconButton(
                               icon: Icon(Icons.photo,color: Cores.cinzaTexto,),
                               onPressed: (){
@@ -746,13 +746,13 @@ class ItemEtapa3 extends StatelessWidget {
                           Column(
                             children: [
                               Container(
-                                width: 130,
-                                child: TextoPadrao(texto:'Tempo (segundos)',cor: Cores.primaria,tamanhoFonte: 14,)
+                                width: 80,
+                                child: TextoPadrao(texto:'Tempo',cor: Cores.primaria,tamanhoFonte: 14,)
                               ),
                               Container(
                                 height: 50,
                                 alignment: Alignment.center,
-                                width: 120,
+                                width: 80,
                                 child: TextoPadrao(texto:listaAnalise[i].tempo,cor: Cores.cinzaTextoEscuro,tamanhoFonte: 14,alinhamentoTexto: TextAlign.center,),
                                 margin: EdgeInsets.only(right: 10),
                               ),

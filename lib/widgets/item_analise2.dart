@@ -190,7 +190,7 @@ class ItemAnalise2 extends StatelessWidget {
                 ),
               ],
             ),
-            SizedBox(width: 10,),
+            SizedBox(width: 5,),
             Column(
               children: [
                 Container(
@@ -203,7 +203,7 @@ class ItemAnalise2 extends StatelessWidget {
                 ),
               ],
             ),
-            SizedBox(width: 10,),
+            SizedBox(width: 5,),
             Column(
               children: [
                 Container(
@@ -220,19 +220,19 @@ class ItemAnalise2 extends StatelessWidget {
                 ),
               ],
             ),
-            SizedBox(width: 10,),
+            SizedBox(width: 5,),
             Column(
               children: [
                 Container(
-                    width: 100,
-                    child: TextoPadrao(texto:'Tempo (seg)',cor: Cores.primaria,tamanhoFonte: 14,)
+                    width: 50,
+                    child: TextoPadrao(texto:'Tempo (seg)',cor: Cores.primaria,tamanhoFonte: 12,)
                 ),
                 CaixaTexto(
                   mostrarTitulo: false,
                   textoCaixa: 'Inserir tempo',
                   titulo: '',
                   controller: modeloAnalise.tempoAnalise,
-                  largura: 100,
+                  largura: 50,
                   corCaixa: Cores.cinzaClaro,
                   ativarCaixa: modeloAnalise.analiseAtiva,
                   textInputType: TextInputType.number,

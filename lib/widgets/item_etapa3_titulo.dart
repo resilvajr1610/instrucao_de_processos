@@ -90,17 +90,17 @@ class ItemEtapa3Titulo extends StatelessWidget {
           width: largura * 0.95,
           child: Row(
             children: [
-              TextoPadrao(texto: titulo1,cor: Cores.primaria,tamanhoFonte: 14,),
+              TextoPadrao(texto: titulo1,cor: Cores.primaria,tamanhoFonte: 12,),
               SizedBox(width: 10,),
               Container(
-                width: largura*0.55,
+                width: largura*0.5,
                 child: TextoPadrao(
                   texto: dadoString1
                       ?BadStateString(dadosEspecificacao, item1)
                       :BadStateList(dadosEspecificacao, item1).toString().replaceAll('[', '').replaceAll(']', ''),
                   cor: Cores.cinzaTextoEscuro,
                   maxLines: 2,
-                  tamanhoFonte: 12,
+                  tamanhoFonte: 10,
                 ),
               ),
             ],
@@ -110,17 +110,17 @@ class ItemEtapa3Titulo extends StatelessWidget {
           width: largura * 0.95,
           child: Row(
             children: [
-              TextoPadrao(texto: titulo2,cor: Cores.primaria,tamanhoFonte: 14,),
+              TextoPadrao(texto: titulo2,cor: Cores.primaria,tamanhoFonte: 12,),
               SizedBox(width: 10,),
               Container(
-                width: largura*0.55,
+                width: largura*0.5,
                 child: TextoPadrao(
                   texto: dadoString2
                       ?BadStateString(dadosEspecificacao, item2):dadosInt?'$minutos min $segundos seg'
                       :BadStateList(dadosEspecificacao, item2).toString().replaceAll('[', '').replaceAll(']', '').toString(),
                   cor: Cores.cinzaTextoEscuro,
                   maxLines: 2,
-                  tamanhoFonte: 12,
+                  tamanhoFonte: 10,
                 ),
               ),
             ],

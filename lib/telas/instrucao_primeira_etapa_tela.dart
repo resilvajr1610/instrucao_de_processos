@@ -414,7 +414,7 @@ class _InstrucaoPrimeiraEtapaTelaState extends State<InstrucaoPrimeiraEtapaTela>
                           textoCaixa: 'Infome o nome do processo',
                           titulo: 'Nome do Processo',
                           controller: nomeProcesso,
-                          largura: largura>700?largura*0.3:largura*0.85,
+                          largura: largura>700?largura*0.3:largura*0.8,
                           corCaixa: Cores.cinzaClaro,
                           ativarCaixa: widget.idEsp=='',
                           copiar: true,
@@ -554,7 +554,7 @@ class _InstrucaoPrimeiraEtapaTelaState extends State<InstrucaoPrimeiraEtapaTela>
                               textoCaixa: 'Informe a máquina',
                               titulo: 'Máquina',
                               controller: maquina,
-                              largura: largura*0.85,
+                              largura: largura*0.8,
                               corCaixa: Cores.cinzaClaro,
                               copiar: true,
                             ),
@@ -805,11 +805,11 @@ class _InstrucaoPrimeiraEtapaTelaState extends State<InstrucaoPrimeiraEtapaTela>
                                             child: Card(
                                                 child: Container(
                                                     height: 50,
-                                                    width: largura*0.30,
+                                                    width: largura*0.25,
                                                     child: Row(
                                                       children: [
                                                         Container(
-                                                            width: 150,
+                                                            width: 130,
                                                             height: 50,
                                                             child: TextoPadrao(texto: listaTagDocFerramenta[i],cor: Cores.cinzaTextoEscuro,tamanhoFonte: 10,alinhamentoTexto: TextAlign.center,)
                                                         ),
@@ -1036,12 +1036,12 @@ class _InstrucaoPrimeiraEtapaTelaState extends State<InstrucaoPrimeiraEtapaTela>
                                                 child: Card(
                                                     child: Container(
                                                         height: 20,
-                                                        width: largura*0.3,
+                                                        width: largura*0.35,
                                                         child: Row(
                                                           children: [
                                                             Container(
                                                                 height: 15,
-                                                                width: 140,
+                                                                width: 120,
                                                                 child: TextoPadrao(texto: listaTagDocMaterial[i],cor: Cores.cinzaTextoEscuro,tamanhoFonte: 10,alinhamentoTexto: TextAlign.center,)
                                                             ),
                                                             Icon(Icons.close,color: Colors.red,size: 10,)
@@ -1085,7 +1085,7 @@ class _InstrucaoPrimeiraEtapaTelaState extends State<InstrucaoPrimeiraEtapaTela>
                             CaixaTexto(
                               titulo: 'Tempo total das Etapas',
                               controller: tempoEtapas,
-                              largura: largura*0.93,
+                              largura: largura*0.9,
                               corCaixa: Cores.cinzaClaro,
                               ativarCaixa: false,
                             ),
@@ -1114,14 +1114,14 @@ class _InstrucaoPrimeiraEtapaTelaState extends State<InstrucaoPrimeiraEtapaTela>
                             CaixaTexto(
                               titulo: 'Específicações do Processo',
                               controller: espeficicacao,
-                              largura: largura*0.85,
+                              largura: largura*0.8,
                               corCaixa: Cores.cinzaClaro,
                               copiar: true,
                             ),
                             CaixaTexto(
                               titulo: 'Prazo de Aprendizagem',
                               controller: prazo,
-                              largura: largura*0.85,
+                              largura: largura*0.8,
                               corCaixa: Cores.cinzaClaro,
                               copiar: true,
                             ),
@@ -1150,14 +1150,14 @@ class _InstrucaoPrimeiraEtapaTelaState extends State<InstrucaoPrimeiraEtapaTela>
                             CaixaTexto(
                               titulo: 'Específicações máquina',
                               controller: esp_maquina,
-                              largura: largura*0.85,
+                              largura: largura*0.8,
                               corCaixa: Cores.cinzaClaro,
                               copiar: true,
                             ),
                             CaixaTexto(
                               titulo: 'Licenças ou qualificações',
                               controller: licenca_qualificacoes,
-                              largura: largura*0.85,
+                              largura: largura*0.8,
                               corCaixa: Cores.cinzaClaro,
                               copiar: true,
                             ),

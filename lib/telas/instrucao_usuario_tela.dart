@@ -300,7 +300,7 @@ class _InstrucaoUsuarioTelaState extends State<InstrucaoUsuarioTela> {
                           TextoPadrao(texto: 'Visto',cor: Cores.primaria,tamanhoFonte: 14,),
                           SizedBox(width: 10,),
                           Container(
-                              width: largura * 0.4,
+                              width: largura * 0.3,
                               child: TextoPadrao(texto: BadStateString(dadosEspecificacao, 'visto'),cor: Cores.cinzaTextoEscuro,tamanhoFonte: 10,)
                           ),
                         ],
@@ -349,7 +349,9 @@ class _InstrucaoUsuarioTelaState extends State<InstrucaoUsuarioTela> {
                         children: [
                           TextoPadrao(texto: 'Nome de Processos',cor: Cores.primaria,negrito: FontWeight.bold,tamanhoFonte: 12,),
                           SizedBox(width: 10,),
-                          TextoPadrao(texto: BadStateString(dadosEspecificacao, 'nome'),cor: Cores.cinzaTextoEscuro,negrito: FontWeight.bold,tamanhoFonte: 12,),
+                          Container(
+                              width: largura*0.6,
+                              child: TextoPadrao(texto: BadStateString(dadosEspecificacao, 'nome'),cor: Cores.cinzaTextoEscuro,negrito: FontWeight.bold,tamanhoFonte: 10,maxLines: 2,)),
                         ],
                       ),
                     ],
@@ -480,14 +482,14 @@ class _InstrucaoUsuarioTelaState extends State<InstrucaoUsuarioTela> {
                                 width: largura>700?100:70,
                                 child: TextoPadrao(texto:'Data',cor: Cores.primaria,tamanhoFonte: largura>700?14:10,alinhamentoTexto: TextAlign.center,)
                             ),
-                            SizedBox(width: 10,),
+                            SizedBox(width: largura>700?10:5,),
                             Container(
-                                width: largura>700?300:120,
+                                width: largura>700?300:90,
                                 child: TextoPadrao(texto:'Resp. Alteração',cor: Cores.primaria,tamanhoFonte: largura>700?14:10,)
                             ),
-                            SizedBox(width: 10,),
+                            SizedBox(width:largura>700? 10:5,),
                             Container(
-                                width: largura>700?largura*0.3:180,
+                                width: largura>700?largura*0.3:130,
                                 child: TextoPadrao(texto:'Razão',cor: Cores.primaria,tamanhoFonte: largura>700?14:10,)
                             ),
                           ],
@@ -523,14 +525,14 @@ class _InstrucaoUsuarioTelaState extends State<InstrucaoUsuarioTela> {
                                         alinhamentoTexto: TextAlign.center,
                                       )
                                   ),
-                                  SizedBox(width: 10,),
+                                  SizedBox(width: largura>700? 10:5,),
                                   Container(
-                                      width: largura>700?300:120,
+                                      width: largura>700?300:90,
                                       child: TextoPadrao(texto:listaHistorico[i].responsavel,cor: Cores.cinzaTextoEscuro,tamanhoFonte: largura>700?14:10,)
                                   ),
-                                  SizedBox(width: 10,),
+                                  SizedBox(width: largura>700? 10:5,),
                                   Container(
-                                      width: largura>700?largura*0.3:180,
+                                      width: largura>700?largura*0.3:130,
                                       child: TextoPadrao(texto:listaHistorico[i].alteracao,cor: Cores.cinzaTextoEscuro,tamanhoFonte: largura>700?14:10,maxLines: 3,)
                                   ),
                                 ],
